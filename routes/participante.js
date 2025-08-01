@@ -56,17 +56,49 @@
     router.post('/enviar-postulacion', protegerRuta('Participante'), upload, async (req, res) => {
     const client = await pool.connect();
     try {
+        console.log('=== DEBUG BACKEND ===');
+        console.log('req.session.usuario:', req.session.usuario);
+        console.log('req.body keys:', Object.keys(req.body));
+        console.log('req.files keys:', req.files ? Object.keys(req.files) : 'No files');
+
         const empresaId = req.session.usuario.empresaId;
+        console.log('empresaId:', empresaId);
+
+        if (!empresaId) {
+        return res.status(400).json({ error: 'No se encontró empresa_id en la sesión' });
+        }
+
         const uploadedFiles = req.files || {};
+
+        // Debug de campos recibidos
+        console.log('Campo producto_info raw:', req.body.producto_info);
+        console.log('Campo brechas raw:', req.body.brechas);
+        console.log('Campo motivacion raw:', req.body.motivacion);
 
         // Parseo seguro de campos JSON
         let producto_info, brechas, motivacion;
         try {
         producto_info = req.body.producto_info ? JSON.parse(req.body.producto_info) : {};
-        brechas = req.body.brechas ? JSON.parse(req.body.brechas) : {};
-        motivacion = req.body.motivacion ? JSON.parse(req.body.motivacion) : {};
+        console.log('producto_info parseado:', producto_info);
         } catch (e) {
-        return res.status(400).json({ error: "Al menos uno de los campos principales no es un JSON válido." });
+        console.error('Error parsing producto_info:', e);
+        return res.status(400).json({ error: "El campo producto_info no es un JSON válido: " + e.message });
+        }
+
+        try {
+        brechas = req.body.brechas ? JSON.parse(req.body.brechas) : {};
+        console.log('brechas parseado:', brechas);
+        } catch (e) {
+        console.error('Error parsing brechas:', e);
+        return res.status(400).json({ error: "El campo brechas no es un JSON válido: " + e.message });
+        }
+
+        try {
+        motivacion = req.body.motivacion ? JSON.parse(req.body.motivacion) : {};
+        console.log('motivacion parseado:', motivacion);
+        } catch (e) {
+        console.error('Error parsing motivacion:', e);
+        return res.status(400).json({ error: "El campo motivacion no es un JSON válido: " + e.message });
         }
 
         await client.query('BEGIN');
@@ -77,11 +109,13 @@
         );
 
         if (postulacionResult.rows.length === 0) {
+        console.log('Insertando nueva postulación...');
         await client.query(
             'INSERT INTO postulaciones (empresa_id, estado, producto_info, brechas, motivacion, fecha_envio) VALUES ($1, $2, $3, $4, $5, now())',
             [empresaId, 'enviado', producto_info, brechas, motivacion]
         );
         } else {
+        console.log('Actualizando postulación existente...');
         await client.query(
             'UPDATE postulaciones SET estado = $1, producto_info = $2, brechas = $3, motivacion = $4, fecha_envio = now() WHERE empresa_id = $5',
             ['enviado', producto_info, brechas, motivacion, empresaId]
@@ -92,6 +126,7 @@
         for (const fieldName in uploadedFiles) {
         const filesArray = uploadedFiles[fieldName];
         for (const archivo of filesArray) {
+            console.log(`Guardando documento: ${archivo.originalname}`);
             const documentoQuery = `
             INSERT INTO documentos(nombre_original, nombre_guardado, tipo_archivo, ruta, empresa_id)
             VALUES($1, $2, $3, $4, $5)
@@ -107,11 +142,12 @@
         }
 
         await client.query('COMMIT');
+        console.log('Postulación guardada exitosamente');
         res.json({ mensaje: 'Postulación y documentos enviados correctamente.' });
     } catch (error) {
         await client.query('ROLLBACK');
-        console.error('Error enviando postulación:', error);
-        res.status(500).json({ error: 'Error al enviar la postulación.' });
+        console.error('Error completo en enviar-postulacion:', error);
+        res.status(500).json({ error: 'Error al enviar la postulación: ' + error.message });
     } finally {
         client.release();
     }

@@ -549,7 +549,7 @@ Cargando fecha de cierre...
             disponible: document.querySelector('input[name="disponibilidad"]:checked')?.value === 'true'
         };
 
-        // IMPORTANTE: Limpiar los campos del FormData para evitar duplicados
+        // Limpiar campos del FormData
         formData.delete('producto_info');
         formData.delete('brechas');
         formData.delete('motivacion');
@@ -559,23 +559,42 @@ Cargando fecha de cierre...
         formData.append('brechas', JSON.stringify(brechas));
         formData.append('motivacion', JSON.stringify(motivacion));
 
-        console.log('Datos enviados:');
+        console.log('=== DEBUG ENVÍO ===');
         console.log('producto_info:', JSON.stringify(producto_info));
         console.log('brechas:', JSON.stringify(brechas));
         console.log('motivacion:', JSON.stringify(motivacion));
+        
+        // Ver todos los datos del FormData
+        console.log('=== FormData completo ===');
+        for (let [key, value] of formData.entries()) {
+            console.log(key, ':', typeof value === 'object' ? '[File]' : value);
+        }
 
         const res = await fetch('/participante/enviar-postulacion', {
             method: 'POST',
             body: formData
         });
+
+        console.log('Response status:', res.status);
+        console.log('Response headers:', res.headers);
+
+        if (!res.ok) {
+            const errorText = await res.text();
+            console.error('Error response:', errorText);
+            alert(`Error ${res.status}: ${errorText}`);
+            return;
+        }
+
         const data = await res.json();
+        console.log('Success response:', data);
         alert(data.mensaje || data.error);
         if (res.ok) location.reload();
     } catch (error) {
-        alert('Error al enviar la postulación.');
-        console.error(error);
+        console.error('Catch error:', error);
+        alert('Error al enviar la postulación: ' + error.message);
     }
 }
+
 
     // Habilitar campo "Otro" cuando se selecciona
     document.getElementById('estado_otro').addEventListener('change', function() {
