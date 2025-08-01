@@ -1,0 +1,69 @@
+# Dependencias
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+db
+server.js
+db.js
+
+
+# Entorno de desarrollo
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+
+# PostgreSQL
+*.pid
+*.dump
+pgdata/
+
+# Archivos subidos por usuarios
+uploads/
+*.pdf
+*.docx
+*.xlsx
+*.jpg
+*.png
+*.jpeg
+
+# IDE y editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de sesión y logs
+*.log
+*.sqlite
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Carpeta de vistas compiladas (si usas algún preprocesador)
+views_protegidas/compiled/
+
+# Archivos de configuración local
+config/local.json
+
+# Testing
+coverage/
+.nyc_output/
+
+# Build
+dist/
+build/
+

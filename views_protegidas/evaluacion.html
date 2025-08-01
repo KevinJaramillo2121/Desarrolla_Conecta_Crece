@@ -1,0 +1,169 @@
+    <h2>Postulaciones enviadas</h2>
+    <table id="tabla-postulaciones">
+    <thead>
+        <tr>
+        <th>Empresa</th>
+        <th>Tipo</th>
+        <th>Municipio</th>
+        <th>Preselección</th>
+        <th>Acción</th>
+        </tr>
+    </thead>
+
+<script>
+    async function cargarPostulaciones() {
+    try {
+        const res = await fetch('/evaluador/postulaciones');
+        const data = await res.json();
+
+        const tbody = document.querySelector('#tabla-postulaciones tbody');
+        tbody.innerHTML = ''; // limpiar por si acaso
+
+        data.forEach(postulacion => {
+        const tr = document.createElement('tr');
+
+        const preseleccion = postulacion.estado_preseleccion || '🟡 Sin evaluar';
+
+        tr.innerHTML = `
+            <td>${postulacion.nombre_legal}</td>
+            <td>${postulacion.tipo_empresa}</td>
+            <td>${postulacion.municipio}</td>
+            <td>${preseleccion}</td>
+            <td><button onclick="verDetalle(${postulacion.id}, '${postulacion.nombre_legal.replace(/'/g, "\\'")}')">🔍 Evaluar</button></td>
+        `;
+
+        tbody.appendChild(tr);
+        });
+
+    } catch (error) {
+        console.error('Error cargando postulaciones:', error);
+        alert('Error al cargar postulaciones.');
+    }
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarPostulaciones);
+</script>
+
+<script>
+    async function verDetalle(empresaId, nombreEmpresa) {
+    try {
+        const res = await fetch(`/evaluador/postulacion/${empresaId}`);
+        const data = await res.json();
+
+        document.getElementById('detalle-postulacion').style.display = 'block';
+        document.getElementById('nombre_empresa').textContent = nombreEmpresa;
+        document.getElementById('empresa_id').value = empresaId;
+
+        // Si ya existe una evaluación, precargarla
+        if (data.seleccion) {
+        document.getElementById('estado_preseleccion').value = data.seleccion.estado_preseleccion;
+        document.getElementById('observaciones').value = data.seleccion.observaciones || '';
+        document.getElementById('criterios').value = JSON.stringify(data.seleccion.criterios_evaluacion || {}, null, 2);
+        } else {
+        document.getElementById('estado_preseleccion').value = 'Preseleccionado';
+        document.getElementById('observaciones').value = '';
+        document.getElementById('criterios').value = '{}';
+        }
+
+    } catch (error) {
+        console.error('Error cargando detalle:', error);
+        alert('No se pudo cargar la postulación.');
+    }
+    }
+
+    // En el script de evaluacion.html, dentro de la función que muestra los detalles
+async function verDetalle(empresaId, nombreEmpresa) {
+    // ... tu lógica actual para obtener los detalles de la postulación ...
+
+    // 💡 Obtener los documentos de la postulación
+    try {
+        const resDocs = await fetch(`/evaluador/documentos/${empresaId}`);
+        const documentos = await resDocs.json();
+        
+        const documentosDiv = document.getElementById('lista-documentos');
+        documentosDiv.innerHTML = '<h4>Documentos Adjuntos:</h4>';
+        if (documentos.length > 0) {
+            documentos.forEach(doc => {
+                const link = document.createElement('a');
+                link.href = `/evaluador/descargar-documento/${doc.id}`;
+                link.textContent = doc.nombre_original;
+                link.download = doc.nombre_original; // Para sugerir el nombre al descargar
+                documentosDiv.appendChild(link);
+                documentosDiv.appendChild(document.createElement('br'));
+            });
+        } else {
+            documentosDiv.innerHTML += '<p>No hay documentos adjuntos.</p>';
+        }
+    } catch (err) {
+        console.error('Error al cargar documentos:', err);
+    }
+}
+</script>
+
+<script>
+    async function guardarEvaluacion() {
+    const empresaId = document.getElementById('empresa_id').value;
+    const estado = document.getElementById('estado_preseleccion').value;
+    const observaciones = document.getElementById('observaciones').value;
+    const criteriosTexto = document.getElementById('criterios').value;
+
+    let criterios;
+    try {
+        criterios = JSON.parse(criteriosTexto);
+    } catch (e) {
+        alert('⚠️ Los criterios deben estar en formato JSON válido.');
+        return;
+    }
+
+    const body = {
+        empresa_id: empresaId,
+        estado_preseleccion: estado,
+        observaciones,
+        criterios
+    };
+
+    try {
+        const res = await fetch('/evaluador/evaluar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+        alert(data.mensaje || data.error);
+
+        if (res.ok) {
+        cargarPostulaciones(); // actualiza tabla
+        document.getElementById('detalle-postulacion').style.display = 'none';
+        }
+
+    } catch (error) {
+        console.error('Error al guardar evaluación:', error);
+        alert('Ocurrió un error al guardar la evaluación.');
+    }
+    }
+</script>
+
+
+    <tbody>
+        <!-- se llena con JS -->
+    </tbody>
+    </table>
+
+    <div id="detalle-postulacion" style="display:none">
+    <h3>Evaluar empresa: <span id="nombre_empresa"></span></h3>
+
+    <label for="estado_preseleccion">Estado:</label>
+    <select id="estado_preseleccion">
+        <option value="Preseleccionado">Preseleccionado</option>
+        <option value="No_preseleccionado">No preseleccionado</option>
+    </select><br><br>
+
+    <label for="observaciones">Observaciones:</label><br>
+    <textarea id="observaciones" rows="4" cols="60"></textarea><br><br>
+
+    <label for="criterios">Criterios (opcional en JSON):</label><br>
+    <textarea id="criterios" rows="6" cols="60">{}</textarea><br><br>
+
+    <button onclick="guardarEvaluacion()">💾 Guardar evaluación</button>
+    </div>

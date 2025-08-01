@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Administrador - Convocatoria</title>
+</head>
+<body>
+    <h1>Panel del Administrador</h1>
+
+    <section>
+        <h2>🗓️ Fechas de convocatoria</h2>
+        <form id="form-fechas">
+            <label for="fecha_inicio">Inicio:</label>
+            <input type="date" id="fecha_inicio" required><br><br>
+
+            <label for="fecha_fin">Cierre:</label>
+            <input type="date" id="fecha_fin" required><br><br>
+
+            <button type="submit">💾 Guardar fechas</button>
+        </form>
+        <p id="mensaje-fechas" style="color: green;"></p>
+    </section>
+
+    <hr>
+
+    <section>
+        <h2>📋 Postulaciones registradas</h2>
+        <table border="1" id="tabla-postulaciones" cellpadding="6">
+            <thead>
+                <tr>
+                    <th>Empresa</th>
+                    <th>NIT</th>
+                    <th>Tipo</th>
+                    <th>Municipio</th>
+                    <th>Postulación</th>
+                    <th>Preselección</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </section>
+
+    <script>
+        async function cargarFechas() {
+            try {
+                const res = await fetch('/admin/convocatoria');
+                const data = await res.json();
+                if (data) {
+                    document.getElementById('fecha_inicio').value = data.fecha_inicio.split('T')[0];
+                    document.getElementById('fecha_fin').value = data.fecha_fin.split('T')[0];
+                }
+            } catch (err) {
+                console.error('Error cargando fechas:', err);
+            }
+        }
+
+        async function cargarPostulaciones() {
+            try {
+                const res = await fetch('/admin/postulaciones');
+                const postulaciones = await res.json();
+                const tbody = document.querySelector('#tabla-postulaciones tbody');
+                tbody.innerHTML = '';
+
+                postulaciones.forEach(postulacion => {
+                    const tr = document.createElement('tr');
+                    const estadoPostulacion = postulacion.estado_postulacion || 'Sin iniciar';
+                    const estadoPreseleccion = postulacion.estado_preseleccion || 'Sin evaluar';
+
+                    tr.innerHTML = `
+                        <td>${postulacion.nombre_legal}</td>
+                        <td>${postulacion.nit}</td>
+                        <td>${postulacion.tipo_empresa}</td>
+                        <td>${postulacion.municipio}</td>
+                        <td>${estadoPostulacion}</td>
+                        <td>${estadoPreseleccion}</td>
+                        <td>
+                            <button>Ver Detalles</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+            } catch (err) {
+                console.error('Error cargando postulaciones:', err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cargar fechas existentes al iniciar
+            cargarFechas();
+            // Cargar postulaciones al iniciar
+            cargarPostulaciones();
+        });
+
+        document.getElementById('form-fechas').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const inicio = document.getElementById('fecha_inicio').value;
+            const fin = document.getElementById('fecha_fin').value;
+
+            const res = await fetch('/admin/convocatoria', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fecha_inicio: inicio, fecha_fin: fin })
+            });
+
+            const data = await res.json();
+            document.getElementById('mensaje-fechas').textContent = data.mensaje || data.error;
+            document.getElementById('mensaje-fechas').style.color = res.ok ? 'green' : 'red';
+        });
+    </script>
+</body>
+</html>

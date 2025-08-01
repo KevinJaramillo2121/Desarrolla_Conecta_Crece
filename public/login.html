@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+    <meta charset="UTF-8">
+    <title>Login - Desarrolla, Conecta y Crece</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        label { display: block; margin-top: 10px; }
+        input { width: 300px; padding: 5px; margin-top: 5px; }
+        button { margin-top: 15px; padding: 10px 20px; }
+    </style>
+    </head>
+    <body>
+
+    <h1>Iniciar Sesión</h1>
+
+    <form id="formLogin">
+        <label>Nombre de usuario:
+        <input type="text" name="nombre_usuario" required>
+        </label>
+
+        <label>Contraseña:
+        <input type="password" name="password" required>
+        </label>
+
+        <button type="submit">Ingresar</button>
+    </form>
+
+    <div id="mensaje" style="margin-top: 20px; font-weight: bold;"></div>
+
+    <script>
+        document.getElementById('formLogin').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const form = e.target;
+        const datos = new FormData(form);
+        const body = Object.fromEntries(datos.entries());
+
+        try {
+            const respuesta = await fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+            });
+
+            const resultado = await respuesta.json();
+            const mensaje = document.getElementById('mensaje');
+
+            if (respuesta.ok) {
+            mensaje.textContent = 'Inicio de sesión exitoso. Redirigiendo...';
+            mensaje.style.color = 'green';
+            setTimeout(() => {
+                window.location.href = resultado.redireccion; // Redirige a la URL proporcionada por el servidor
+            }, 2000);
+            } else {
+            mensaje.textContent = resultado.mensaje;
+            mensaje.style.color = 'red';
+            }
+
+        } catch (error) {
+            console.error('Error en login:', error);
+            document.getElementById('mensaje').textContent = 'Error en el servidor.';
+        }
+        });
+    </script>
+
+</body>
+</html>

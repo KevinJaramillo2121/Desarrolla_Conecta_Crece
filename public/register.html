@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+    <meta charset="UTF-8">
+    <title>Registro de Participante</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        label { display: block; margin-top: 10px; }
+        input, select { width: 300px; padding: 5px; margin-top: 5px; }
+        button { margin-top: 15px; padding: 10px 20px; }
+    </style>
+    </head>
+<body>
+
+    <h1>Formulario de Registro - Participante</h1>
+
+    <form id="formularioRegistro">
+
+        <h3>Datos del Usuario</h3>
+        <label>Nombre de usuario:
+        <input type="text" name="nombre_usuario" required>
+        </label>
+
+        <label>Correo electrónico:
+        <input type="email" name="correo" required>
+        </label>
+
+        <label>Contraseña:
+        <input type="password" name="password" required>
+        </label>
+
+        <label>Nombre completo del representante:
+        <input type="text" name="nombre_completo" required>
+        </label>
+
+        <h3>Datos de la Empresa</h3>
+
+        <label>Nombre legal:
+        <input type="text" name="nombre_legal" required>
+        </label>
+
+        <label>NIT:
+        <input type="text" name="nit" required>
+        </label>
+
+        <label>¿Es persona jurídica?
+        <select name="persona_juridica" required>
+            <option value="true">Sí</option>
+            <option value="false">No</option>
+        </select>
+        </label>
+
+        <label>Tipo de empresa:
+        <select name="tipo_empresa" required>
+            <option value="Micro">Micro</option>
+            <option value="Pequeña">Pequeña</option>
+            <option value="Mediana">Mediana</option>
+        </select>
+        </label>
+
+        <label>Representante legal:
+        <input type="text" name="representante" required>
+        </label>
+
+        <label>Cédula del representante:
+        <input type="text" name="cedula_representante" required>
+        </label>
+
+        <label>Teléfono de contacto:
+        <input type="text" name="telefono_contacto" required>
+        </label>
+
+        <label>Municipio:
+        <input type="text" name="municipio" required>
+        </label>
+
+        <label>Dirección:
+        <input type="text" name="direccion" required>
+        </label>
+
+        <label>¿Está ubicada fuera del Valle de Aburrá?
+        <select name="fuera_valle" required>
+            <option value="true">Sí</option>
+            <option value="false">No</option>
+        </select>
+        </label>
+
+        <label>¿Afiliada a Comfama?
+        <select name="afiliada_comfama" required>
+            <option value="true">Sí</option>
+            <option value="false">No</option>
+        </select>
+        </label>
+
+        <label>¿Tiene al menos un trabajador afiliado?
+        <select name="tiene_trabajador" required>
+            <option value="true">Sí</option>
+            <option value="false">No</option>
+        </select>
+        </label>
+
+        <button type="submit">Registrarse</button>
+    </form>
+    <div id="mensaje" style="margin-top: 20px; font-weight: bold;"></div>
+
+    <script>
+        document.getElementById('formularioRegistro').addEventListener('submit', async function (e) {
+        e.preventDefault(); // Evita el envío tradicional
+
+        const form = e.target;
+        const datos = new FormData(form);
+        const body = Object.fromEntries(datos.entries());
+
+        // Convertir valores booleanos que vienen como strings
+        body.persona_juridica = body.persona_juridica === "true";
+        body.fuera_valle = body.fuera_valle === "true";
+        body.afiliada_comfama = body.afiliada_comfama === "true";
+        body.tiene_trabajador = body.tiene_trabajador === "true";
+
+        try {
+            const respuesta = await fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+            });
+
+            const resultado = await respuesta.json();
+            const mensaje = document.getElementById('mensaje');
+
+            if (respuesta.ok) {
+            mensaje.textContent = 'Registro exitoso. Redirigiendo al login...';
+            mensaje.style.color = 'green';
+            setTimeout(() => {
+                window.location.href = '/login.html'; // Redirige después de 2 segundos
+            }, 2000);
+            } else {
+            mensaje.textContent = resultado.mensaje || 'Error al registrar.';
+            mensaje.style.color = 'red';
+            }
+
+        } catch (error) {
+            console.error('Error en fetch:', error);
+            const mensaje = document.getElementById('mensaje');
+            mensaje.textContent = 'Error en el servidor.';
+            mensaje.style.color = 'red';
+        }
+        });
+    </script>
+
+</body>
+</html>
