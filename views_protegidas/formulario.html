@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
 <meta charset="utf-8"/>
@@ -79,17 +78,17 @@
         .file-upload {
             margin: 10px 0;
         }
-    </style>
+</style>
 </head>
 <body>
-<!-- views_protegidas/formulario_actualizado.html -->
 <div id="reloj-convocatoria" style="font-weight: bold; font-size: 18px; margin-bottom: 20px;">
 Cargando fecha de cierre...
 </div>
 <div class="container">
 <h1>Formulario de Inscripción: Desarrolla, Conecta y Crece</h1>
 <p><strong>Convocatoria dirigida a MiPymes agroalimentarias afiliadas a Comfama ubicadas en Antioquia</strong></p>
-<form id="inscripcionForm">
+
+<form id="inscripcionForm" enctype="multipart/form-data">
 <!-- Sección 1: Información general de la empresa -->
 <div class="form-section">
 <h2>1. Información general de la empresa</h2>
@@ -184,6 +183,7 @@ Cargando fecha de cierre...
 </div>
 </div>
 </div>
+
 <!-- Sección 2: Producto o proyecto a postular -->
 <div class="form-section">
 <h2>2. Producto o proyecto a postular</h2>
@@ -218,6 +218,7 @@ Cargando fecha de cierre...
 <label class="required" for="mercado_objetivo">¿Cuál es el público o mercado objetivo de este producto?</label>
 <textarea id="mercado_objetivo" name="mercado_objetivo" required=""></textarea>
 </div>
+
 <h3>2.2. Brechas que desea cerrar</h3>
 <p>Por favor describa las brechas o necesidades que su empresa ha identificado en relación con su producto.</p>
 <div class="form-group">
@@ -228,7 +229,6 @@ Cargando fecha de cierre...
 </div>
 <textarea id="brecha_tecnica_desc" name="brecha_tecnica_desc" placeholder="¿Qué desafíos técnicos presenta actualmente su producto? ¿Qué desea validar, reformular o mejorar? ¿Existen dificultades relacionadas con la estabilidad del producto, la textura, sabor, color, vida útil u otra propiedad?"></textarea>
 </div>
-<!-- Repetir para las otras brechas -->
 <div class="form-group">
 <label><strong>2. Brechas en el cumplimiento normativo:</strong></label>
 <div class="checkbox-group">
@@ -266,6 +266,7 @@ Cargando fecha de cierre...
 <textarea id="otras_brechas" name="otras_brechas"></textarea>
 </div>
 </div>
+
 <!-- Sección 7: Proyección estratégica -->
 <div class="form-section">
 <h2>7. Proyección estratégica del producto</h2>
@@ -283,6 +284,7 @@ Cargando fecha de cierre...
 <textarea id="compromisos" name="compromisos" required=""></textarea>
 </div>
 </div>
+
 <!-- Sección 8: Motivación y expectativas -->
 <div class="form-section">
 <h2>8. Motivación y expectativas</h2>
@@ -304,8 +306,8 @@ Cargando fecha de cierre...
 </div>
 </div>
 </div>
+
 <!-- Sección 9: Documentos requeridos -->
-<form id="inscripcionForm" enctype="multipart/form-data">
 <div class="form-section">
 <h2>9. Documentos requeridos (adjuntar)</h2>
 <div class="form-group">
@@ -318,12 +320,6 @@ Cargando fecha de cierre...
 <label class="required" for="rut">RUT actualizado:</label>
 <div class="file-upload">
 <input id="rut" name="rut" required="" type="file"/>
-</div>
-</div>
-<div class="form-group">
-<label for="certificado_tamano_file">Certificado de tamaño empresarial:</label>
-<div class="file-upload">
-<input id="certificado_tamano_file" name="certificado_tamano_file" type="file" accept=".pdf"/>
 </div>
 </div>
 <div class="form-group">
@@ -345,7 +341,7 @@ Cargando fecha de cierre...
 </div>
 </div>
 </div>
-</form>
+
 <!-- Sección 10: Declaración -->
 <div class="form-section">
 <h2>10. Declaración</h2>
@@ -367,67 +363,14 @@ Cargando fecha de cierre...
 <input id="fecha_declaracion" name="fecha_declaracion" required="" type="date"/>
 </div>
 </div>
-<div class="form-group">
-</div>
 
 <div style="margin-top: 20px;">
     <button type="button" id="btn-guardar-borrador">💾 Guardar como borrador</button>
     <button type="button" id="btn-enviar">✅ Enviar postulación</button>
 </div>
 
-
 </form>
 </div>
-
-<script>
-    document.getElementById('inscripcionForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const form = e.target;
-    const formData = new FormData(form);
-    const datos = Object.fromEntries(formData.entries());
-
-    // Convertir radios y checks de string a boolean
-    ['persona_juridica', 'fuera_valle', 'afiliada_comfama', 'tiene_trabajador', 'disponibilidad'].forEach(campo => {
-        if (datos[campo]) datos[campo] = datos[campo] === "true";
-    });
-
-    // Añadir las brechas seleccionadas
-    const brechasSeleccionadas = Array.from(document.querySelectorAll('input[name="brechas[]"]:checked'))
-        .map(b => b.value);
-    datos.brechas = brechasSeleccionadas;
-
-    // Adjuntar las descripciones de brechas
-    if (datos.brechas.includes('Brechas técnicas')) datos.brecha_tecnica_desc = formData.get('brecha_tecnica_desc');
-    if (datos.brechas.includes('Brechas normativas')) datos.brecha_normativa_desc = formData.get('brecha_normativa_desc');
-    if (datos.brechas.includes('Brechas de calidad')) datos.brecha_calidad_desc = formData.get('brecha_calidad_desc');
-    if (datos.brechas.includes('Brechas de empaque')) datos.brecha_empaque_desc = formData.get('brecha_empaque_desc');
-    if (datos.brechas.includes('Brechas de mercado')) datos.brecha_mercado_desc = formData.get('brecha_mercado_desc');
-    datos.otras_brechas = formData.get('otras_brechas');
-
-    // Validar coincidencia de cédulas
-    if (formData.get('cedula_representante') !== formData.get('cedula_representante_declaracion')) {
-        alert('El número de cédula en la declaración no coincide con el proporcionado anteriormente.');
-        return;
-    }
-
-    try {
-        const res = await fetch('/participante/formulario', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(datos)
-        });
-
-        const resultado = await res.json();
-        alert(resultado.mensaje);
-
-        if (res.ok) form.reset();
-    } catch (error) {
-        alert('Error al enviar el formulario.');
-        console.error(error);
-    }
-    });
-</script>
 
 <script>
     async function obtenerFechaCierre() {
@@ -473,86 +416,18 @@ Cargando fecha de cierre...
     }
 
     async function validarEstadoPostulacion() {
-        const res = await fetch('/participante/estado-postulacion');
-        const data = await res.json();
-        if (data.estado === 'enviado') {
-            document.getElementById('reloj-convocatoria').textContent = '✅ Ya enviaste tu postulación.';
-            const formulario = document.getElementById('inscripcionForm');
-            formulario.querySelectorAll('input, textarea, select, button').forEach(elem => {
-                elem.disabled = true;
-            });
-        }
-    }
-
-    async function guardarComoBorrador() {
-        const datos = recolectarDatosDelFormulario();
-        const res = await fetch('/participante/guardar-borrador', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datos)
-        });
-        const data = await res.json();
-        alert(data.mensaje || data.error);
-    }
-
-    async function enviarPostulacion() {
-        const confirmacion = confirm('¿Estás seguro de enviar tu postulación? Ya no podrás modificarla.');
-        if (!confirmacion) return;
-
-        const form = document.getElementById('inscripcionForm');
-        const formData = new FormData(form);
-
-        // Construir los objetos complejos
-        const producto_info = {
-            nombre: document.getElementById('nombre_producto').value,
-            descripcion: document.getElementById('descripcion_producto').value,
-            estado_producto: document.querySelector('input[name="estado_producto"]:checked')?.value || '',
-            mercado_objetivo: document.getElementById('mercado_objetivo').value
-        };
-
-        const brechas = {
-            tecnicas: document.getElementById('brecha_tecnica_desc').value,
-            normativas: document.getElementById('brecha_normativa_desc').value,
-            calidad: document.getElementById('brecha_calidad_desc').value,
-            empaque: document.getElementById('brecha_empaque_desc').value,
-            mercado: document.getElementById('brecha_mercado_desc').value,
-            otras: document.getElementById('otras_brechas').value
-        };
-
-        const motivacion = {
-            vision: document.getElementById('vision_producto').value,
-            impacto: document.getElementById('impacto_empresa').value,
-            compromisos: document.getElementById('compromisos').value,
-            motivo: document.getElementById('motivacion').value,
-            expectativa: document.getElementById('expectativas').value,
-            disponible: document.querySelector('input[name="disponibilidad"]:checked')?.value === 'true'
-        };
-
-        // Validar cédulas coincidentes
-        if (
-            document.getElementById('cedula_representante').value !==
-            document.getElementById('cedula_representante_declaracion').value
-        ) {
-            alert('El número de cédula en la declaración no coincide con el proporcionado anteriormente.');
-            return;
-        }
-
-        // Agregar objetos como JSON al FormData
-        formData.append('producto_info', JSON.stringify(producto_info));
-        formData.append('brechas', JSON.stringify(brechas));
-        formData.append('motivacion', JSON.stringify(motivacion));
-
         try {
-            const res = await fetch('/participante/enviar-postulacion', {
-                method: 'POST',
-                body: formData
-            });
+            const res = await fetch('/participante/estado-postulacion');
             const data = await res.json();
-            alert(data.mensaje || data.error);
-            if (res.ok) location.reload();
+            if (data.estado === 'enviado') {
+                document.getElementById('reloj-convocatoria').textContent = '✅ Ya enviaste tu postulación.';
+                const formulario = document.getElementById('inscripcionForm');
+                formulario.querySelectorAll('input, textarea, select, button').forEach(elem => {
+                    elem.disabled = true;
+                });
+            }
         } catch (error) {
-            alert('Error al enviar la postulación.');
-            console.error(error);
+            console.error('Error al validar estado:', error);
         }
     }
 
@@ -583,6 +458,130 @@ Cargando fecha de cierre...
         };
     }
 
+    async function guardarComoBorrador() {
+    try {
+        const producto_info = {
+            nombre: document.getElementById('nombre_producto').value || '',
+            descripcion: document.getElementById('descripcion_producto').value || '',
+            estado_producto: document.querySelector('input[name="estado_producto"]:checked')?.value || '',
+            mercado_objetivo: document.getElementById('mercado_objetivo').value || ''
+        };
+
+        const brechas = {
+            tecnicas: document.getElementById('brecha_tecnica_desc').value || '',
+            normativas: document.getElementById('brecha_normativa_desc').value || '',
+            calidad: document.getElementById('brecha_calidad_desc').value || '',
+            empaque: document.getElementById('brecha_empaque_desc').value || '',
+            mercado: document.getElementById('brecha_mercado_desc').value || '',
+            otras: document.getElementById('otras_brechas').value || ''
+        };
+
+        const motivacion = {
+            vision: document.getElementById('vision_producto').value || '',
+            impacto: document.getElementById('impacto_empresa').value || '',
+            compromisos: document.getElementById('compromisos').value || '',
+            motivo: document.getElementById('motivacion').value || '',
+            expectativa: document.getElementById('expectativas').value || '',
+            disponible: document.querySelector('input[name="disponibilidad"]:checked')?.value === 'true'
+        };
+
+        const datos = {
+            producto_info: JSON.stringify(producto_info),
+            brechas: JSON.stringify(brechas),
+            motivacion: JSON.stringify(motivacion)
+        };
+
+        console.log('Guardando borrador:', datos);
+
+        const res = await fetch('/participante/guardar-borrador', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        });
+        const data = await res.json();
+        alert(data.mensaje || data.error);
+    } catch (error) {
+        alert('Error al guardar borrador.');
+        console.error(error);
+    }
+}
+
+
+    async function enviarPostulacion() {
+    const confirmacion = confirm('¿Estás seguro de enviar tu postulación? Ya no podrás modificarla.');
+    if (!confirmacion) return;
+
+    // Validar cédulas coincidentes
+    const cedula1 = document.getElementById('cedula_representante').value;
+    const cedula2 = document.getElementById('cedula_representante_declaracion').value;
+    if (cedula1 !== cedula2) {
+        alert('El número de cédula en la declaración no coincide con el proporcionado anteriormente.');
+        return;
+    }
+
+    try {
+        const form = document.getElementById('inscripcionForm');
+        const formData = new FormData(form);
+
+        // Construir los objetos complejos
+        const producto_info = {
+            nombre: document.getElementById('nombre_producto').value || '',
+            descripcion: document.getElementById('descripcion_producto').value || '',
+            estado_producto: document.querySelector('input[name="estado_producto"]:checked')?.value || '',
+            mercado_objetivo: document.getElementById('mercado_objetivo').value || ''
+        };
+
+        const brechas = {
+            tecnicas: document.getElementById('brecha_tecnica_desc').value || '',
+            normativas: document.getElementById('brecha_normativa_desc').value || '',
+            calidad: document.getElementById('brecha_calidad_desc').value || '',
+            empaque: document.getElementById('brecha_empaque_desc').value || '',
+            mercado: document.getElementById('brecha_mercado_desc').value || '',
+            otras: document.getElementById('otras_brechas').value || ''
+        };
+
+        const motivacion = {
+            vision: document.getElementById('vision_producto').value || '',
+            impacto: document.getElementById('impacto_empresa').value || '',
+            compromisos: document.getElementById('compromisos').value || '',
+            motivo: document.getElementById('motivacion').value || '',
+            expectativa: document.getElementById('expectativas').value || '',
+            disponible: document.querySelector('input[name="disponibilidad"]:checked')?.value === 'true'
+        };
+
+        // IMPORTANTE: Limpiar los campos del FormData para evitar duplicados
+        formData.delete('producto_info');
+        formData.delete('brechas');
+        formData.delete('motivacion');
+
+        // Agregar objetos como strings JSON válidos
+        formData.append('producto_info', JSON.stringify(producto_info));
+        formData.append('brechas', JSON.stringify(brechas));
+        formData.append('motivacion', JSON.stringify(motivacion));
+
+        console.log('Datos enviados:');
+        console.log('producto_info:', JSON.stringify(producto_info));
+        console.log('brechas:', JSON.stringify(brechas));
+        console.log('motivacion:', JSON.stringify(motivacion));
+
+        const res = await fetch('/participante/enviar-postulacion', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await res.json();
+        alert(data.mensaje || data.error);
+        if (res.ok) location.reload();
+    } catch (error) {
+        alert('Error al enviar la postulación.');
+        console.error(error);
+    }
+}
+
+    // Habilitar campo "Otro" cuando se selecciona
+    document.getElementById('estado_otro').addEventListener('change', function() {
+        document.getElementById('estado_otro_texto').disabled = !this.checked;
+    });
+
     document.addEventListener('DOMContentLoaded', async () => {
         await validarEstadoPostulacion();
 
@@ -593,7 +592,6 @@ Cargando fecha de cierre...
         document.getElementById('btn-enviar').addEventListener('click', enviarPostulacion);
     });
 </script>
-
 
 </body>
 </html>

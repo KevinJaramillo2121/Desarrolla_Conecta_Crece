@@ -27,7 +27,7 @@ pgdata/
 uploads/
 *.pdf
 *.docx
-*.xlsx
+*.xlsx 
 *.jpg
 *.png
 *.jpeg
