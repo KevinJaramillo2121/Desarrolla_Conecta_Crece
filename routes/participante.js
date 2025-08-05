@@ -1,85 +1,63 @@
+
 const express = require('express');
 const router = express.Router();
 const path = require('path');
 const protegerRuta = require('../middlewares/authMiddleware');
-const pool = require('../db'); // ✅ USAR CONFIGURACIÓN CENTRALIZADA
+const pool = require('../db');
 const multer = require('multer');
 const fs = require('fs');
 
-// Crear directorio uploads si no existe
-const uploadsDir = 'uploads';
+// 1. Definir uploadsDir como ruta absoluta
+const uploadsDir = path.resolve(__dirname, '..', 'uploads');
 if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Configuración mejorada de Multer para archivos
+// 2. Configuración de Multer usando uploadsDir
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
+    destination: (req, file, cb) => cb(null, uploadsDir),
     filename: (req, file, cb) => {
-        // Sanitizar nombre de archivo
-        const sanitizedName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
-        cb(null, Date.now() + '-' + sanitizedName);
+        const sanitized = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
+        cb(null, Date.now() + '-' + sanitized);
     }
 });
-
-// Filtro de archivos permitidos
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = [
+    const allowed = [
         'application/pdf',
-        'image/jpeg',
-        'image/jpg', 
-        'image/png',
+        'image/jpeg','image/jpg','image/png',
         'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     ];
-    
-    if (allowedTypes.includes(file.mimetype)) {
-        cb(null, true);
-    } else {
-        cb(new Error('Tipo de archivo no permitido'), false);
-    }
+    cb(null, allowed.includes(file.mimetype));
 };
-
-const upload = multer({ 
-    storage: storage,
-    limits: {
-        fileSize: 20 * 1024 * 1024 // 20MB máximo
-    },
-    fileFilter: fileFilter
-}).fields([
-    { name: 'camara_comercio', maxCount: 1 },
-    { name: 'rut', maxCount: 1 },
-    { name: 'certificado_tamano_file', maxCount: 1 },
-    { name: 'afiliacion_comfama', maxCount: 1 },
-    { name: 'hoja_vida', maxCount: 1 },
-    { name: 'otros_documentos', maxCount: 1 }
-]);
+const upload = multer({ storage, limits:{ fileSize:20*1024*1024 }, fileFilter })
+    .fields([
+        { name:'camara_comercio', maxCount:1 },
+        { name:'rut', maxCount:1 },
+        { name:'certificado_tamano_file', maxCount:1 },
+        { name:'afiliacion_comfama', maxCount:1 },
+        { name:'hoja_vida', maxCount:1 },
+        { name:'otros_documentos', maxCount:1 }
+    ]);
 
 // Vista principal del participante
 router.get('/', protegerRuta('Participante'), (req, res) => {
-    const filePath = path.resolve(__dirname, '../views_protegidas/participante.html');
-    res.sendFile(filePath);
+    res.sendFile(path.resolve(__dirname, '../views_protegidas/participante.html'));
 });
 
 // Vista del formulario
 router.get('/formulario', protegerRuta('Participante'), async (req, res) => {
     const user = req.session.usuario;
-    
     if (!user.empresaId) {
         return res.send('Debes completar el registro de tu empresa antes de continuar.');
     }
-    
-    const yaPostulo = await pool.query(
-        'SELECT * FROM postulaciones WHERE empresa_id = $1 AND estado = $2',
+    const { rows } = await pool.query(
+        'SELECT 1 FROM postulaciones WHERE empresa_id=$1 AND estado=$2',
         [user.empresaId, 'enviado']
     );
-    
-    if (yaPostulo.rows.length > 0) {
+    if (rows.length) {
         return res.send('Ya enviaste tu postulación. No puedes modificarla.');
     }
-    
     res.sendFile(path.resolve(__dirname, '../views_protegidas/formulario.html'));
 });
 
