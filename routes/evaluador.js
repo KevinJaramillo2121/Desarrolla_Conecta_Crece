@@ -78,9 +78,9 @@ router.post('/evaluador/evaluar', protegerRuta('Evaluador'), async (req, res) =>
 // 💡 Nueva ruta para obtener la lista de documentos de una empresa
 router.get('/documentos/:empresaId', protegerRuta('Evaluador'), async (req, res) => {
     const { empresaId } = req.params;
-
     try {
-        const result = await pool.query('SELECT id, nombre_original FROM documentos WHERE id_empresa = $1', [empresaId]);
+        // ✅ CAMBIAR id_empresa por empresa_id
+        const result = await pool.query('SELECT id, nombre_original FROM documentos WHERE empresa_id = $1', [empresaId]);
         res.json(result.rows);
     } catch (error) {
         console.error('Error al obtener documentos para la empresa:', error);
