@@ -53,6 +53,32 @@ router.get('/postulaciones', protegerRuta('Administrador'), async (req, res) => 
         res.status(500).json({ error: 'Error del servidor' });
     }
 });
-
+    router.post('/evaluadores', protegerRuta('Administrador'), async (req, res) => {
+    const { nombre_usuario, correo, password, nombre_completo } = req.body;
+    if (!nombre_usuario || !correo || !password || !nombre_completo) {
+        return res.status(400).json({ error: 'Faltan campos obligatorios.' });
+    }
+    try {
+        // Obtener rol Evaluador
+        const rolRes = await pool.query(
+        "SELECT id FROM roles WHERE nombre = 'Evaluador'"
+        );
+        const rol_id = rolRes.rows[0].id;
+        // Hashear contraseña
+        const bcrypt = require('bcrypt');
+        const hash = await bcrypt.hash(password, 10);
+        // Insertar usuario
+        await pool.query(
+        `INSERT INTO usuarios (
+            nombre_usuario, correo, password_hash, nombre_completo, rol_id
+        ) VALUES ($1,$2,$3,$4,$5)`,
+        [nombre_usuario, correo, hash, nombre_completo, rol_id]
+        );
+        res.json({ mensaje: 'Evaluador creado exitosamente.' });
+    } catch (error) {
+        console.error('Error creando evaluador:', error);
+        res.status(500).json({ error: 'Error del servidor.' });
+    }
+    });
 
 module.exports = router;

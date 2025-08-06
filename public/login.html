@@ -1,67 +1,240 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
+<head>
     <meta charset="UTF-8">
-    <title>Login - Desarrolla, Conecta y Crece</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        label { display: block; margin-top: 10px; }
-        input { width: 300px; padding: 5px; margin-top: 5px; }
-        button { margin-top: 15px; padding: 10px 20px; }
-    </style>
-    </head>
-    <body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Desarrolla, Conecta y Crece | Comfama & Aoxlab</title>
+    <link rel="stylesheet" href="../css/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Aller:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background decorativo -->
+    <div class="background-decoration">
+        <div class="decoration-circle circle-1"></div>
+        <div class="decoration-circle circle-2"></div>
+        <div class="decoration-circle circle-3"></div>
+    </div>
 
-    <h1>Iniciar Sesión</h1>
+    <!-- Header con branding -->
+    <header class="login-header">
+        <div class="header-content">
+            <div class="brand-partnership">
+                <div class="brand-logos">
+                    <img src="img/logo-comfama.png" alt="Comfama" class="logo-comfama">
+                    <div class="partnership-symbol">×</div>
+                    <img src="img/logo-aoxlab.jpg" alt="Aoxlab" class="logo-aoxlab">
+                </div>
+                <div class="program-info">
+                    <h1>Desarrolla, Conecta y Crece</h1>
+                    <p>Plataforma de Convocatorias MiPymes Agroalimentarias</p>
+                </div>
+            </div>
+        </div>
+    </header>
 
-    <form id="formLogin">
-        <label>Nombre de usuario:
-        <input type="text" name="nombre_usuario" required>
-        </label>
+    <!-- Contenedor principal -->
+    <main class="login-main">
+        <div class="login-container">
+            
+            <!-- Card de login -->
+            <div class="login-card">
+                <div class="login-card-header">
+                    <div class="login-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 13.5C14.76 13.86 14.4 14.22 14 14.22C13.6 14.22 13.24 13.86 13 13.5L7.91 8.41C7.66 8.15 7.66 7.73 7.91 7.47L9 6.38C9.28 6.1 9.72 6.1 10 6.38L12 8.38L17 3.38C17.28 3.1 17.72 3.1 18 3.38L21 6.38V9Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="login-title">
+                        <h2>Iniciar Sesión</h2>
+                        <p>Accede a tu cuenta para continuar</p>
+                    </div>
+                </div>
 
-        <label>Contraseña:
-        <input type="password" name="password" required>
-        </label>
+                <div class="login-card-body">
+                    <!-- Mensajes de estado -->
+                    <div id="mensaje" class="message-container" style="display: none;">
+                        <div class="message-icon">
+                            <span class="icon-success">✓</span>
+                            <span class="icon-error">⚠</span>
+                            <span class="icon-loading">
+                                <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                                        <animate attributeName="stroke-dashoffset" dur="2s" values="31.416;0" repeatCount="indefinite"/>
+                                        <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416;0 31.416" repeatCount="indefinite"/>
+                                    </circle>
+                                </svg>
+                            </span>
+                        </div>
+                        <span class="message-text"></span>
+                    </div>
 
-        <button type="submit">Ingresar</button>
-    </form>
+                    <!-- Formulario -->
+                    <form id="formLogin" class="login-form" action="/login" method="POST" novalidate>
+                        <div class="input-group">
+                            <label for="usuario" class="form-label">Usuario</label>
+                            <div class="input-wrapper">
+                                <div class="input-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
+                                    </svg>
+                                </div>
+                                <input 
+                                    id="usuario" 
+                                    name="nombre_usuario" 
+                                    type="text" 
+                                    class="form-input" 
+                                    placeholder="Ingresa tu nombre de usuario"
+                                    required 
+                                    autocomplete="username"
+                                />
+                            </div>
+                            <div class="input-error" id="usuario-error"></div>
+                        </div>
 
-    <div id="mensaje" style="margin-top: 20px; font-weight: bold;"></div>
+                        <div class="input-group">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <div class="input-wrapper">
+                                <div class="input-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18 8H17V6C17 3.24 14.76 1 12 1S7 3.24 7 6V8H6C4.9 8 4 8.9 4 10V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V10C20 8.9 19.1 8 18 8ZM12 17C10.9 17 10 16.1 10 15S10.9 13 12 13 14 13.9 14 15 13.1 17 12 17ZM15.1 8H8.9V6C8.9 4.29 10.29 2.9 12 2.9S15.1 4.29 15.1 6V8Z" fill="currentColor"/>
+                                    </svg>
+                                </div>
+                                <input 
+                                    id="password" 
+                                    name="password" 
+                                    type="password" 
+                                    class="form-input" 
+                                    placeholder="Ingresa tu contraseña"
+                                    required 
+                                    autocomplete="current-password"
+                                />
+                                <button type="button" class="password-toggle" id="togglePassword">
+                                    <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12C2.73 16.39 7 19.5 12 19.5S21.27 16.39 23 12C21.27 7.61 17 4.5 12 4.5ZM12 17C9.24 17 7 14.76 7 12S9.24 7 12 7S17 9.24 17 12S14.76 17 12 17ZM12 9C10.34 9 9 10.34 9 12S10.34 15 12 15S15 13.66 15 12S13.66 9 12 9Z" fill="currentColor"/>
+                                    </svg>
+                                    <svg class="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                        <path d="M12 7C9.24 7 7 9.24 7 12C7 12.65 7.13 13.26 7.36 13.82L2.92 18.26C2.53 18.65 2.53 19.28 2.92 19.67C3.31 20.06 3.94 20.06 4.33 19.67L19.67 4.33C20.06 3.94 20.06 3.31 19.67 2.92C19.28 2.53 18.65 2.53 18.26 2.92L16.17 5.01C14.85 4.37 13.47 4.5 12 4.5C7 4.5 2.73 7.61 1 12C1.69 13.24 2.79 14.28 4.17 15.01L12 7Z" fill="currentColor"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="input-error" id="password-error"></div>
+                        </div>
 
-    <script>
-        document.getElementById('formLogin').addEventListener('submit', async function (e) {
-        e.preventDefault();
-        const form = e.target;
-        const datos = new FormData(form);
-        const body = Object.fromEntries(datos.entries());
+                        <div class="form-options">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="recordar" name="recordar">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">Recordar sesión</span>
+                            </label>
+                            <a href="#" class="forgot-password" id="forgotPassword">¿Olvidaste tu contraseña?</a>
+                        </div>
 
-        try {
-            const respuesta = await fetch('/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-            });
+                        <button type="submit" class="btn-login" id="btnLogin">
+                            <span class="btn-text">Iniciar Sesión</span>
+                            <span class="btn-loading" style="display: none;">
+                                <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                                        <animate attributeName="stroke-dashoffset" dur="2s" values="31.416;0" repeatCount="indefinite"/>
+                                        <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416;0 31.416" repeatCount="indefinite"/>
+                                    </circle>
+                                </svg>
+                                Iniciando sesión...
+                            </span>
+                        </button>
+                    </form>
+                </div>
 
-            const resultado = await respuesta.json();
-            const mensaje = document.getElementById('mensaje');
+                <div class="login-card-footer">
+                    <div class="divider">
+                        <span>¿Primera vez aquí?</span>
+                    </div>
+                    <a href="./register.html" class="btn-register">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 12C17.21 12 19 10.21 19 8C19 5.79 17.21 4 15 4C12.79 4 11 5.79 11 8C11 10.21 12.79 12 15 12ZM6 10V7H4V10H1V12H4V15H6V12H9V10M15 14C12.33 14 7 15.34 7 18V20H23V18C23 15.34 17.67 14 15 14Z" fill="currentColor"/>
+                        </svg>
+                        Crear cuenta nueva
+                    </a>
+                </div>
+            </div>
 
-            if (respuesta.ok) {
-            mensaje.textContent = 'Inicio de sesión exitoso. Redirigiendo...';
-            mensaje.style.color = 'green';
-            setTimeout(() => {
-                window.location.href = resultado.redireccion; // Redirige a la URL proporcionada por el servidor
-            }, 2000);
-            } else {
-            mensaje.textContent = resultado.mensaje;
-            mensaje.style.color = 'red';
-            }
+        </div>
 
-        } catch (error) {
-            console.error('Error en login:', error);
-            document.getElementById('mensaje').textContent = 'Error en el servidor.';
-        }
-        });
-    </script>
+        <!-- Panel informativo lateral -->
+        <div class="info-panel">
+            <div class="info-content">
+                <div class="info-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L13.09 5.26L16 6L13.09 6.74L12 10L10.91 6.74L8 6L10.91 5.26L12 2ZM12 14L13.09 17.26L16 18L13.09 18.74L12 22L10.91 18.74L8 18L10.91 17.26L12 14ZM20 12L21.09 15.26L24 16L21.09 16.74L20 20L18.91 16.74L16 16L18.91 15.26L20 12ZM4 12L5.09 15.26L8 16L5.09 16.74L4 20L2.91 16.74L0 16L2.91 15.26L4 12Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h3>Desarrolla, Conecta y Crece</h3>
+                <p>Impulsa el crecimiento de tu empresa agroalimentaria con el acompañamiento técnico especializado de <strong>Aoxlab</strong> y el respaldo de <strong>Comfama</strong>.</p>
+                
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">🔬</div>
+                        <div class="feature-text">
+                            <h4>Análisis Técnico Especializado</h4>
+                            <p>Validación de calidad y cumplimiento normativo</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🚀</div>
+                        <div class="feature-text">
+                            <h4>Bootcamps de Desarrollo</h4>
+                            <p>Capacitación práctica para el crecimiento empresarial</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🌱</div>
+                        <div class="feature-text">
+                            <h4>Acompañamiento Continuo</h4>
+                            <p>Seguimiento personalizado durante todo el proceso</p>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="cta-info">
+                    <p class="cta-text">¿Listo para transformar tu negocio?</p>
+                    <a href="./register.html" class="cta-link">Únete ahora →</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="login-footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Desarrolla, Conecta y Crece. Una alianza entre Aoxlab y Comfama.</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Términos y Condiciones</a>
+                <a href="#" class="footer-link">Política de Privacidad</a>
+                <a href="#" class="footer-link">Soporte</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de recuperación de contraseña -->
+    <div id="forgotPasswordModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Recuperar Contraseña</h3>
+                <button class="modal-close" id="closeForgotModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Ingresa tu correo electrónico y te enviaremos las instrucciones para restablecer tu contraseña.</p>
+                <div class="input-group">
+                    <label for="emailRecuperar" class="form-label">Correo electrónico</label>
+                    <input type="email" id="emailRecuperar" class="form-input" placeholder="tu@correo.com" required>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="cancelForgot">Cancelar</button>
+                <button class="btn-primary" id="sendReset">Enviar instrucciones</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/login.js"></script>
 </body>
 </html>

@@ -3,13 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>Panel del Administrador</title>
-    </head>
-    <body>
-    <h1>Bienvenido, Administrador</h1>
-    <p>Desde aquí puedes gestionar la convocatoria y revisar el estado general.</p>
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <!-- Header con logos corporativos -->
+    <header class="header-bienvenida">
+        <div class="header-content">
+            <div class="logo-corporativo">
+                <!-- Reemplaza con las rutas correctas de tus logos -->
+                <a href="https://www.comfama.com" target="_blank" class="logo-link">
+                    <img src="../img/logo-comfama.png" alt="Comfama" class="logo-comfama">
+                </a>
+                <div class="separador-logos"></div>
+                <a href="https://www.aoxlab.com" target="_blank" class="logo-link">
+                    <img src="../img/logo-aoxlab.jpg" alt="Aoxlab" class="logo-aoxlab">
+                </a>
+            </div>
+        </div>
+    </header>
 
-    <button onclick="window.location.href='/admin/panel'">
-        Ir al Panel de Administración
-    </button>
+    <!-- Tarjeta principal de bienvenida -->
+    <div class="welcome-card">
+        <div class="admin-icon"></div>
+        <h1>Bienvenido, Administrador</h1>
+        <p>Desde aquí puedes gestionar la convocatoria y revisar el estado general del sistema. Todo está preparado para que administres de manera eficiente.</p>
+        
+        <!-- Botón original sin cambios funcionales -->
+        <button onclick="window.location.href='/admin/panel'">
+            Ir al Panel de Administración
+        </button>
+    </div>
+
+    <!-- Indicador de estado del sistema -->
+    <div class="status-indicator">
+        <div class="status-dot"></div>
+        <span>Sistema Activo</span>
+    </div>
+
+    <!-- Footer informativo -->
+    <div class="footer-info">
+        <p>Sistema de Gestión de Convocatorias - Comfama & Aoxlab 2025</p>
+    </div>
 </body>
 </html>

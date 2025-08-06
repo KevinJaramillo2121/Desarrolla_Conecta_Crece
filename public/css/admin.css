@@ -1,0 +1,459 @@
+/* ========================================
+   PANTALLA DE BIENVENIDA - ADMINISTRADOR
+   SISTEMA DE CONVOCATORIAS COMFAMA + AOXLAB
+======================================== */
+
+:root {
+    /* Colores Corporativos Unificados */
+    --magenta-comfama: #D0417E;
+    --magenta-light: #E659A1;
+    --naranja-aoxlab: #F37728;
+    --naranja-light: #FF8A4D;
+    --azul-aoxlab: #2BA1D4;
+    --azul-light: #5CB8E1;
+    --gris-texto: #484547;
+    --negro-fuerte: #231F20;
+    --blanco: #FFFFFF;
+    --gris-claro: #F8F9FD;
+    --gris-card: #FAFBFC;
+    
+    /* Efectos y Sombras */
+    --shadow-principal: 0 8px 32px rgba(208, 65, 126, 0.12);
+    --shadow-tarjeta: 0 4px 20px rgba(72, 69, 71, 0.08);
+    --shadow-boton: 0 6px 20px rgba(243, 119, 40, 0.25);
+    --shadow-hover: 0 12px 40px rgba(208, 65, 126, 0.2);
+    
+    /* Tipografías */
+    --font-principal: 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-titulo: 'Aller', 'Arial Black', 'Helvetica Bold', sans-serif;
+    
+    /* Espaciado Sistémico */
+    --espacio-xs: 8px;
+    --espacio-sm: 16px;
+    --espacio-md: 24px;
+    --espacio-lg: 32px;
+    --espacio-xl: 48px;
+    --espacio-xxl: 64px;
+    
+    /* Bordes y Radio */
+    --radio-suave: 12px;
+    --radio-tarjeta: 16px;
+    --radio-boton: 8px;
+}
+
+/* Reset y Configuración Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: var(--font-principal);
+    line-height: 1.6;
+    background: linear-gradient(135deg, 
+        var(--gris-claro) 0%, 
+        #E8F4F8 50%, 
+        var(--gris-claro) 100%);
+    color: var(--gris-texto);
+    overflow-x: hidden;
+}
+
+/* Fondo Animado con Patrones Sutiles */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(208, 65, 126, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(243, 119, 40, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(43, 161, 212, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Contenedor Principal Centrado */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: var(--espacio-md);
+}
+
+/* Header con Logos Corporativos */
+.header-bienvenida {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(208, 65, 126, 0.1);
+    padding: var(--espacio-sm) 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--espacio-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--espacio-lg);
+}
+
+.logo-corporativo {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-md);
+}
+
+.logo-comfama {
+    height: 48px;
+    width: auto;
+    filter: drop-shadow(0 2px 8px rgba(208, 65, 126, 0.15));
+    transition: transform 0.3s ease;
+}
+
+.logo-aoxlab {
+    height: 42px;
+    width: auto;
+    filter: drop-shadow(0 2px 8px rgba(243, 119, 40, 0.15));
+    transition: transform 0.3s ease;
+}
+
+.logo-corporativo:hover .logo-comfama,
+.logo-corporativo:hover .logo-aoxlab {
+    transform: scale(1.05);
+}
+
+.separador-logos {
+    width: 2px;
+    height: 30px;
+    background: linear-gradient(to bottom, 
+        var(--magenta-comfama) 0%, 
+        var(--naranja-aoxlab) 100%);
+    border-radius: 1px;
+}
+
+/* Tarjeta Principal de Bienvenida */
+.welcome-card {
+    background: var(--blanco);
+    border-radius: var(--radio-tarjeta);
+    padding: var(--espacio-xxl) var(--espacio-xl);
+    box-shadow: var(--shadow-principal);
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    margin-top: var(--espacio-xxl);
+    
+    /* Animación de entrada */
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Decoración de fondo en la tarjeta */
+.welcome-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 30% 20%, rgba(208, 65, 126, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(243, 119, 40, 0.03) 0%, transparent 50%);
+    animation: float 15s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes float {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+}
+
+/* Icono de Administrador */
+.admin-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, 
+        var(--magenta-comfama) 0%, 
+        var(--naranja-aoxlab) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--espacio-lg);
+    box-shadow: var(--shadow-tarjeta);
+    position: relative;
+    z-index: 1;
+}
+
+.admin-icon::after {
+    content: '👨‍💼';
+    font-size: 36px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Títulos y Texto */
+h1 {
+    font-family: var(--font-titulo);
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--negro-fuerte);
+    margin-bottom: var(--espacio-sm);
+    background: linear-gradient(135deg, 
+        var(--magenta-comfama) 0%, 
+        var(--naranja-aoxlab) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 8px rgba(208, 65, 126, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+p {
+    font-size: 1.125rem;
+    color: var(--gris-texto);
+    margin-bottom: var(--espacio-xl);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Botón Principal Mejorado */
+button {
+    background: linear-gradient(135deg, 
+        var(--magenta-comfama) 0%, 
+        var(--magenta-light) 50%, 
+        var(--naranja-aoxlab) 100%);
+    color: var(--blanco);
+    font-family: var(--font-principal);
+    font-size: 1.125rem;
+    font-weight: 700;
+    padding: var(--espacio-sm) var(--espacio-xl);
+    border: none;
+    border-radius: var(--radio-boton);
+    cursor: pointer;
+    box-shadow: var(--shadow-boton);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 1;
+    
+    /* Efecto de brillo interno */
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Efecto hover del botón */
+button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+        var(--shadow-hover),
+        0 0 30px rgba(243, 119, 40, 0.3);
+    animation: none;
+    background: linear-gradient(135deg, 
+        var(--naranja-aoxlab) 0%, 
+        var(--naranja-light) 50%, 
+        var(--magenta-comfama) 100%);
+}
+
+/* Efecto de click */
+button:active {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: var(--shadow-tarjeta);
+}
+
+/* Ripple effect en el botón */
+button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+button:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Indicador de sistema activo */
+.status-indicator {
+    position: absolute;
+    bottom: var(--espacio-md);
+    right: var(--espacio-md);
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-xs);
+    font-size: 0.875rem;
+    color: var(--gris-texto);
+    opacity: 0.7;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(45deg, var(--magenta-comfama), var(--naranja-aoxlab));
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Footer con información del sistema */
+.footer-info {
+    position: absolute;
+    bottom: var(--espacio-md);
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--gris-texto);
+    opacity: 0.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-content {
+        padding: 0 var(--espacio-sm);
+        gap: var(--espacio-sm);
+    }
+    
+    .logo-comfama,
+    .logo-aoxlab {
+        height: 36px;
+    }
+    
+    .welcome-card {
+        margin-top: var(--espacio-xl);
+        padding: var(--espacio-xl) var(--espacio-lg);
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    p {
+        font-size: 1rem;
+    }
+    
+    button {
+        font-size: 1rem;
+        padding: var(--espacio-sm) var(--espacio-lg);
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: var(--espacio-sm);
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: var(--espacio-xs);
+    }
+    
+    .separador-logos {
+        width: 30px;
+        height: 2px;
+    }
+    
+    .welcome-card {
+        padding: var(--espacio-lg) var(--espacio-md);
+    }
+    
+    h1 {
+        font-size: 1.75rem;
+    }
+    
+    .admin-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .admin-icon::after {
+        font-size: 28px;
+    }
+}
+
+/* Estados de carga y feedback */
+.loading button {
+    pointer-events: none;
+    opacity: 0.7;
+    background: var(--gris-texto);
+}
+
+.loading button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid var(--blanco);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Accesibilidad */
+button:focus {
+    outline: 3px solid rgba(208, 65, 126, 0.5);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

@@ -37,7 +37,9 @@ const upload = multer({ storage, limits:{ fileSize:20*1024*1024 }, fileFilter })
         { name:'certificado_tamano_file', maxCount:1 },
         { name:'afiliacion_comfama', maxCount:1 },
         { name:'hoja_vida', maxCount:1 },
-        { name:'otros_documentos', maxCount:1 }
+        { name:'otros_documentos', maxCount:1 },
+        { name: 'firma_digital',           maxCount: 1 }
+        
     ]);
 
 // Vista principal del participante

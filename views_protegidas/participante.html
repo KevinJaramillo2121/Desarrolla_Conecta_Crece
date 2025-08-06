@@ -1,15 +1,295 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
+<head>
     <meta charset="UTF-8">
-    <title>Panel de Participante</title>
-    </head>
-    <body>
-    <h1>Bienvenido, Participante</h1>
-    <p>Desde aquí puedes acceder al formulario de inscripción.</p>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Participante - Sistema de Convocatorias</title>
+    <link rel="stylesheet" href="../css/participante.css">
+</head>
+<body>
+    <!-- Header Principal -->
+    <header class="participant-header">
+        <div class="header-container">
+            <div class="header-brand">
+                <div class="brand-logos">
+                    <img src="../img/logo-comfama.png" alt="Comfama company logo featuring stylized text Comfama in bold letters, set against a clean background that conveys a professional and welcoming atmosphere" class="logo-comfama">
+                    <div class="brand-separator">+</div>
+                    <img src="../img/logo-aoxlab.jpg" alt="Aoxlab company logo with stylized text Aoxlab, set against a clean background, conveying a professional and innovative atmosphere" class="logo-aoxlab">
+                </div>
+                <div class="brand-text">
+                    <h1>Portal del Participante</h1>
+                    <p>Sistema de Gestión de Convocatorias</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="user-info">
+                    <div class="user-avatar">👤</div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Participante</span>
+                        <span class="user-role">Empresa Postulante</span>
+                    </div>
+                </div>
+                <button class="btn-logout" onclick="logout()">
+                    <span class="btn-icon">🚪</span>
+                    Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </header>
 
-    <button onclick="window.location.href='/participante/formulario'">
-        Diligenciar Formulario
-    </button>
+    <!-- Contenedor Principal -->
+    <div class="main-container">
+        <!-- Bienvenida -->
+        <section class="welcome-section">
+            <div class="welcome-content">
+                <div class="welcome-text">
+                    <h2>¡Bienvenido al Portal de Convocatorias!</h2>
+                    <p>Desde aquí puedes gestionar tu postulación, consultar el estado de tu aplicación y acceder a toda la información necesaria para participar en nuestra convocatoria.</p>
+                </div>
+                <div class="welcome-graphic">
+                    <div class="graphic-circle">
+                        <div class="graphic-icon">🎯</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Panel de Estado -->
+        <section class="status-panel">
+            <div class="status-card main-status">
+                <div class="status-header">
+                    <h3>Estado de tu Postulación</h3>
+                    <div class="status-refresh" onclick="checkApplicationStatus()">
+                        <span class="refresh-icon">🔄</span>
+                    </div>
+                </div>
+                <div class="status-content">
+                    <div class="status-indicator" id="statusIndicator">
+                        <div class="status-icon pending">⏳</div>
+                        <div class="status-info">
+                            <div class="status-title" id="statusTitle">Verificando estado...</div>
+                            <div class="status-description" id="statusDescription">Cargando información...</div>
+                        </div>
+                    </div>
+                    <div class="status-progress" id="statusProgress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-steps">
+                            <div class="step active" data-step="1">
+                                <div class="step-number">1</div>
+                                <div class="step-label">Registro</div>
+                            </div>
+                            <div class="step" data-step="2">
+                                <div class="step-number">2</div>
+                                <div class="step-label">Postulación</div>
+                            </div>
+                            <div class="step" data-step="3">
+                                <div class="step-number">3</div>
+                                <div class="step-label">Evaluación</div>
+                            </div>
+                            <div class="step" data-step="4">
+                                <div class="step-number">4</div>
+                                <div class="step-label">Resultado</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tarjetas de Acciones -->
+        <section class="actions-section">
+            <div class="actions-grid">
+                <!-- Tarjeta Principal - Formulario -->
+                <div class="action-card primary-card" id="applicationCard">
+                    <div class="card-header">
+                        <div class="card-icon">📝</div>
+                        <div class="card-title">
+                            <h3>Formulario de Postulación</h3>
+                            <p>Completa tu aplicación a la convocatoria</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-features">
+                            <div class="feature">
+                                <span class="feature-icon">✅</span>
+                                <span>Información de la empresa</span>
+                            </div>
+                            <div class="feature">
+                                <span class="feature-icon">📦</span>
+                                <span>Detalles del producto/servicio</span>
+                            </div>
+                            <div class="feature">
+                                <span class="feature-icon">📎</span>
+                                <span>Carga de documentos</span>
+                            </div>
+                        </div>
+                        <div class="card-status" id="applicationStatus">
+                            <span class="status-badge pending">⏳ Pendiente</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary btn-large" onclick="goToApplication()" id="applicationBtn">
+                            <span class="btn-icon">🚀</span>
+                            <span class="btn-text">Diligenciar Formulario</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Documentos -->
+                <div class="action-card">
+                    <div class="card-header">
+                        <div class="card-icon">📋</div>
+                        <div class="card-title">
+                            <h3>Mis Documentos</h3>
+                            <p>Revisa los documentos subidos</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="documents-summary" id="documentsSummary">
+                            <div class="doc-stat">
+                                <div class="doc-number" id="uploadedDocs">-</div>
+                                <div class="doc-label">Subidos</div>
+                            </div>
+                            <div class="doc-separator"></div>
+                            <div class="doc-stat">
+                                <div class="doc-number" id="pendingDocs">-</div>
+                                <div class="doc-label">Pendientes</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-secondary" onclick="checkDocuments()">
+                            <span class="btn-icon">👁️</span>
+                            Ver Documentos
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Convocatoria -->
+                <div class="action-card">
+                    <div class="card-header">
+                        <div class="card-icon">📅</div>
+                        <div class="card-title">
+                            <h3>Información de Convocatoria</h3>
+                            <p>Fechas y requisitos importantes</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="convocatoria-info" id="convocatoriaInfo">
+                            <div class="info-item">
+                                <div class="info-label">Fecha de Cierre:</div>
+                                <div class="info-value" id="fechaCierre">Cargando...</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Días Restantes:</div>
+                                <div class="info-value countdown" id="diasRestantes">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-outline" onclick="showConvocatoriaDetails()">
+                            <span class="btn-icon">ℹ️</span>
+                            Ver Detalles
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Ayuda -->
+                <div class="action-card">
+                    <div class="card-header">
+                        <div class="card-icon">❓</div>
+                        <div class="card-title">
+                            <h3>Centro de Ayuda</h3>
+                            <p>Encuentra respuestas y soporte</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="help-options">
+                            <div class="help-item" onclick="showFAQ()">
+                                <span class="help-icon">📚</span>
+                                <span>Preguntas Frecuentes</span>
+                            </div>
+                            <div class="help-item" onclick="contactSupport()">
+                                <span class="help-icon">💬</span>
+                                <span>Contactar Soporte</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-outline" onclick="downloadGuide()">
+                            <span class="btn-icon">📥</span>
+                            Descargar Guía
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Noticias/Actualizaciones -->
+        <section class="news-section">
+            <div class="section-header">
+                <h3>Actualizaciones y Noticias</h3>
+                <button class="btn-text" onclick="loadNews()">Ver todas</button>
+            </div>
+            <div class="news-grid" id="newsGrid">
+                <!-- Las noticias se cargarán dinámicamente -->
+                <div class="news-item">
+                    <div class="news-icon">📢</div>
+                    <div class="news-content">
+                        <div class="news-title">¡Convocatoria Abierta!</div>
+                        <div class="news-description">Ya puedes completar tu postulación. No olvides revisar todos los requisitos.</div>
+                        <div class="news-date">Hace 2 días</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="participant-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <p>📞 Línea de atención: (604) 444-0000</p>
+                <p>📧 Email: convocatorias@comfama.com</p>
+            </div>
+            <div class="footer-section">
+                <h4>Horarios de Atención</h4>
+                <p>🕒 Lunes a Viernes: 8:00 AM - 6:00 PM</p>
+                <p>🕒 Sábados: 8:00 AM - 12:00 PM</p>
+            </div>
+            <div class="footer-section">
+                <h4>Seguimiento</h4>
+                <p>Consulta el estado de tu postulación en cualquier momento desde este panel.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Comfama + Aoxlab. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Modal para información adicional -->
+    <div id="infoModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Información</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+
+    <script src="../js/participante.js"></script>
 </body>
 </html>

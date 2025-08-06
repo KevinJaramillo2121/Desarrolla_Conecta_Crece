@@ -2,14 +2,92 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel de Evaluador</title>
-    </head>
-    <body>
-    <h1>Bienvenido, Evaluador</h1>
-    <p>Desde aquí puedes acceder a la plataforma de evaluación de postulaciones.</p>
+    <title>Panel de Evaluador - Sistema de Convocatorias</title>
+    <link rel="stylesheet" href="../css/evaluador.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <!-- Header con logos corporativos -->
+    <header class="header-bienvenida">
+        <div class="header-content">
+            <div class="logo-corporativo">
+                <!-- Logo Comfama con enlace -->
+                <a href="https://www.comfama.com" target="_blank" class="logo-link">
+                    <img src="../img/logo-comfama.png" alt="Comfama" class="logo-comfama">
+                </a>
+                
+                <div class="separador-logos"></div>
+                
+                <!-- Logo Aoxlab con enlace -->
+                <a href="https://www.aoxlab.com" target="_blank" class="logo-link">
+                    <img src="../img/logo-aoxlab.jpg" alt="Aoxlab" class="logo-aoxlab">
+                </a>
+            </div>
+        </div>
+    </header>
 
-    <button onclick="window.location.href='/evaluador/evaluacion'">
-        Ver postulaciones para evaluar
-    </button>
+    <!-- Tarjeta principal de bienvenida -->
+    <div class="welcome-card">
+        <div class="evaluator-icon"></div>
+        <h1>Bienvenido, Evaluador</h1>
+        <p>Tu rol es fundamental en el proceso de selección. Aquí podrás revisar las postulaciones enviadas, evaluar la documentación de las empresas y registrar tus criterios de evaluación de manera profesional y objetiva.</p>
+        
+        <!-- Estadísticas rápidas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-postulaciones">-</div>
+                <div class="stat-label">Postulaciones Pendientes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="evaluaciones-completadas">-</div>
+                <div class="stat-label">Evaluaciones Completadas</div>
+            </div>
+        </div>
+
+        <!-- Botón principal mejorado -->
+        <button class="btn-evaluacion" onclick="window.location.href='/evaluador/evaluacion'">
+            <span class="btn-icon">📋</span>
+            Ver postulaciones para evaluar
+            <span class="btn-arrow">→</span>
+        </button>
+        
+        <!-- Información adicional -->
+        <div class="info-panel">
+            <div class="info-item">
+                <span class="info-icon">🔍</span>
+                <div class="info-content">
+                    <strong>Proceso de Evaluación</strong>
+                    <p>Revisa documentos, califica criterios y registra observaciones detalladas.</p>
+                </div>
+            </div>
+            <div class="info-item">
+                <span class="info-icon">📄</span>
+                <div class="info-content">
+                    <strong>Documentación Disponible</strong>
+                    <p>Accede a todos los documentos subidos por las empresas participantes.</p>
+                </div>
+            </div>
+            <div class="info-item">
+                <span class="info-icon">⚖️</span>
+                <div class="info-content">
+                    <strong>Criterios Objetivos</strong>
+                    <p>Utiliza los criterios establecidos para garantizar una evaluación justa.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Indicador de estado del sistema -->
+    <div class="status-indicator">
+        <div class="status-dot"></div>
+        <span>Sistema de Evaluación Activo</span>
+    </div>
+
+    <!-- Footer informativo -->
+    <div class="footer-info">
+        <p>Sistema de Gestión de Convocatorias - Comfama & Aoxlab 2025</p>
+    </div>
+
+    <script src="../js/evaluador.js"></script>
 </body>
 </html>

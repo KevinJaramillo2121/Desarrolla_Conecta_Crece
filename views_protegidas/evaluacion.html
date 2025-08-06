@@ -3,517 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluación de Postulaciones</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { color: #333; text-align: center; margin-bottom: 30px; }
-        
-        /* Estilos para la lista de postulaciones */
-        .postulaciones-grid { display: grid; gap: 20px; margin-bottom: 30px; }
-        .postulacion-card { 
-            border: 1px solid #ddd; 
-            padding: 20px; 
-            border-radius: 8px; 
-            background: #f9f9f9;
-            transition: all 0.3s ease;
-        }
-        .postulacion-card:hover { 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
-            transform: translateY(-2px);
-        }
-        
-        /* Botones */
-        .btn { 
-            padding: 10px 20px; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-        .btn-primary { background: #007bff; color: white; }
-        .btn-primary:hover { background: #0056b3; }
-        .btn-success { background: #28a745; color: white; }
-        .btn-success:hover { background: #1e7e34; }
-        
-        /* Estados */
-        .loading, .error, .info { 
-            padding: 20px; 
-            text-align: center; 
-            border-radius: 4px; 
-            margin: 20px 0;
-        }
-        .loading { background: #f8f9fa; border: 1px solid #dee2e6; }
-        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .info { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        
-        /* Formularios */
-        .form-group { margin-bottom: 15px; }
-        .form-group label { 
-            display: block; 
-            margin-bottom: 5px; 
-            font-weight: bold; 
-            color: #333;
-        }
-        .form-group input, 
-        .form-group select, 
-        .form-group textarea { 
-            width: 100%; 
-            padding: 8px 12px; 
-            border: 1px solid #ddd; 
-            border-radius: 4px;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-        .form-group textarea { resize: vertical; min-height: 100px; }
-        
-        /* Secciones de detalle */
-        .detalle-section { 
-            margin-bottom: 30px; 
-            padding: 20px; 
-            background: #f8f9fa; 
-            border-radius: 8px;
-            border-left: 4px solid #007bff;
-        }
-        .detalle-section h3 { 
-            margin-top: 0; 
-            color: #007bff; 
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-        }
-        .detalle-section h4 { 
-            color: #495057; 
-            margin-top: 20px;
-        }
-        .detalle-section p { 
-            margin: 8px 0; 
-            line-height: 1.6;
-        }
-        
-        /* Documentos */
-        .documentos-list { 
-            list-style: none; 
-            padding: 0; 
-        }
-        .documentos-list li { 
-            margin-bottom: 10px; 
-            padding: 10px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .documento-link { 
-            color: #007bff; 
-            text-decoration: none; 
-            font-weight: 500;
-        }
-        .documento-link:hover { 
-            text-decoration: underline; 
-            color: #0056b3;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container { padding: 15px; }
-            .postulaciones-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+    <title>Evaluación de Postulaciones - Sistema de Convocatorias</title>
+    <link rel="stylesheet" href="../css/evaluacion.css">
 </head>
 <body>
-    <div class="container">
-        <h1>🔍 Evaluación de Postulaciones</h1>
+    <!-- Header con navegación -->
+    <header class="evaluation-header">
+        <div class="header-container">
+            <div class="header-brand">
+                <h1>🔍 Evaluación de Postulaciones</h1>
+                <p>Sistema de Gestión de Convocatorias</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="window.location.href='/evaluador'">
+                    ← Volver al Panel
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor principal -->
+    <div class="main-container">
+        <!-- Panel de estadísticas rápidas -->
+        <div class="stats-panel">
+            <div class="stat-item">
+                <div class="stat-icon">📋</div>
+                <div class="stat-content">
+                    <div class="stat-number" id="total-postulaciones">-</div>
+                    <div class="stat-label">Total Postulaciones</div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-content">
+                    <div class="stat-number" id="pendientes-evaluacion">-</div>
+                    <div class="stat-label">Pendientes</div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">✅</div>
+                <div class="stat-content">
+                    <div class="stat-number" id="evaluaciones-completadas">-</div>
+                    <div class="stat-label">Evaluadas</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filtros de búsqueda -->
+        <div class="filters-section">
+            <div class="filter-group">
+                <input type="text" id="search-filter" placeholder="🔍 Buscar por nombre de empresa..." class="search-input">
+            </div>
+            <div class="filter-group">
+                <select id="status-filter" class="filter-select">
+                    <option value="">Todos los estados</option>
+                    <option value="pendiente">⏳ Pendientes</option>
+                    <option value="Preseleccionado">✅ Preseleccionadas</option>
+                    <option value="No_preseleccionado">❌ No preseleccionadas</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <select id="type-filter" class="filter-select">
+                    <option value="">Todos los tipos</option>
+                    <option value="Micro">Micro empresa</option>
+                    <option value="Pequeña">Pequeña empresa</option>
+                    <option value="Mediana">Mediana empresa</option>
+                </select>
+            </div>
+        </div>
         
         <!-- Lista de postulaciones -->
-        <div id="postulaciones-lista" class="postulaciones-grid">
-            <div class="loading">Cargando postulaciones...</div>
+        <div class="postulaciones-section">
+            <div id="postulaciones-lista" class="postulaciones-grid">
+                <div class="loading-card">
+                    <div class="loading-spinner"></div>
+                    <p>Cargando postulaciones...</p>
+                </div>
+            </div>
         </div>
         
         <!-- Detalle de postulación seleccionada -->
-        <div id="detalle-postulacion" style="display: none;">
-            <!-- El detalle se cargará aquí -->
+        <div id="detalle-postulacion" class="detail-modal" style="display: none;">
+            <div class="detail-content">
+                <div class="detail-header">
+                    <h2>📋 Detalle de Postulación</h2>
+                    <button class="btn-close" onclick="ocultarDetalle()">×</button>
+                </div>
+                <div class="detail-body">
+                    <!-- El contenido se carga dinámicamente -->
+                </div>
+            </div>
         </div>
         
-        <!-- Lista de documentos -->
+        <!-- Lista de documentos (se muestra junto con el detalle) -->
         <div id="documentos-lista" style="display: none;">
             <!-- Los documentos se cargarán aquí -->
         </div>
     </div>
 
-    <script>
-        // ✅ VARIABLES GLOBALES
-        let postulacionesData = [];
-        
-        // ✅ CARGAR POSTULACIONES AL INICIAR LA PÁGINA
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Página cargada, iniciando carga de postulaciones...');
-            cargarPostulaciones();
-        });
-        
-        // ✅ FUNCIÓN PARA CARGAR LISTA DE POSTULACIONES
-        async function cargarPostulaciones() {
-            try {
-                console.log('Cargando postulaciones...');
-                
-                const response = await fetch('/evaluador/postulaciones');
-                
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status}`);
-                }
-                
-                const postulaciones = await response.json();
-                console.log('Postulaciones cargadas:', postulaciones);
-                
-                postulacionesData = postulaciones;
-                mostrarPostulaciones(postulaciones);
-                
-            } catch (error) {
-                console.error('Error al cargar postulaciones:', error);
-                const lista = document.getElementById('postulaciones-lista');
-                if (lista) {
-                    lista.innerHTML = `<div class="error">❌ Error al cargar postulaciones: ${error.message}</div>`;
-                }
-            }
-        }
-        
-        // ✅ FUNCIÓN PARA MOSTRAR POSTULACIONES EN LA LISTA
-        function mostrarPostulaciones(postulaciones) {
-            const lista = document.getElementById('postulaciones-lista');
-            
-            if (!lista) {
-                console.error('Elemento postulaciones-lista no encontrado');
-                return;
-            }
-            
-            if (!postulaciones || postulaciones.length === 0) {
-                lista.innerHTML = '<div class="info">📝 No hay postulaciones para evaluar</div>';
-                return;
-            }
-            
-            lista.innerHTML = postulaciones.map(post => `
-                <div class="postulacion-card">
-                    <h3>🏢 ${post.nombre_legal}</h3>
-                    <p><strong>Tipo:</strong> Empresa ${post.tipo_empresa || 'No especificado'}</p>
-                    <p><strong>Municipio:</strong> ${post.municipio || 'No especificado'}</p>
-                    <p><strong>Estado:</strong> 
-                        ${post.estado_preseleccion ? 
-                            `<span style="color: ${post.estado_preseleccion === 'Preseleccionado' ? 'green' : 'red'}">
-                                ${post.estado_preseleccion}
-                            </span>` : 
-                            '<span style="color: orange">Pendiente</span>'
-                        }
-                    </p>
-                    <button class="btn btn-primary" onclick="verDetalle(${post.id})">
-                        👁️ Ver Detalle y Evaluar
-                    </button>
-                </div>
-            `).join('');
-        }
-        
-        // ✅ FUNCIÓN PRINCIPAL PARA VER DETALLE (CORREGIDA)
-        async function verDetalle(empresaId) {
-            try {
-                console.log('Cargando detalle para empresa:', empresaId);
-                
-                // ✅ VALIDAR QUE LOS ELEMENTOS EXISTEN ANTES DE USARLOS
-                const detalleContainer = document.getElementById('detalle-postulacion');
-                const documentosContainer = document.getElementById('documentos-lista');
-                
-                if (!detalleContainer) {
-                    console.error('❌ Elemento detalle-postulacion no encontrado en el DOM');
-                    alert('Error: Elemento detalle-postulacion no encontrado');
-                    return;
-                }
-                
-                if (!documentosContainer) {
-                    console.error('❌ Elemento documentos-lista no encontrado en el DOM');
-                    alert('Error: Elemento documentos-lista no encontrado');
-                    return;
-                }
-                
-                // Mostrar contenedores
-                detalleContainer.style.display = 'block';
-                documentosContainer.style.display = 'block';
-                
-                // Mostrar loading
-                detalleContainer.innerHTML = '<div class="loading">⏳ Cargando detalle de postulación...</div>';
-                documentosContainer.innerHTML = '<div class="loading">📄 Cargando documentos...</div>';
-                
-                // ✅ CARGAR DETALLE DE POSTULACIÓN
-                console.log('Haciendo fetch a:', `/evaluador/evaluador/postulacion/${empresaId}`);
-                const responsePostulacion = await fetch(`/evaluador/evaluador/postulacion/${empresaId}`);
-                
-                if (!responsePostulacion.ok) {
-                    throw new Error(`Error HTTP: ${responsePostulacion.status} - ${responsePostulacion.statusText}`);
-                }
-                
-                const data = await responsePostulacion.json();
-                console.log('✅ Datos de postulación recibidos:', data);
-                
-                // ✅ VALIDAR QUE TENEMOS DATOS
-                if (!data || !data.empresa || !data.postulacion) {
-                    throw new Error('Datos incompletos recibidos del servidor');
-                }
-                
-                // ✅ MOSTRAR DETALLE DE LA EMPRESA Y POSTULACIÓN
-                mostrarDetallePostulacion(data, empresaId);
-                
-                // ✅ CARGAR DOCUMENTOS
-                await cargarDocumentos(empresaId);
-                
-                // Hacer scroll hacia el detalle
-                detalleContainer.scrollIntoView({ behavior: 'smooth' });
-                
-            } catch (error) {
-                console.error('❌ Error al cargar detalle:', error);
-                
-                const detalleContainer = document.getElementById('detalle-postulacion');
-                if (detalleContainer) {
-                    detalleContainer.innerHTML = `
-                        <div class="error">
-                            ❌ Error al cargar el detalle: ${error.message}
-                            <br><br>
-                            <button class="btn btn-primary" onclick="verDetalle(${empresaId})">
-                                🔄 Reintentar
-                            </button>
-                        </div>
-                    `;
-                    detalleContainer.style.display = 'block';
-                }
-            }
-        }
-        
-        // ✅ FUNCIÓN PARA MOSTRAR EL DETALLE DE LA POSTULACIÓN
-        function mostrarDetallePostulacion(data, empresaId) {
-            const detalleContainer = document.getElementById('detalle-postulacion');
-            
-            if (!detalleContainer) {
-                console.error('No se puede mostrar detalle - elemento no encontrado');
-                return;
-            }
-            
-            const empresa = data.empresa;
-            const postulacion = data.postulacion;
-            
-            detalleContainer.innerHTML = `
-                <div class="detalle-section">
-                    <h3>🏢 Información de la Empresa</h3>
-                    <p><strong>Nombre Legal:</strong> ${empresa.nombre_legal || 'No especificado'}</p>
-                    <p><strong>NIT:</strong> ${empresa.nit || 'No especificado'}</p>
-                    <p><strong>Tipo de Empresa:</strong> ${empresa.tipo_empresa || 'No especificado'}</p>
-                    <p><strong>Municipio:</strong> ${empresa.municipio || 'No especificado'}</p>
-                    <p><strong>Representante Legal:</strong> ${empresa.representante || 'No especificado'}</p>
-                    <p><strong>Teléfono:</strong> ${empresa.telefono_contacto || 'No especificado'}</p>
-                    <p><strong>Correo:</strong> ${empresa.correo_contacto || 'No especificado'}</p>
-                    <p><strong>Afiliada a Comfama:</strong> ${empresa.afiliada_comfama ? 'Sí' : 'No'}</p>
-                </div>
-                
-                <div class="detalle-section">
-                    <h3>📦 Información del Producto</h3>
-                    <h4>Producto/Servicio</h4>
-                    <p><strong>Nombre:</strong> ${postulacion.producto_info?.nombre || 'No especificado'}</p>
-                    <p><strong>Descripción:</strong> ${postulacion.producto_info?.descripcion || 'No especificado'}</p>
-                    <p><strong>Estado del Producto:</strong> ${postulacion.producto_info?.estado_producto || 'No especificado'}</p>
-                    <p><strong>Mercado Objetivo:</strong> ${postulacion.producto_info?.mercado_objetivo || 'No especificado'}</p>
-                    
-                    <h4>🔧 Brechas Identificadas</h4>
-                    <p><strong>Brechas Técnicas:</strong> ${postulacion.brechas?.tecnicas || 'No especificado'}</p>
-                    <p><strong>Brechas Normativas:</strong> ${postulacion.brechas?.normativas || 'No especificado'}</p>
-                    <p><strong>Brechas de Calidad:</strong> ${postulacion.brechas?.calidad || 'No especificado'}</p>
-                    <p><strong>Brechas de Empaque:</strong> ${postulacion.brechas?.empaque || 'No especificado'}</p>
-                    <p><strong>Brechas de Mercado:</strong> ${postulacion.brechas?.mercado || 'No especificado'}</p>
-                    <p><strong>Otras Brechas:</strong> ${postulacion.brechas?.otras || 'No especificado'}</p>
-                    
-                    <h4>💡 Motivación y Expectativas</h4>
-                    <p><strong>Visión del Producto:</strong> ${postulacion.motivacion?.vision || 'No especificado'}</p>
-                    <p><strong>Impacto en la Empresa:</strong> ${postulacion.motivacion?.impacto || 'No especificado'}</p>
-                    <p><strong>Compromisos:</strong> ${postulacion.motivacion?.compromisos || 'No especificado'}</p>
-                    <p><strong>Expectativas:</strong> ${postulacion.motivacion?.expectativa || 'No especificado'}</p>
-                    <p><strong>Disponibilidad:</strong> ${postulacion.motivacion?.disponible ? 'Disponible' : 'No disponible'}</p>
-                </div>
-                
-                <div class="detalle-section">
-                    <h3>📝 Evaluar Postulación</h3>
-                    <form onsubmit="guardarEvaluacion(event, ${empresaId})">
-                        <div class="form-group">
-                            <label for="estado_preseleccion">Estado de Preselección:</label>
-                            <select id="estado_preseleccion" name="estado_preseleccion" required>
-                                <option value="">-- Seleccionar Estado --</option>
-                                <option value="Preseleccionado">✅ Preseleccionado</option>
-                                <option value="No_preseleccionado">❌ No Preseleccionado</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="observaciones">Observaciones:</label>
-                            <textarea id="observaciones" name="observaciones" placeholder="Escriba sus observaciones sobre la postulación..."></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="criterios">Criterios de Evaluación (formato JSON opcional):</label>
-                            <textarea id="criterios" name="criterios" placeholder='Ejemplo: {"innovacion": 8, "viabilidad": 7, "impacto": 9, "factibilidad": 6}'></textarea>
-                            <small style="color: #666;">Formato JSON opcional. Deje en blanco si no desea especificar criterios.</small>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-success">
-                            💾 Guardar Evaluación
-                        </button>
-                        
-                        <button type="button" class="btn btn-primary" onclick="ocultarDetalle()" style="margin-left: 10px;">
-                            ↩️ Volver a la Lista
-                        </button>
-                    </form>
-                </div>
-            `;
-        }
-        
-        // ✅ FUNCIÓN PARA CARGAR DOCUMENTOS (CORREGIDA)
-        async function cargarDocumentos(empresaId) {
-            try {
-                const documentosContainer = document.getElementById('documentos-lista');
-                
-                if (!documentosContainer) {
-                    console.error('❌ Elemento documentos-lista no encontrado');
-                    return;
-                }
-                
-                console.log('📄 Cargando documentos para empresa:', empresaId);
-                
-                const responseDocumentos = await fetch(`/evaluador/documentos/${empresaId}`);
-                
-                if (!responseDocumentos.ok) {
-                    throw new Error(`Error HTTP: ${responseDocumentos.status}`);
-                }
-                
-                const documentos = await responseDocumentos.json();
-                console.log('✅ Documentos cargados:', documentos);
-                
-                if (documentos && documentos.length > 0) {
-                    documentosContainer.innerHTML = `
-                        <div class="detalle-section">
-                            <h3>📎 Documentos Adjuntos (${documentos.length})</h3>
-                            <ul class="documentos-list">
-                                ${documentos.map(doc => `
-                                    <li>
-                                        <a href="/evaluador/descargar-documento/${doc.id}" 
-                                           target="_blank" 
-                                           class="documento-link">
-                                            📄 ${doc.nombre_original}
-                                        </a>
-                                    </li>
-                                `).join('')}
-                            </ul>
-                        </div>
-                    `;
-                } else {
-                    documentosContainer.innerHTML = `
-                        <div class="detalle-section">
-                            <div class="info">📝 No se encontraron documentos adjuntos para esta postulación</div>
-                        </div>
-                    `;
-                }
-                
-            } catch (error) {
-                console.error('❌ Error al cargar documentos:', error);
-                const documentosContainer = document.getElementById('documentos-lista');
-                if (documentosContainer) {
-                    documentosContainer.innerHTML = `
-                        <div class="detalle-section">
-                            <div class="error">❌ Error al cargar documentos: ${error.message}</div>
-                        </div>
-                    `;
-                }
-            }
-        }
-        
-        // ✅ FUNCIÓN PARA GUARDAR EVALUACIÓN
-        async function guardarEvaluacion(event, empresaId) {
-            event.preventDefault();
-            
-            try {
-                const formData = new FormData(event.target);
-                const criteriosText = formData.get('criterios');
-                
-                let criterios = null;
-                if (criteriosText && criteriosText.trim()) {
-                    try {
-                        criterios = JSON.parse(criteriosText);
-                    } catch (e) {
-                        alert('❌ Los criterios deben ser un JSON válido. Ejemplo: {"innovacion": 8, "viabilidad": 7}');
-                        return;
-                    }
-                }
-                
-                const evaluacionData = {
-                    empresa_id: empresaId,
-                    estado_preseleccion: formData.get('estado_preseleccion'),
-                    observaciones: formData.get('observaciones') || '',
-                    criterios: criterios
-                };
-                
-                console.log('💾 Enviando evaluación:', evaluacionData);
-                
-                // Mostrar loading en el botón
-                const submitBtn = event.target.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '⏳ Guardando...';
-                submitBtn.disabled = true;
-                
-                const response = await fetch('/evaluador/evaluador/evaluar', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(evaluacionData)
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok) {
-                    alert('✅ Evaluación guardada exitosamente');
-                    
-                    // Recargar la lista de postulaciones
-                    await cargarPostulaciones();
-                    
-                    // Ocultar el detalle
-                    ocultarDetalle();
-                } else {
-                    throw new Error(result.error || 'Error desconocido');
-                }
-                
-            } catch (error) {
-                console.error('❌ Error al guardar evaluación:', error);
-                alert('❌ Error al guardar la evaluación: ' + error.message);
-            } finally {
-                // Restaurar botón
-                const submitBtn = event.target.querySelector('button[type="submit"]');
-                if (submitBtn) {
-                    submitBtn.innerHTML = '💾 Guardar Evaluación';
-                    submitBtn.disabled = false;
-                }
-            }
-        }
-        
-        // ✅ FUNCIÓN PARA OCULTAR DETALLE
-        function ocultarDetalle() {
-            const detalleContainer = document.getElementById('detalle-postulacion');
-            const documentosContainer = document.getElementById('documentos-lista');
-            
-            if (detalleContainer) detalleContainer.style.display = 'none';
-            if (documentosContainer) documentosContainer.style.display = 'none';
-            
-            // Hacer scroll hacia arriba
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
-        // ✅ MANEJAR ERRORES GLOBALES DE JAVASCRIPT
-        window.addEventListener('error', function(e) {
-            console.error('❌ Error JavaScript global:', e.error);
-        });
-        
-        window.addEventListener('unhandledrejection', function(e) {
-            console.error('❌ Promise rechazada no manejada:', e.reason);
-        });
-    </script>
+    <!-- Toast para notificaciones -->
+    <div id="toast-container"></div>
+
+    <script src="../js/evaluacion.js"></script>
 </body>
 </html>

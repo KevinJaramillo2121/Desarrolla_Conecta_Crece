@@ -1,153 +1,544 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
+<head>
     <meta charset="UTF-8">
-    <title>Registro de Participante</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        label { display: block; margin-top: 10px; }
-        input, select { width: 300px; padding: 5px; margin-top: 5px; }
-        button { margin-top: 15px; padding: 10px 20px; }
-    </style>
-    </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta - Desarrolla, Conecta y Crece | Comfama & Aoxlab</title>
+    <link rel="stylesheet" href="../css/register.css">
+    <link href="https://fonts.googleapis.com/css2?family=Aller:wght@400;700&display=swap" rel="stylesheet">
+</head>
 <body>
+    <!-- Background decorativo -->
+    <div class="background-decoration">
+        <div class="decoration-circle circle-1"></div>
+        <div class="decoration-circle circle-2"></div>
+        <div class="decoration-circle circle-3"></div>
+    </div>
 
-    <h1>Formulario de Registro - Participante</h1>
+    <!-- Header con branding -->
+    <header class="register-header">
+        <div class="header-content">
+            <div class="brand-partnership">
+                <div class="brand-logos">
+                    <img src="img/logo-comfama.png" alt="Comfama" class="logo-comfama">
+                    <div class="partnership-symbol">×</div>
+                    <img src="img/logo-aoxlab.jpg" alt="Aoxlab" class="logo-aoxlab">
+                </div>
+                <div class="program-info">
+                    <h1>Desarrolla, Conecta y Crece</h1>
+                    <p>Regístrate en la Plataforma de Convocatorias MiPymes Agroalimentarias</p>
+                </div>
+            </div>
+        </div>
+    </header>
 
-    <form id="formularioRegistro">
+    <!-- Contenedor principal -->
+    <main class="register-main">
+        <div class="register-container">
+            
+            <!-- Progress indicator -->
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <span class="step-label">Usuario</span>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <span class="step-label">Empresa</span>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <span class="step-label">Confirmación</span>
+                    </div>
+                </div>
+            </div>
 
-        <h3>Datos del Usuario</h3>
-        <label>Nombre de usuario:
-        <input type="text" name="nombre_usuario" required>
-        </label>
+            <!-- Card principal -->
+            <div class="register-card">
+                <div class="register-card-header">
+                    <div class="register-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 12C17.21 12 19 10.21 19 8C19 5.79 17.21 4 15 4C12.79 4 11 5.79 11 8C11 10.21 12.79 12 15 12ZM6 10V7H4V10H1V12H4V15H6V12H9V10M15 14C12.33 14 7 15.34 7 18V20H23V18C23 15.34 17.67 14 15 14Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="register-title">
+                        <h2 id="stepTitle">Crea tu cuenta</h2>
+                        <p id="stepDescription">Ingresa tus datos personales para comenzar</p>
+                    </div>
+                </div>
 
-        <label>Correo electrónico:
-        <input type="email" name="correo" required>
-        </label>
+                <div class="register-card-body">
+                    <!-- Mensajes de estado -->
+                    <div id="mensaje" class="message-container" style="display: none;">
+                        <div class="message-icon">
+                            <span class="icon-success">✓</span>
+                            <span class="icon-error">⚠</span>
+                            <span class="icon-loading">
+                                <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                                        <animate attributeName="stroke-dashoffset" dur="2s" values="31.416;0" repeatCount="indefinite"/>
+                                        <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416;0 31.416" repeatCount="indefinite"/>
+                                    </circle>
+                                </svg>
+                            </span>
+                        </div>
+                        <span class="message-text"></span>
+                    </div>
 
-        <label>Contraseña:
-        <input type="password" name="password" required>
-        </label>
+                    <!-- Formulario multi-paso -->
+                    <form id="formularioRegistro" class="register-form" novalidate>
+                        
+                        <!-- PASO 1: Datos del Usuario -->
+                        <div class="form-step active" id="step1">
+                            <div class="step-header">
+                                <h3>Datos del Usuario</h3>
+                                <p>Información básica de tu cuenta</p>
+                            </div>
 
-        <label>Nombre completo del representante:
-        <input type="text" name="nombre_completo" required>
-        </label>
+                            <div class="form-grid">
+                                <div class="input-group">
+                                    <label for="nombre_completo" class="form-label">Nombre completo del representante *</label>
+                                    <div class="input-wrapper">
+                                        <div class="input-icon">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
+                                            </svg>
+                                        </div>
+                                        <input type="text" id="nombre_completo" name="nombre_completo" class="form-input" placeholder="Ej: María Fernanda García López" required>
+                                    </div>
+                                    <div class="input-error"></div>
+                                </div>
 
-        <h3>Datos de la Empresa</h3>
+                                <div class="input-group">
+                                    <label for="nombre_usuario" class="form-label">Nombre de usuario *</label>
+                                    <div class="input-wrapper">
+                                        <div class="input-icon">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 13.5C14.76 13.86 14.4 14.22 14 14.22C13.6 14.22 13.24 13.86 13 13.5L7.91 8.41C7.66 8.15 7.66 7.73 7.91 7.47L9 6.38C9.28 6.1 9.72 6.1 10 6.38L12 8.38L17 3.38C17.28 3.1 17.72 3.1 18 3.38L21 6.38V9Z" fill="currentColor"/>
+                                            </svg>
+                                        </div>
+                                        <input type="text" id="nombre_usuario" name="nombre_usuario" class="form-input" placeholder="Ej: mgarcia2024" required>
+                                        <div class="input-hint">Solo letras, números y guiones bajos</div>
+                                    </div>
+                                    <div class="input-error"></div>
+                                </div>
 
-        <label>Nombre legal:
-        <input type="text" name="nombre_legal" required>
-        </label>
+                                <div class="input-group">
+                                    <label for="correo" class="form-label">Correo electrónico *</label>
+                                    <div class="input-wrapper">
+                                        <div class="input-icon">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="currentColor"/>
+                                            </svg>
+                                        </div>
+                                        <input type="email" id="correo" name="correo" class="form-input" placeholder="Ej: maria.garcia@empresa.com" required autocomplete="email">
+                                    </div>
+                                    <div class="input-error"></div>
+                                </div>
 
-        <label>NIT:
-        <input type="text" name="nit" required>
-        </label>
+                                <div class="input-group">
+                                    <label for="password" class="form-label">Contraseña *</label>
+                                    <div class="input-wrapper">
+                                        <div class="input-icon">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M18 8H17V6C17 3.24 14.76 1 12 1S7 3.24 7 6V8H6C4.9 8 4 8.9 4 10V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V10C20 8.9 19.1 8 18 8ZM12 17C10.9 17 10 16.1 10 15S10.9 13 12 13 14 13.9 14 15 13.1 17 12 17ZM15.1 8H8.9V6C8.9 4.29 10.29 2.9 12 2.9S15.1 4.29 15.1 6V8Z" fill="currentColor"/>
+                                            </svg>
+                                        </div>
+                                        <input type="password" id="password" name="password" class="form-input" placeholder="Mínimo 8 caracteres" required autocomplete="new-password">
+                                        <button type="button" class="password-toggle" id="togglePassword1">
+                                            <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12C2.73 16.39 7 19.5 12 19.5S21.27 16.39 23 12C21.27 7.61 17 4.5 12 4.5ZM12 17C9.24 17 7 14.76 7 12S9.24 7 12 7S17 9.24 17 12S14.76 17 12 17ZM12 9C10.34 9 9 10.34 9 12S10.34 15 12 15S15 13.66 15 12S13.66 9 12 9Z" fill="currentColor"/>
+                                            </svg>
+                                            <svg class="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                                <path d="M12 7C9.24 7 7 9.24 7 12C7 12.65 7.13 13.26 7.36 13.82L2.92 18.26C2.53 18.65 2.53 19.28 2.92 19.67C3.31 20.06 3.94 20.06 4.33 19.67L19.67 4.33C20.06 3.94 20.06 3.31 19.67 2.92C19.28 2.53 18.65 2.53 18.26 2.92L16.17 5.01C14.85 4.37 13.47 4.5 12 4.5C7 4.5 2.73 7.61 1 12C1.69 13.24 2.79 14.28 4.17 15.01L12 7Z" fill="currentColor"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="password-strength" id="passwordStrength">
+                                        <div class="strength-meter">
+                                            <div class="strength-fill"></div>
+                                        </div>
+                                        <span class="strength-text">Ingresa una contraseña</span>
+                                    </div>
+                                    <div class="input-error"></div>
+                                </div>
 
-        <label>¿Es persona jurídica?
-        <select name="persona_juridica" required>
-            <option value="true">Sí</option>
-            <option value="false">No</option>
-        </select>
-        </label>
+                                <div class="input-group">
+                                    <label for="confirm_password" class="form-label">Confirmar contraseña *</label>
+                                    <div class="input-wrapper">
+                                        <div class="input-icon">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </div>
+                                        <input type="password" id="confirm_password" name="confirm_password" class="form-input" placeholder="Repite la contraseña" required autocomplete="new-password">
+                                        <button type="button" class="password-toggle" id="togglePassword2">
+                                            <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12C2.73 16.39 7 19.5 12 19.5S21.27 16.39 23 12C21.27 7.61 17 4.5 12 4.5ZM12 17C9.24 17 7 14.76 7 12S9.24 7 12 7S17 9.24 17 12S14.76 17 12 17ZM12 9C10.34 9 9 10.34 9 12S10.34 15 12 15S15 13.66 15 12S13.66 9 12 9Z" fill="currentColor"/>
+                                            </svg>
+                                            <svg class="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                                <path d="M12 7C9.24 7 7 9.24 7 12C7 12.65 7.13 13.26 7.36 13.82L2.92 18.26C2.53 18.65 2.53 19.28 2.92 19.67C3.31 20.06 3.94 20.06 4.33 19.67L19.67 4.33C20.06 3.94 20.06 3.31 19.67 2.92C19.28 2.53 18.65 2.53 18.26 2.92L16.17 5.01C14.85 4.37 13.47 4.5 12 4.5C7 4.5 2.73 7.61 1 12C1.69 13.24 2.79 14.28 4.17 15.01L12 7Z" fill="currentColor"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="input-error"></div>
+                                </div>
+                            </div>
+                        </div>
 
-        <label>Tipo de empresa:
-        <select name="tipo_empresa" required>
-            <option value="Micro">Micro</option>
-            <option value="Pequeña">Pequeña</option>
-            <option value="Mediana">Mediana</option>
-        </select>
-        </label>
+                        <!-- PASO 2: Datos de la Empresa -->
+                        <div class="form-step" id="step2">
+                            <div class="step-header">
+                                <h3>Datos de la Empresa</h3>
+                                <p>Información de tu empresa o negocio</p>
+                            </div>
 
-        <label>Representante legal:
-        <input type="text" name="representante" required>
-        </label>
+                            <div class="form-grid">
+                                <div class="input-group">
+                                    <label for="nombre_legal" class="form-label">Nombre legal de la empresa *</label>
+                                    <div class="input-wrapper">
+                                        <div class="input-icon">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12 7V3H2V21H22V7H12ZM6 19H4V17H6V19ZM6 15H4V13H6V15ZM6 11H4V9H6V11ZM6 7H4V5H6V7ZM10 19H8V17H10V19ZM10 15H8V13H10V15ZM10 11H8V9H10V11ZM10 7H8V5H10V7ZM20 19H12V17H14V15H12V13H14V11H12V9H20V19ZM18 11H16V13H18V11ZM18 15H16V17H18V15Z" fill="currentColor"/>
+                                            </svg>
+                                        </div>
+                                        <input type="text" id="nombre_legal" name="nombre_legal" class="form-input" placeholder="Ej: Alimentos del Valle S.A.S." required>
+                                    </div>
+                                    <div class="input-error"></div>
+                                </div>
 
-        <label>Cédula del representante:
-        <input type="text" name="cedula_representante" required>
-        </label>
+                                <div class="input-group">
+                                    <label for="nit" class="form-label">NIT *</label>
+                                    <div class="input-wrapper">
+                                        <div class="input-icon">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M14 2H6C4.9 2 4.01 2.9 4.01 4L4 20C4 21.1 4.89 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13V9H18V20Z" fill="currentColor"/>
+                                            </svg>
+                                        </div>
+                                        <input type="text" id="nit" name="nit" class="form-input" placeholder="Ej: 900123456-7" required>
+                                        <div class="input-hint">Con dígito de verificación</div>
+                                    </div>
+                                    <div class="input-error"></div>
+                                </div>
 
-        <label>Teléfono de contacto:
-        <input type="text" name="telefono_contacto" required>
-        </label>
+                                <div class="form-row">
+                                    <div class="input-group">
+                                        <label for="persona_juridica" class="form-label">Tipo de persona *</label>
+                                        <div class="select-wrapper">
+                                            <select id="persona_juridica" name="persona_juridica" class="form-select" required>
+                                                <option value="">Selecciona...</option>
+                                                <option value="true">Persona Jurídica</option>
+                                                <option value="false">Persona Natural</option>
+                                            </select>
+                                            <div class="select-icon">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7 10L12 15L17 10H7Z" fill="currentColor"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div class="input-error"></div>
+                                    </div>
 
-        <label>Municipio:
-        <input type="text" name="municipio" required>
-        </label>
+                                    <div class="input-group">
+                                        <label for="tipo_empresa" class="form-label">Tamaño de empresa *</label>
+                                        <div class="select-wrapper">
+                                            <select id="tipo_empresa" name="tipo_empresa" class="form-select" required>
+                                                <option value="">Selecciona...</option>
+                                                <option value="Micro">Microempresa</option>
+                                                <option value="Pequeña">Pequeña empresa</option>
+                                                <option value="Mediana">Mediana empresa</option>
+                                            </select>
+                                            <div class="select-icon">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7 10L12 15L17 10H7Z" fill="currentColor"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div class="input-error"></div>
+                                    </div>
+                                </div>
 
-        <label>Dirección:
-        <input type="text" name="direccion" required>
-        </label>
+                                <div class="input-group">
+                                    <label for="representante" class="form-label">Representante legal *</label>
+                                    <div class="input-wrapper">
+                                        <div class="input-icon">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 13.5C14.76 13.86 14.4 14.22 14 14.22C13.6 14.22 13.24 13.86 13 13.5L7.91 8.41C7.66 8.15 7.66 7.73 7.91 7.47L9 6.38C9.28 6.1 9.72 6.1 10 6.38L12 8.38L17 3.38C17.28 3.1 17.72 3.1 18 3.38L21 6.38V9Z" fill="currentColor"/>
+                                            </svg>
+                                        </div>
+                                        <input type="text" id="representante" name="representante" class="form-input" placeholder="Ej: María Fernanda García López" required>
+                                    </div>
+                                    <div class="input-error"></div>
+                                </div>
 
-        <label>¿Está ubicada fuera del Valle de Aburrá?
-        <select name="fuera_valle" required>
-            <option value="true">Sí</option>
-            <option value="false">No</option>
-        </select>
-        </label>
+                                <div class="form-row">
+                                    <div class="input-group">
+                                        <label for="cedula_representante" class="form-label">Cédula del representante *</label>
+                                        <div class="input-wrapper">
+                                            <div class="input-icon">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M14 2H6C4.9 2 4.01 2.9 4.01 4L4 20C4 21.1 4.89 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13V9H18V20ZM9 12H16V14H9V12ZM9 16H13V18H9V16Z" fill="currentColor"/>
+                                                </svg>
+                                            </div>
+                                            <input type="text" id="cedula_representante" name="cedula_representante" class="form-input" placeholder="Ej: 1234567890" required>
+                                        </div>
+                                        <div class="input-error"></div>
+                                    </div>
 
-        <label>¿Afiliada a Comfama?
-        <select name="afiliada_comfama" required>
-            <option value="true">Sí</option>
-            <option value="false">No</option>
-        </select>
-        </label>
+                                    <div class="input-group">
+                                        <label for="telefono_contacto" class="form-label">Teléfono de contacto *</label>
+                                        <div class="input-wrapper">
+                                            <div class="input-icon">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M6.62 10.79C8.06 13.62 10.38 15.94 13.21 17.38L15.41 15.18C15.69 14.9 16.08 14.82 16.43 14.93C17.55 15.3 18.75 15.5 20 15.5C20.55 15.5 21 15.95 21 16.5V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z" fill="currentColor"/>
+                                                </svg>
+                                            </div>
+                                            <input type="tel" id="telefono_contacto" name="telefono_contacto" class="form-input" placeholder="Ej: +57 300 123 4567" required>
+                                        </div>
+                                        <div class="input-error"></div>
+                                    </div>
+                                </div>
 
-        <label>¿Tiene al menos un trabajador afiliado?
-        <select name="tiene_trabajador" required>
-            <option value="true">Sí</option>
-            <option value="false">No</option>
-        </select>
-        </label>
+                                <div class="form-row">
+                                    <div class="input-group">
+                                        <label for="municipio" class="form-label">Municipio *</label>
+                                        <div class="input-wrapper">
+                                            <div class="input-icon">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22S19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9S10.62 6.5 12 6.5S14.5 7.62 14.5 9S13.38 11.5 12 11.5Z" fill="currentColor"/>
+                                                </svg>
+                                            </div>
+                                            <input type="text" id="municipio" name="municipio" class="form-input" placeholder="Ej: Medellín" required>
+                                        </div>
+                                        <div class="input-error"></div>
+                                    </div>
 
-        <button type="submit">Registrarse</button>
-    </form>
-    <div id="mensaje" style="margin-top: 20px; font-weight: bold;"></div>
+                                    <div class="input-group">
+                                        <label for="direccion" class="form-label">Dirección *</label>
+                                        <div class="input-wrapper">
+                                            <div class="input-icon">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z" fill="currentColor"/>
+                                                </svg>
+                                            </div>
+                                            <input type="text" id="direccion" name="direccion" class="form-input" placeholder="Ej: Calle 50 # 25-45" required>
+                                        </div>
+                                        <div class="input-error"></div>
+                                    </div>
+                                </div>
 
-    <script>
-        document.getElementById('formularioRegistro').addEventListener('submit', async function (e) {
-        e.preventDefault(); // Evita el envío tradicional
+                                <div class="checkbox-grid">
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-container">
+                                            <input type="checkbox" name="fuera_valle" value="true">
+                                            <span class="checkbox-custom"></span>
+                                            <div class="checkbox-content">
+                                                <span class="checkbox-title">Ubicación fuera del Valle de Aburrá</span>
+                                                <span class="checkbox-description">Mi empresa está ubicada fuera del Valle de Aburrá</span>
+                                            </div>
+                                        </label>
+                                    </div>
 
-        const form = e.target;
-        const datos = new FormData(form);
-        const body = Object.fromEntries(datos.entries());
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-container">
+                                            <input type="checkbox" name="afiliada_comfama" value="true">
+                                            <span class="checkbox-custom"></span>
+                                            <div class="checkbox-content">
+                                                <span class="checkbox-title">Afiliada a Comfama</span>
+                                                <span class="checkbox-description">Mi empresa está afiliada a Comfama</span>
+                                            </div>
+                                        </label>
+                                    </div>
 
-        // Convertir valores booleanos que vienen como strings
-        body.persona_juridica = body.persona_juridica === "true";
-        body.fuera_valle = body.fuera_valle === "true";
-        body.afiliada_comfama = body.afiliada_comfama === "true";
-        body.tiene_trabajador = body.tiene_trabajador === "true";
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-container">
+                                            <input type="checkbox" name="tiene_trabajador" value="true">
+                                            <span class="checkbox-custom"></span>
+                                            <div class="checkbox-content">
+                                                <span class="checkbox-title">Trabajador afiliado</span>
+                                                <span class="checkbox-description">Tiene al menos un trabajador afiliado</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-        try {
-            const respuesta = await fetch('/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-            });
+                        <!-- PASO 3: Confirmación -->
+                        <div class="form-step" id="step3">
+                            <div class="step-header">
+                                <h3>Confirmación</h3>
+                                <p>Revisa la información antes de crear tu cuenta</p>
+                            </div>
 
-            const resultado = await respuesta.json();
-            const mensaje = document.getElementById('mensaje');
+                            <div class="confirmation-summary">
+                                <div class="summary-section">
+                                    <h4>Datos del Usuario</h4>
+                                    <div class="summary-item">
+                                        <span class="label">Nombre completo:</span>
+                                        <span class="value" id="confirm-nombre_completo">-</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="label">Usuario:</span>
+                                        <span class="value" id="confirm-nombre_usuario">-</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="label">Correo:</span>
+                                        <span class="value" id="confirm-correo">-</span>
+                                    </div>
+                                </div>
 
-            if (respuesta.ok) {
-            mensaje.textContent = 'Registro exitoso. Redirigiendo al login...';
-            mensaje.style.color = 'green';
-            setTimeout(() => {
-                window.location.href = '/login.html'; // Redirige después de 2 segundos
-            }, 2000);
-            } else {
-            mensaje.textContent = resultado.mensaje || 'Error al registrar.';
-            mensaje.style.color = 'red';
-            }
+                                <div class="summary-section">
+                                    <h4>Datos de la Empresa</h4>
+                                    <div class="summary-item">
+                                        <span class="label">Nombre legal:</span>
+                                        <span class="value" id="confirm-nombre_legal">-</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="label">NIT:</span>
+                                        <span class="value" id="confirm-nit">-</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="label">Tipo:</span>
+                                        <span class="value" id="confirm-persona_juridica">-</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="label">Tamaño:</span>
+                                        <span class="value" id="confirm-tipo_empresa">-</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="label">Representante:</span>
+                                        <span class="value" id="confirm-representante">-</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="label">Ubicación:</span>
+                                        <span class="value" id="confirm-ubicacion">-</span>
+                                    </div>
+                                </div>
 
-        } catch (error) {
-            console.error('Error en fetch:', error);
-            const mensaje = document.getElementById('mensaje');
-            mensaje.textContent = 'Error en el servidor.';
-            mensaje.style.color = 'red';
-        }
-        });
-    </script>
+                                <div class="summary-section">
+                                    <h4>Características</h4>
+                                    <div class="features-tags" id="confirm-features">
+                                        <!-- Se llenarán dinámicamente -->
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div class="terms-section">
+                                <label class="checkbox-container large">
+                                    <input type="checkbox" name="terms_accepted" required>
+                                    <span class="checkbox-custom"></span>
+                                    <div class="checkbox-content">
+                                        <span class="checkbox-title">Acepto los términos y condiciones</span>
+                                        <span class="checkbox-description">
+                                            He leído y acepto los 
+                                            <a href="#" class="terms-link" id="viewTerms">términos y condiciones</a> 
+                                            y la 
+                                            <a href="#" class="terms-link" id="viewPrivacy">política de privacidad</a>
+                                        </span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Botones de navegación -->
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" id="prevBtn" style="display: none;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="currentColor"/>
+                                </svg>
+                                Anterior
+                            </button>
+                            
+                            <button type="button" class="btn-primary" id="nextBtn">
+                                Continuar
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4 13H16.17L10.58 18.59L12 20L20 12L12 4L10.59 5.41L16.17 11H4V13Z" fill="currentColor"/>
+                                </svg>
+                            </button>
+                            
+                            <button type="submit" class="btn-success" id="submitBtn" style="display: none;">
+                                <span class="btn-text">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" fill="currentColor"/>
+                                    </svg>
+                                    Crear cuenta
+                                </span>
+                                <span class="btn-loading" style="display: none;">
+                                    <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                                            <animate attributeName="stroke-dashoffset" dur="2s" values="31.416;0" repeatCount="indefinite"/>
+                                            <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416;0 31.416" repeatCount="indefinite"/>
+                                        </circle>
+                                    </svg>
+                                    Creando cuenta...
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="register-card-footer">
+                    <div class="divider">
+                        <span>¿Ya tienes una cuenta?</span>
+                    </div>
+                    <a href="./login.html" class="btn-login-link">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
+                        </svg>
+                        Iniciar sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="register-footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Desarrolla, Conecta y Crece. Una alianza entre Aoxlab y Comfama.</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Términos y Condiciones</a>
+                <a href="#" class="footer-link">Política de Privacidad</a>
+                <a href="#" class="footer-link">Soporte</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modales -->
+    <div id="termsModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Términos y Condiciones</h3>
+                <button class="modal-close" id="closeTermsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="terms-content">
+                    <h4>1. Aceptación de los Términos</h4>
+                    <p>Al acceder y utilizar esta plataforma, usted acepta cumplir con estos términos y condiciones.</p>
+                    
+                    <h4>2. Registro de Usuario</h4>
+                    <p>Para participar en las convocatorias, debe proporcionar información precisa y actualizada durante el proceso de registro.</p>
+                    
+                    <h4>3. Uso de la Información</h4>
+                    <p>La información proporcionada será utilizada exclusivamente para los fines de evaluación y selección en las convocatorias del programa.</p>
+                    
+                    <h4>4. Responsabilidades del Usuario</h4>
+                    <p>El usuario se compromete a mantener la confidencialidad de sus credenciales de acceso y a notificar cualquier uso no autorizado.</p>
+                    
+                    <h4>5. Modificaciones</h4>
+                    <p>Nos reservamos el derecho de modificar estos términos en cualquier momento, notificando a los usuarios registrados.</p>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-primary" id="acceptTerms">Entiendo y acepto</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/register.js"></script>
 </body>
 </html>
