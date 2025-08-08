@@ -1,858 +1,304 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario - Desarrolla, Conecta y Crece | Comfama & Aoxlab</title>
-    <link rel="stylesheet" href="../css/formulario.css">
-    <link href="https://fonts.googleapis.com/css2?family=Aller:wght@400;700&display=swap" rel="stylesheet">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Formulario de Inscripción - Desarrolla, Conecta y Crece</title>
+<link rel="stylesheet" href="/public/css/formulario.css">
 </head>
 <body>
-    <!-- Header con Branding -->
-    <header class="form-header">
-        <div class="header-container">
-            <div class="brand-partnership">
-                <div class="brand-logos">
-                    <img src="../img/logo-comfama.png" alt="Comfama" class="logo-comfama">
-                    <div class="partnership-symbol">×</div>
-                    <img src="../img/logo-aoxlab.jpg" alt="Aoxlab" class="logo-aoxlab">
-                </div>
-                <div class="program-title">
-                    <h1>Desarrolla, Conecta y Crece</h1>
-                    <p>Convocatoria MiPymes Agroalimentarias</p>
-                </div>
-            </div>
-            <div class="header-status">
-                <div id="countdown-display" class="countdown-timer">
-                    <div class="timer-icon">⏰</div>
-                    <div class="timer-content">
-                        <span class="timer-label">Tiempo restante:</span>
-                        <span id="timer-value">Cargando...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+<div id="reloj-convocatoria" style="font-weight: bold; font-size: 18px; margin-bottom: 20px;">
+Cargando fecha de cierre...
+</div>
+<div class="container">
+<h1>Formulario de Inscripción: Desarrolla, Conecta y Crece</h1>
+<p><strong>Convocatoria dirigida a MiPymes agroalimentarias afiliadas a Comfama ubicadas en Antioquia</strong></p>
 
-    <!-- Contenedor Principal -->
-    <div class="form-container">
-        <!-- Stepper de Progreso -->
-        <div class="stepper-wrapper">
-            <div class="stepper-container">
-                <div class="step-item active" data-step="1">
-                    <div class="step-circle">
-                        <span class="step-number">1</span>
-                        <span class="step-icon">✓</span>
-                    </div>
-                    <div class="step-content">
-                        <div class="step-title">Información Empresarial</div>
-                        <div class="step-subtitle">Datos básicos de tu empresa</div>
-                    </div>
-                </div>
-                
-                <div class="step-connector"></div>
-                
-                <div class="step-item" data-step="2">
-                    <div class="step-circle">
-                        <span class="step-number">2</span>
-                        <span class="step-icon">✓</span>
-                    </div>
-                    <div class="step-content">
-                        <div class="step-title">Producto o Proyecto</div>
-                        <div class="step-subtitle">Descripción de tu propuesta</div>
-                    </div>
-                </div>
-                
-                <div class="step-connector"></div>
-                
-                <div class="step-item" data-step="3">
-                    <div class="step-circle">
-                        <span class="step-number">3</span>
-                        <span class="step-icon">✓</span>
-                    </div>
-                    <div class="step-content">
-                        <div class="step-title">Brechas Técnicas</div>
-                        <div class="step-subtitle">Necesidades identificadas</div>
-                    </div>
-                </div>
-                
-                <div class="step-connector"></div>
-                
-                <div class="step-item" data-step="4">
-                    <div class="step-circle">
-                        <span class="step-number">4</span>
-                        <span class="step-icon">✓</span>
-                    </div>
-                    <div class="step-content">
-                        <div class="step-title">Proyección</div>
-                        <div class="step-subtitle">Visión y compromisos</div>
-                    </div>
-                </div>
-                
-                <div class="step-connector"></div>
-                
-                <div class="step-item" data-step="5">
-                    <div class="step-circle">
-                        <span class="step-number">5</span>
-                        <span class="step-icon">✓</span>
-                    </div>
-                    <div class="step-content">
-                        <div class="step-title">Documentos</div>
-                        <div class="step-subtitle">Adjuntos requeridos</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<form id="inscripcionForm" enctype="multipart/form-data">
+<!-- Sección 1: Información general de la empresa -->
+<div class="form-section">
+<h2>1. Información general de la empresa</h2>
+<div class="form-group">
+<label class="required" for="nombre_legal">Nombre legal de la empresa:</label>
+<input id="nombre_legal" name="nombre_legal" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="required" for="nit">NIT:</label>
+<input id="nit" name="nit" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="required">Persona jurídica:</label>
+<div class="checkbox-group">
+<input id="persona_juridica_si" name="persona_juridica" required="" type="radio" value="true"/>
+<label for="persona_juridica_si">Sí</label>
+<input id="persona_juridica_no" name="persona_juridica" type="radio" value="false"/>
+<label for="persona_juridica_no">No</label>
+</div>
+</div>
+<div class="form-group">
+<label class="required" for="tipo_empresa">Tipo de empresa:</label>
+<select id="tipo_empresa" name="tipo_empresa" required="">
+<option value="">Seleccione...</option>
+<option value="Micro">Micro</option>
+<option value="Pequeña">Pequeña</option>
+<option value="Mediana">Mediana</option>
+</select>
+</div>
+<div class="form-group">
+<label>Certificado de tamaño empresarial adjunto:</label>
+<div class="checkbox-group">
+<input id="certificado_tamano" name="certificado_tamano" type="checkbox" value="true"/>
+<label for="certificado_tamano">Sí</label>
+</div>
+<div class="file-upload">
+<input id="certificado_tamano_file" name="certificado_tamano_file" type="file"/>
+</div>
+</div>
+<div class="form-group">
+<label class="required" for="representante">Representante legal:</label>
+<input id="representante" name="representante" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="required" for="cedula_representante">Número de cédula del representante:</label>
+<input id="cedula_representante" name="cedula_representante" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="required" for="correo_contacto">Correo electrónico de contacto:</label>
+<input id="correo_contacto" name="correo_contacto" required="" type="email"/>
+</div>
+<div class="form-group">
+<label class="required" for="telefono_contacto">Teléfono de contacto:</label>
+<input id="telefono_contacto" name="telefono_contacto" required="" type="tel"/>
+</div>
+<div class="form-group">
+<label class="required" for="municipio">Municipio y dirección de la sede principal:</label>
+<input id="municipio" name="municipio" placeholder="Municipio" required="" type="text"/>
+<textarea id="direccion" name="direccion" placeholder="Dirección completa" required=""></textarea>
+</div>
+<div class="form-group">
+<label>¿Está ubicada fuera del Valle de Aburrá?</label>
+<div class="checkbox-group">
+<input id="fuera_valle_si" name="fuera_valle" type="radio" value="true"/>
+<label for="fuera_valle_si">Sí</label>
+<input checked="" id="fuera_valle_no" name="fuera_valle" type="radio" value="false"/>
+<label for="fuera_valle_no">No</label>
+</div>
+</div>
+<div class="form-group">
+<label>¿Está afiliada a Comfama?</label>
+<div class="checkbox-group">
+<input id="afiliada_comfama_si" name="afiliada_comfama" type="radio" value="true"/>
+<label for="afiliada_comfama_si">Sí</label>
+<input checked="" id="afiliada_comfama_no" name="afiliada_comfama" type="radio" value="false"/>
+<label for="afiliada_comfama_no">No</label>
+</div>
+</div>
+<div class="form-group">
+<label>¿Cuenta con al menos un trabajador afiliado a Comfama?</label>
+<div class="checkbox-group">
+<input id="tiene_trabajador_si" name="tiene_trabajador" type="radio" value="true"/>
+<label for="tiene_trabajador_si">Sí</label>
+<input checked="" id="tiene_trabajador_no" name="tiene_trabajador" type="radio" value="false"/>
+<label for="tiene_trabajador_no">No</label>
+</div>
+</div>
+<div class="form-group">
+<label class="required" for="parafiscales">Certificado de parafiscales vigente (últimos 6 meses):</label>
+<div class="file-upload">
+<input id="parafiscales" name="parafiscales" required="" type="file"/>
+</div>
+</div>
+</div>
 
-        <!-- Formulario Multi-Step -->
-        <form id="multi-step-form" class="wizard-form" enctype="multipart/form-data">
-            
-            <!-- PASO 1: INFORMACIÓN EMPRESARIAL -->
-            <div class="step-panel active" data-panel="1">
-                <div class="panel-header">
-                    <div class="panel-icon">🏢</div>
-                    <div class="panel-info">
-                        <h2>Información de tu Empresa</h2>
-                        <p>Proporciona los datos básicos y de contacto de tu organización</p>
-                    </div>
-                </div>
+<!-- Sección 2: Producto o proyecto a postular -->
+<div class="form-section">
+<h2>2. Producto o proyecto a postular</h2>
+<p>Esta sección tiene como objetivo identificar el punto de partida técnico, normativo y comercial de su producto o idea.</p>
+<h3>2.1. Información general</h3>
+<div class="form-group">
+<label class="required" for="nombre_producto">Nombre del producto actual o idea a desarrollar:</label>
+<input id="nombre_producto" name="nombre_producto" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="required" for="descripcion_producto">Descripción detallada del producto o idea:</label>
+<textarea id="descripcion_producto" name="descripcion_producto" required=""></textarea>
+<small>(Composición, uso previsto, tipo de consumidor, categoría)</small>
+</div>
+<div class="form-group">
+<label class="required">¿Cuál es el estado actual del producto o idea?</label>
+<div class="checkbox-group">
+<input id="estado_idea" name="estado_producto" required="" type="radio" value="En idea/concepto"/>
+<label for="estado_idea">En idea/concepto</label><br/>
+<input id="estado_prototipo" name="estado_producto" type="radio" value="En desarrollo inicial (prototipo)"/>
+<label for="estado_prototipo">En desarrollo inicial (prototipo)</label><br/>
+<input id="estado_comercializado" name="estado_producto" type="radio" value="Producto comercializado localmente"/>
+<label for="estado_comercializado">Producto comercializado localmente</label><br/>
+<input id="estado_proyeccion" name="estado_producto" type="radio" value="Producto con proyección internacional"/>
+<label for="estado_proyeccion">Producto con proyección internacional</label><br/>
+<input id="estado_otro" name="estado_producto" type="radio" value="Otro"/>
+<label for="estado_otro">Otro (especificar):</label>
+<input disabled="" id="estado_otro_texto" name="estado_otro_texto" type="text"/>
+</div>
+</div>
+<div class="form-group">
+<label class="required" for="mercado_objetivo">¿Cuál es el público o mercado objetivo de este producto?</label>
+<textarea id="mercado_objetivo" name="mercado_objetivo" required=""></textarea>
+</div>
 
-                <div class="form-grid">
-                    <div class="form-section">
-                        <h3 class="section-title">
-                            <span class="section-icon">📋</span>
-                            Datos Básicos
-                        </h3>
-                        <div class="input-grid">
-                            <div class="input-group full-width">
-                                <label for="nombre_legal" class="form-label required">Nombre legal de la empresa</label>
-                                <input type="text" id="nombre_legal" name="nombre_legal" class="form-input" required 
-                                    placeholder="Ej: Alimentos La Montaña S.A.S.">
-                                <div class="input-helper">Nombre registrado en Cámara de Comercio</div>
-                            </div>
+<h3>2.2. Brechas que desea cerrar</h3>
+<p>Por favor describa las brechas o necesidades que su empresa ha identificado en relación con su producto.</p>
+<div class="form-group">
+<label><strong>1. Brechas técnicas del producto (funcionalidad, formulación, desempeño):</strong></label>
+<div class="checkbox-group">
+<input id="brecha_tecnica" name="brechas[]" type="checkbox" value="Brechas técnicas"/>
+<label for="brecha_tecnica">Sí (explique):</label>
+</div>
+<textarea id="brecha_tecnica_desc" name="brecha_tecnica_desc" placeholder="¿Qué desafíos técnicos presenta actualmente su producto? ¿Qué desea validar, reformular o mejorar? ¿Existen dificultades relacionadas con la estabilidad del producto, la textura, sabor, color, vida útil u otra propiedad?"></textarea>
+</div>
+<div class="form-group">
+<label><strong>2. Brechas en el cumplimiento normativo:</strong></label>
+<div class="checkbox-group">
+<input id="brecha_normativa" name="brechas[]" type="checkbox" value="Brechas normativas"/>
+<label for="brecha_normativa">Sí (explique):</label>
+</div>
+<textarea id="brecha_normativa_desc" name="brecha_normativa_desc" placeholder="¿Su producto cumple con los requisitos exigidos por INVIMA, FDA, EFSA u otra entidad reguladora? ¿Qué normativa específica representa una barrera?"></textarea>
+</div>
+<div class="form-group">
+<label><strong>3. Brechas en el análisis y validación de calidad:</strong></label>
+<div class="checkbox-group">
+<input id="brecha_calidad" name="brechas[]" type="checkbox" value="Brechas de calidad"/>
+<label for="brecha_calidad">Sí (explique):</label>
+</div>
+<textarea id="brecha_calidad_desc" name="brecha_calidad_desc" placeholder="¿Ha realizado análisis fisicoquímicos, microbiológicos, etc.? ¿Qué análisis considera fundamentales? ¿Tiene dificultades para interpretar resultados?"></textarea>
+</div>
+<div class="form-group">
+<label><strong>4. Brechas relacionadas con el empaque y conservación:</strong></label>
+<div class="checkbox-group">
+<input id="brecha_empaque" name="brechas[]" type="checkbox" value="Brechas de empaque"/>
+<label for="brecha_empaque">Sí (explique):</label>
+</div>
+<textarea id="brecha_empaque_desc" name="brecha_empaque_desc" placeholder="¿Considera que el empaque actual es adecuado? ¿Ha tenido problemas de vida útil, fugas, deterioro? ¿Desea evaluar nuevos materiales?"></textarea>
+</div>
+<div class="form-group">
+<label><strong>5. Brechas en posicionamiento y acceso a mercado:</strong></label>
+<div class="checkbox-group">
+<input id="brecha_mercado" name="brechas[]" type="checkbox" value="Brechas de mercado"/>
+<label for="brecha_mercado">Sí (explique):</label>
+</div>
+<textarea id="brecha_mercado_desc" name="brecha_mercado_desc" placeholder="¿Qué obstáculos ha identificado para acceder a mercados? ¿El producto tiene atributos diferenciadores? ¿Qué ajustes considera necesarios?"></textarea>
+</div>
+<div class="form-group">
+<label for="otras_brechas"><strong>6. Otras brechas o necesidades específicas no contempladas anteriormente:</strong></label>
+<textarea id="otras_brechas" name="otras_brechas"></textarea>
+</div>
+</div>
 
-                            <div class="input-group">
-                                <label for="nit" class="form-label required">NIT</label>
-                                <input type="text" id="nit" name="nit" class="form-input" required 
-                                    placeholder="900123456-7">
-                                <div class="input-helper">Incluye el dígito de verificación</div>
-                            </div>
+<!-- Sección 7: Proyección estratégica -->
+<div class="form-section">
+<h2>7. Proyección estratégica del producto</h2>
+<div class="form-group">
+<label class="required" for="vision_producto">7.1 ¿Cuál es su visión para este producto en los próximos 12 a 24 meses?</label>
+<textarea id="vision_producto" name="vision_producto" required=""></textarea>
+<small>Describa qué espera lograr en términos de posicionamiento, alcance comercial, transformaciones técnicas, cumplimiento normativo y atributos diferenciadores.</small>
+</div>
+<div class="form-group">
+<label class="required" for="impacto_empresa">7.2 ¿Qué impacto espera que este producto tenga dentro de su empresa y/o en su comunidad (económico, social, ambiental)?</label>
+<textarea id="impacto_empresa" name="impacto_empresa" required=""></textarea>
+</div>
+<div class="form-group">
+<label class="required" for="compromisos">7.3 ¿Qué compromisos está dispuesta su empresa a asumir para alcanzar esta visión (tiempo, recursos, equipo, inversión)?</label>
+<textarea id="compromisos" name="compromisos" required=""></textarea>
+</div>
+</div>
 
-                            <div class="input-group">
-                                <label for="tipo_empresa" class="form-label required">Tipo de empresa</label>
-                                <select id="tipo_empresa" name="tipo_empresa" class="form-select" required>
-                                    <option value="">Selecciona el tamaño</option>
-                                    <option value="Micro">Micro (Hasta 10 trabajadores)</option>
-                                    <option value="Pequeña">Pequeña (11 a 50 trabajadores)</option>
-                                    <option value="Mediana">Mediana (51 a 200 trabajadores)</option>
-                                </select>
-                            </div>
+<!-- Sección 8: Motivación y expectativas -->
+<div class="form-section">
+<h2>8. Motivación y expectativas</h2>
+<div class="form-group">
+<label class="required" for="motivacion">¿Por qué desea participar en la convocatoria Desarrolla, Conecta y Crece?</label>
+<textarea id="motivacion" name="motivacion" required=""></textarea>
+</div>
+<div class="form-group">
+<label class="required" for="expectativas">¿Qué espera lograr con este acompañamiento técnico?</label>
+<textarea id="expectativas" name="expectativas" required=""></textarea>
+</div>
+<div class="form-group">
+<label class="required">¿Está dispuesta su empresa a dedicar tiempo al diagnóstico, participación en Bootcamps y seguimiento técnico durante los próximos meses?</label>
+<div class="checkbox-group">
+<input id="disponibilidad_si" name="disponibilidad" required="" type="radio" value="true"/>
+<label for="disponibilidad_si">Sí</label>
+<input id="disponibilidad_no" name="disponibilidad" type="radio" value="false"/>
+<label for="disponibilidad_no">No</label>
+</div>
+</div>
+</div>
 
-                            <div class="input-group full-width">
-                                <label class="form-label required">¿Es persona jurídica?</label>
-                                <div class="radio-group">
-                                    <label class="radio-option">
-                                        <input type="radio" name="persona_juridica" value="true" required>
-                                        <span class="radio-custom"></span>
-                                        <span class="radio-label">Sí</span>
-                                    </label>
-                                    <label class="radio-option">
-                                        <input type="radio" name="persona_juridica" value="false">
-                                        <span class="radio-custom"></span>
-                                        <span class="radio-label">No</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<!-- Sección 9: Documentos requeridos -->
+<div class="form-section">
+<h2>9. Documentos requeridos (adjuntar)</h2>
+<div class="form-group">
+<label class="required" for="camara_comercio">Cámara de comercio (vigente):</label>
+<div class="file-upload">
+<input id="camara_comercio" name="camara_comercio" required="" type="file" accept=".pdf"/>
+</div>
+</div>
+<div class="form-group">
+<label class="required" for="rut">RUT actualizado:</label>
+<div class="file-upload">
+<input id="rut" name="rut" required="" type="file"/>
+</div>
+</div>
+<div class="form-group">
+<label for="afiliacion_comfama">Certificado de afiliación a Comfama:</label>
+<div class="file-upload">
+<input id="afiliacion_comfama" name="afiliacion_comfama" type="file" accept=".pdf"/>
+</div>
+</div>
+<div class="form-group">
+<label for="hoja_vida">Hoja de vida del producto (si aplica):</label>
+<div class="file-upload">
+<input id="hoja_vida" name="hoja_vida" type="file" accept=".pdf"/>
+</div>
+</div>
+<div class="form-group">
+<label for="otros_documentos">Otro soporte técnico (opcional):</label>
+<div class="file-upload">
+<input id="otros_documentos" name="otros_documentos" type="file" accept=".pdf"/>
+</div>
+</div>
+</div>
 
-                    <div class="form-section">
-                        <h3 class="section-title">
-                            <span class="section-icon">👤</span>
-                            Representante Legal
-                        </h3>
-                        <div class="input-grid">
-                            <div class="input-group">
-                                <label for="representante" class="form-label required">Nombre completo</label>
-                                <input type="text" id="representante" name="representante" class="form-input" required 
-                                       placeholder="Ej: María Fernanda Gómez">
-                            </div>
+<!-- Sección 10: Declaración -->
+<div class="form-section">
+<h2>10. Declaración</h2>
+<p>Declaro que la información aquí consignada es veraz y autorizo su uso en el marco de la presente convocatoria por parte de Aoxlab y Comfama.</p>
+<div class="form-group">
+<label class="required" for="nombre_representante">Nombre completo del representante legal:</label>
+<input id="nombre_representante" name="nombre_representante" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="required" for="cedula_representante_declaracion">Número de cédula:</label>
+<input id="cedula_representante_declaracion" name="cedula_representante_declaracion" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="required" for="firma">Firma:</label>
+<input id="firma" name="firma" placeholder="Escriba su nombre como firma digital" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="required" for="fecha_declaracion">Fecha:</label>
+<input id="fecha_declaracion" name="fecha_declaracion" required="" type="date"/>
+</div>
+</div>
 
-                            <div class="input-group">
-                                <label for="cedula_representante" class="form-label required">Número de cédula</label>
-                                <input type="text" id="cedula_representante" name="cedula_representante" class="form-input" required 
-                                       placeholder="12345678">
-                            </div>
-                        </div>
-                    </div>
+<div style="margin-top: 20px;">
+    <button type="button" id="btn-guardar-borrador">💾 Guardar como borrador</button>
+    <button type="button" id="btn-enviar">✅ Enviar postulación</button>
+</div>
 
-                    <div class="form-section">
-                        <h3 class="section-title">
-                            <span class="section-icon">📞</span>
-                            Información de Contacto
-                        </h3>
-                        <div class="input-grid">
-                            <div class="input-group">
-                                <label for="correo_contacto" class="form-label required">Correo electrónico</label>
-                                <input type="email" id="correo_contacto" name="correo_contacto" class="form-input" required 
-                                       placeholder="info@empresa.com">
-                            </div>
+</form>
+</div>
 
-                            <div class="input-group">
-                                <label for="telefono_contacto" class="form-label required">Teléfono</label>
-                                <input type="tel" id="telefono_contacto" name="telefono_contacto" class="form-input" required 
-                                       placeholder="+57 300 123 4567">
-                            </div>
+<script src="/public/js/formulario.js"></script>
 
-                            <div class="input-group">
-                                <label for="municipio" class="form-label required">Municipio</label>
-                                <input type="text" id="municipio" name="municipio" class="form-input" required 
-                                       placeholder="Ej: Medellín">
-                            </div>
-
-                            <div class="input-group full-width">
-                                <label for="direccion" class="form-label required">Dirección completa</label>
-                                <textarea id="direccion" name="direccion" class="form-textarea" required 
-                                          placeholder="Calle 50 # 25-30, Barrio Laureles"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3 class="section-title">
-                            <span class="section-icon">📍</span>
-                            Características Adicionales
-                        </h3>
-                        <div class="checkbox-grid">
-                            <div class="checkbox-group">
-                                <label class="form-label">¿Está ubicada fuera del Valle de Aburrá?</label>
-                                <div class="radio-group">
-                                    <label class="radio-option">
-                                        <input type="radio" name="fuera_valle" value="true">
-                                        <span class="radio-custom"></span>
-                                        <span class="radio-label">Sí</span>
-                                    </label>
-                                    <label class="radio-option">
-                                        <input type="radio" name="fuera_valle" value="false" checked>
-                                        <span class="radio-custom"></span>
-                                        <span class="radio-label">No</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-group">
-                                <label class="form-label">¿Está afiliada a Comfama?</label>
-                                <div class="radio-group">
-                                    <label class="radio-option">
-                                        <input type="radio" name="afiliada_comfama" value="true">
-                                        <span class="radio-custom"></span>
-                                        <span class="radio-label">Sí</span>
-                                    </label>
-                                    <label class="radio-option">
-                                        <input type="radio" name="afiliada_comfama" value="false" checked>
-                                        <span class="radio-custom"></span>
-                                        <span class="radio-label">No</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-group">
-                                <label class="form-label">¿Cuenta con trabajadores afiliados a Comfama?</label>
-                                <div class="radio-group">
-                                    <label class="radio-option">
-                                        <input type="radio" name="tiene_trabajador" value="true">
-                                        <span class="radio-custom"></span>
-                                        <span class="radio-label">Sí</span>
-                                    </label>
-                                    <label class="radio-option">
-                                        <input type="radio" name="tiene_trabajador" value="false" checked>
-                                        <span class="radio-custom"></span>
-                                        <span class="radio-label">No</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel-actions">
-                    <button type="button" class="btn-secondary" onclick="saveDraft()">
-                        <span class="btn-icon">💾</span>
-                        Guardar borrador
-                    </button>
-                    <button type="button" class="btn-primary" onclick="nextStep()">
-                        <span class="btn-text">Continuar</span>
-                        <span class="btn-icon">→</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- PASO 2: PRODUCTO O PROYECTO -->
-            <div class="step-panel" data-panel="2">
-                <div class="panel-header">
-                    <div class="panel-icon">🎯</div>
-                    <div class="panel-info">
-                        <h2>Tu Producto o Proyecto</h2>
-                        <p>Cuéntanos sobre lo que quieres desarrollar o mejorar</p>
-                    </div>
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-section">
-                        <h3 class="section-title">
-                            <span class="section-icon">📦</span>
-                            Información General del Producto
-                        </h3>
-                        <div class="input-grid">
-                            <div class="input-group full-width">
-                                <label for="nombre_producto" class="form-label required">Nombre del producto o idea</label>
-                                <input type="text" id="nombre_producto" name="nombre_producto" class="form-input" required 
-                                       placeholder="Ej: Mermelada artesanal de frutos rojos">
-                                <div class="input-helper">Nombre comercial o denominación del producto</div>
-                            </div>
-
-                            <div class="input-group full-width">
-                                <label for="descripcion_producto" class="form-label required">Descripción detallada</label>
-                                <textarea id="descripcion_producto" name="descripcion_producto" class="form-textarea large" required 
-                                          placeholder="Describe tu producto: composición, uso previsto, tipo de consumidor, categoría, características especiales..."></textarea>
-                                <div class="input-helper">Incluye composición, uso, target, características distintivas</div>
-                            </div>
-
-                            <div class="input-group full-width">
-                                <label class="form-label required">¿Cuál es el estado actual del producto?</label>
-                                <div class="radio-group vertical">
-                                    <label class="radio-option">
-                                        <input type="radio" name="estado_producto" value="En idea/concepto" required>
-                                        <span class="radio-custom"></span>
-                                        <div class="radio-content">
-                                            <span class="radio-label">En idea/concepto</span>
-                                            <span class="radio-description">Tienes una idea clara pero aún no has desarrollado el producto</span>
-                                        </div>
-                                    </label>
-                                    <label class="radio-option">
-                                        <input type="radio" name="estado_producto" value="En desarrollo inicial (prototipo)">
-                                        <span class="radio-custom"></span>
-                                        <div class="radio-content">
-                                            <span class="radio-label">En desarrollo inicial (prototipo)</span>
-                                            <span class="radio-description">Tienes una primera versión o prototipo en desarrollo</span>
-                                        </div>
-                                    </label>
-                                    <label class="radio-option">
-                                        <input type="radio" name="estado_producto" value="Producto comercializado localmente">
-                                        <span class="radio-custom"></span>
-                                        <div class="radio-content">
-                                            <span class="radio-label">Producto comercializado localmente</span>
-                                            <span class="radio-description">Ya vendes el producto en mercado local/regional</span>
-                                        </div>
-                                    </label>
-                                    <label class="radio-option">
-                                        <input type="radio" name="estado_producto" value="Producto con proyección internacional">
-                                        <span class="radio-custom"></span>
-                                        <div class="radio-content">
-                                            <span class="radio-label">Producto con proyección internacional</span>
-                                            <span class="radio-description">Producto establecido buscando expansión internacional</span>
-                                        </div>
-                                    </label>
-                                    <label class="radio-option">
-                                        <input type="radio" name="estado_producto" value="Otro">
-                                        <span class="radio-custom"></span>
-                                        <div class="radio-content">
-                                            <span class="radio-label">Otro</span>
-                                            <span class="radio-description">Especifica tu situación particular</span>
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="conditional-input" id="estado_otro_container" style="display: none;">
-                                    <input type="text" id="estado_otro_texto" name="estado_otro_texto" class="form-input" 
-                                           placeholder="Especifica el estado actual de tu producto...">
-                                </div>
-                            </div>
-
-                            <div class="input-group full-width">
-                                <label for="mercado_objetivo" class="form-label required">Mercado objetivo</label>
-                                <textarea id="mercado_objetivo" name="mercado_objetivo" class="form-textarea" required 
-                                          placeholder="Describe tu público objetivo: edad, perfil socioeconómico, hábitos de consumo, ubicación geográfica..."></textarea>
-                                <div class="input-helper">¿A quién está dirigido tu producto? ¿Quiénes son tus clientes ideales?</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel-actions">
-                    <button type="button" class="btn-secondary" onclick="prevStep()">
-                        <span class="btn-icon">←</span>
-                        Anterior
-                    </button>
-                    <div class="actions-right">
-                        <button type="button" class="btn-outline" onclick="saveDraft()">
-                            <span class="btn-icon">💾</span>
-                            Guardar
-                        </button>
-                        <button type="button" class="btn-primary" onclick="nextStep()">
-                            <span class="btn-text">Continuar</span>
-                            <span class="btn-icon">→</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PASO 3: BRECHAS TÉCNICAS -->
-            <div class="step-panel" data-panel="3">
-                <div class="panel-header">
-                    <div class="panel-icon">🔍</div>
-                    <div class="panel-info">
-                        <h2>Brechas que Deseas Cerrar</h2>
-                        <p>Identifica las necesidades y desafíos de tu producto</p>
-                    </div>
-                </div>
-
-                <div class="form-grid">
-                    <div class="brechas-container">
-                        
-                        <div class="brecha-card">
-                            <div class="brecha-header">
-                                <div class="brecha-icon">⚙️</div>
-                                <div class="brecha-title">
-                                    <h4>Brechas Técnicas del Producto</h4>
-                                    <p>Funcionalidad, formulación, desempeño</p>
-                                </div>
-                                <label class="checkbox-toggle">
-                                    <input type="checkbox" id="brecha_tecnica" name="brechas[]" value="Brechas técnicas">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <div class="brecha-content" id="brecha_tecnica_content">
-                                <textarea id="brecha_tecnica_desc" name="brecha_tecnica_desc" class="form-textarea" 
-                                          placeholder="¿Qué desafíos técnicos presenta tu producto? ¿Qué deseas validar, reformular o mejorar? (estabilidad, textura, sabor, color, vida útil...)"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="brecha-card">
-                            <div class="brecha-header">
-                                <div class="brecha-icon">📋</div>
-                                <div class="brecha-title">
-                                    <h4>Cumplimiento Normativo</h4>
-                                    <p>Requisitos INVIMA, FDA, EFSA</p>
-                                </div>
-                                <label class="checkbox-toggle">
-                                    <input type="checkbox" id="brecha_normativa" name="brechas[]" value="Brechas normativas">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <div class="brecha-content" id="brecha_normativa_content">
-                                <textarea id="brecha_normativa_desc" name="brecha_normativa_desc" class="form-textarea" 
-                                          placeholder="¿Tu producto cumple con los requisitos exigidos por INVIMA, FDA, EFSA u otra entidad reguladora? ¿Qué normativa específica representa una barrera?"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="brecha-card">
-                            <div class="brecha-header">
-                                <div class="brecha-icon">🔬</div>
-                                <div class="brecha-title">
-                                    <h4>Análisis y Validación de Calidad</h4>
-                                    <p>Pruebas fisicoquímicas, microbiológicas</p>
-                                </div>
-                                <label class="checkbox-toggle">
-                                    <input type="checkbox" id="brecha_calidad" name="brechas[]" value="Brechas de calidad">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <div class="brecha-content" id="brecha_calidad_content">
-                                <textarea id="brecha_calidad_desc" name="brecha_calidad_desc" class="form-textarea" 
-                                          placeholder="¿Has realizado análisis fisicoquímicos, microbiológicos? ¿Qué análisis consideras fundamentales? ¿Tienes dificultades para interpretar resultados?"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="brecha-card">
-                            <div class="brecha-header">
-                                <div class="brecha-icon">📦</div>
-                                <div class="brecha-title">
-                                    <h4>Empaque y Conservación</h4>
-                                    <p>Materiales, vida útil, almacenamiento</p>
-                                </div>
-                                <label class="checkbox-toggle">
-                                    <input type="checkbox" id="brecha_empaque" name="brechas[]" value="Brechas de empaque">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <div class="brecha-content" id="brecha_empaque_content">
-                                <textarea id="brecha_empaque_desc" name="brecha_empaque_desc" class="form-textarea" 
-                                          placeholder="¿El empaque actual es adecuado? ¿Has tenido problemas de vida útil, fugas, deterioro? ¿Deseas evaluar nuevos materiales?"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="brecha-card">
-                            <div class="brecha-header">
-                                <div class="brecha-icon">📈</div>
-                                <div class="brecha-title">
-                                    <h4>Posicionamiento y Acceso a Mercado</h4>
-                                    <p>Comercialización, diferenciación</p>
-                                </div>
-                                <label class="checkbox-toggle">
-                                    <input type="checkbox" id="brecha_mercado" name="brechas[]" value="Brechas de mercado">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <div class="brecha-content" id="brecha_mercado_content">
-                                <textarea id="brecha_mercado_desc" name="brecha_mercado_desc" class="form-textarea" 
-                                          placeholder="¿Qué obstáculos has identificado para acceder a mercados? ¿El producto tiene atributos diferenciadores? ¿Qué ajustes consideras necesarios?"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="brecha-card">
-                            <div class="brecha-header">
-                                <div class="brecha-icon">➕</div>
-                                <div class="brecha-title">
-                                    <h4>Otras Necesidades</h4>
-                                    <p>Especifica otras brechas particulares</p>
-                                </div>
-                            </div>
-                            <div class="brecha-content active">
-                                <textarea id="otras_brechas" name="otras_brechas" class="form-textarea" 
-                                          placeholder="¿Hay otras brechas o necesidades específicas no contempladas anteriormente?"></textarea>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="panel-actions">
-                    <button type="button" class="btn-secondary" onclick="prevStep()">
-                        <span class="btn-icon">←</span>
-                        Anterior
-                    </button>
-                    <div class="actions-right">
-                        <button type="button" class="btn-outline" onclick="saveDraft()">
-                            <span class="btn-icon">💾</span>
-                            Guardar
-                        </button>
-                        <button type="button" class="btn-primary" onclick="nextStep()">
-                            <span class="btn-text">Continuar</span>
-                            <span class="btn-icon">→</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PASO 4: PROYECCIÓN ESTRATÉGICA -->
-            <div class="step-panel" data-panel="4">
-                <div class="panel-header">
-                    <div class="panel-icon">🚀</div>
-                    <div class="panel-info">
-                        <h2>Proyección Estratégica</h2>
-                        <p>Define tu visión, impacto esperado y compromisos</p>
-                    </div>
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-section">
-                        <div class="vision-cards">
-                            
-                            <div class="vision-card">
-                                <div class="card-header">
-                                    <div class="card-icon">🔮</div>
-                                    <h4>Visión del Producto</h4>
-                                </div>
-                                <div class="card-content">
-                                    <label for="vision_producto" class="form-label required">¿Cuál es tu visión para este producto en los próximos 12-24 meses?</label>
-                                    <textarea id="vision_producto" name="vision_producto" class="form-textarea large" required 
-                                              placeholder="Describe tu visión en términos de posicionamiento, alcance comercial, transformaciones técnicas, cumplimiento normativo y atributos diferenciadores..."></textarea>
-                                </div>
-                            </div>
-
-                            <div class="vision-card">
-                                <div class="card-header">
-                                    <div class="card-icon">💡</div>
-                                    <h4>Impacto Esperado</h4>
-                                </div>
-                                <div class="card-content">
-                                    <label for="impacto_empresa" class="form-label required">¿Qué impacto esperas en tu empresa y comunidad?</label>
-                                    <textarea id="impacto_empresa" name="impacto_empresa" class="form-textarea large" required 
-                                              placeholder="Describe el impacto económico, social y ambiental que esperas generar..."></textarea>
-                                </div>
-                            </div>
-
-                            <div class="vision-card">
-                                <div class="card-header">
-                                    <div class="card-icon">🤝</div>
-                                    <h4>Compromisos</h4>
-                                </div>
-                                <div class="card-content">
-                                    <label for="compromisos" class="form-label required">¿Qué compromisos asume tu empresa?</label>
-                                    <textarea id="compromisos" name="compromisos" class="form-textarea large" required 
-                                              placeholder="Especifica los compromisos en tiempo, recursos, equipo humano e inversión que está dispuesta a asumir tu empresa..."></textarea>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3 class="section-title">
-                            <span class="section-icon">💭</span>
-                            Motivación y Expectativas
-                        </h3>
-                        <div class="input-grid">
-                            <div class="input-group full-width">
-                                <label for="motivacion" class="form-label required">¿Por qué deseas participar en "Desarrolla, Conecta y Crece"?</label>
-                                <textarea id="motivacion" name="motivacion" class="form-textarea" required 
-                                          placeholder="Explica las razones que te motivan a participar en esta convocatoria..."></textarea>
-                            </div>
-
-                            <div class="input-group full-width">
-                                <label for="expectativas" class="form-label required">¿Qué esperas lograr con este acompañamiento?</label>
-                                <textarea id="expectativas" name="expectativas" class="form-textarea" required 
-                                          placeholder="Describe qué resultados concretos esperas obtener del acompañamiento técnico..."></textarea>
-                            </div>
-
-                            <div class="input-group full-width">
-                                <label class="form-label required">Compromiso de Participación</label>
-                                <div class="commitment-box">
-                                    <p class="commitment-text">¿Tu empresa se compromete a dedicar tiempo al diagnóstico, participación en Bootcamps y seguimiento técnico durante el desarrollo del programa?</p>
-                                    <div class="radio-group">
-                                        <label class="radio-option">
-                                            <input type="radio" name="disponibilidad" value="true" required>
-                                            <span class="radio-custom"></span>
-                                            <div class="radio-content">
-                                                <span class="radio-label">Sí, nos comprometemos</span>
-                                                <span class="radio-description">Asumimos el compromiso de participar activamente</span>
-                                            </div>
-                                        </label>
-                                        <label class="radio-option">
-                                            <input type="radio" name="disponibilidad" value="false">
-                                            <span class="radio-custom"></span>
-                                            <div class="radio-content">
-                                                <span class="radio-label">No podemos comprometernos</span>
-                                                <span class="radio-description">No podemos garantizar la disponibilidad requerida</span>
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel-actions">
-                    <button type="button" class="btn-secondary" onclick="prevStep()">
-                        <span class="btn-icon">←</span>
-                        Anterior
-                    </button>
-                    <div class="actions-right">
-                        <button type="button" class="btn-outline" onclick="saveDraft()">
-                            <span class="btn-icon">💾</span>
-                            Guardar
-                        </button>
-                        <button type="button" class="btn-primary" onclick="nextStep()">
-                            <span class="btn-text">Continuar</span>
-                            <span class="btn-icon">→</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PASO 5: DOCUMENTOS -->
-            <div class="step-panel" data-panel="5">
-                <div class="panel-header">
-                    <div class="panel-icon">📎</div>
-                    <div class="panel-info">
-                        <h2>Documentos Requeridos</h2>
-                        <p>Adjunta los documentos necesarios para completar tu postulación</p>
-                    </div>
-                </div>
-
-                <div class="form-grid">
-                    <div class="upload-section">
-                        <div class="upload-requirements">
-                            <h4>📋 Requisitos para los documentos:</h4>
-                            <ul>
-                                <li>Formato PDF o imagen (JPG, PNG)</li>
-                                <li>Peso máximo: 2MB por archivo</li>
-                                <li>Sin contraseña o protección</li>
-                                <li>Documentos legibles y sin daños</li>
-                            </ul>
-                        </div>
-
-                        <div class="documents-grid">
-                            
-                            <div class="upload-card required">
-                                <div class="upload-header">
-                                    <div class="upload-icon">🏢</div>
-                                    <div class="upload-info">
-                                        <h4>Cámara de Comercio</h4>
-                                        <p>Certificado vigente (últimos 3 meses)</p>
-                                        <span class="required-badge">Obligatorio</span>
-                                    </div>
-                                </div>
-                                <div class="upload-zone" onclick="triggerFileInput('camara_comercio')">
-                                    <input type="file" id="camara_comercio" name="camara_comercio" accept=".pdf,.jpg,.jpeg,.png" required style="display: none;">
-                                    <div class="upload-content">
-                                        <div class="upload-visual">📄</div>
-                                        <p class="upload-text">Haz clic o arrastra tu archivo aquí</p>
-                                        <p class="upload-subtext">Certificado vigente</p>
-                                    </div>
-                                </div>
-                                <div class="file-preview" style="display: none;"></div>
-                            </div>
-
-                            <div class="upload-card required">
-                                <div class="upload-header">
-                                    <div class="upload-icon">📊</div>
-                                    <div class="upload-info">
-                                        <h4>RUT Actualizado</h4>
-                                        <p>Registro Único Tributario</p>
-                                        <span class="required-badge">Obligatorio</span>
-                                    </div>
-                                </div>
-                                <div class="upload-zone" onclick="triggerFileInput('rut')">
-                                    <input type="file" id="rut" name="rut" accept=".pdf,.jpg,.jpeg,.png" required style="display: none;">
-                                    <div class="upload-content">
-                                        <div class="upload-visual">📄</div>
-                                        <p class="upload-text">Haz clic o arrastra tu archivo aquí</p>
-                                        <p class="upload-subtext">Documento actualizado</p>
-                                    </div>
-                                </div>
-                                <div class="file-preview" style="display: none;"></div>
-                            </div>
-
-                            <div class="upload-card">
-                                <div class="upload-header">
-                                    <div class="upload-icon">🛡️</div>
-                                    <div class="upload-info">
-                                        <h4>Afiliación a Comfama</h4>
-                                        <p>Certificado de afiliación</p>
-                                        <span class="optional-badge">Opcional</span>
-                                    </div>
-                                </div>
-                                <div class="upload-zone" onclick="triggerFileInput('afiliacion_comfama')">
-                                    <input type="file" id="afiliacion_comfama" name="afiliacion_comfama" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
-                                    <div class="upload-content">
-                                        <div class="upload-visual">📄</div>
-                                        <p class="upload-text">Haz clic o arrastra tu archivo aquí</p>
-                                        <p class="upload-subtext">Si aplica</p>
-                                    </div>
-                                </div>
-                                <div class="file-preview" style="display: none;"></div>
-                            </div>
-
-                            <div class="upload-card">
-                                <div class="upload-header">
-                                    <div class="upload-icon">📋</div>
-                                    <div class="upload-info">
-                                        <h4>Hoja de Vida del Producto</h4>
-                                        <p>Ficha técnica o información detallada</p>
-                                        <span class="optional-badge">Opcional</span>
-                                    </div>
-                                </div>
-                                <div class="upload-zone" onclick="triggerFileInput('hoja_vida')">
-                                    <input type="file" id="hoja_vida" name="hoja_vida" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
-                                    <div class="upload-content">
-                                        <div class="upload-visual">📄</div>
-                                        <p class="upload-text">Haz clic o arrastra tu archivo aquí</p>
-                                        <p class="upload-subtext">Si está disponible</p>
-                                    </div>
-                                </div>
-                                <div class="file-preview" style="display: none;"></div>
-                            </div>
-
-                            <div class="upload-card">
-                                <div class="upload-header">
-                                    <div class="upload-icon">📎</div>
-                                    <div class="upload-info">
-                                        <h4>Otros Documentos</h4>
-                                        <p>Soporte técnico adicional</p>
-                                        <span class="optional-badge">Opcional</span>
-                                    </div>
-                                </div>
-                                <div class="upload-zone" onclick="triggerFileInput('otros_documentos')">
-                                    <input type="file" id="otros_documentos" name="otros_documentos" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
-                                    <div class="upload-content">
-                                        <div class="upload-visual">📄</div>
-                                        <p class="upload-text">Haz clic o arrastra tu archivo aquí</p>
-                                        <p class="upload-subtext">Documentos adicionales</p>
-                                    </div>
-                                </div>
-                                <div class="file-preview" style="display: none;"></div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3 class="section-title">
-                            <span class="section-icon">✍️</span>
-                            Declaración y Firma
-                        </h3>
-                        <div class="declaration-box">
-                            <p class="declaration-text">
-                                <strong>Declaro que:</strong> La información aquí consignada es veraz y autorizo su uso en el marco de la presente convocatoria por parte de Aoxlab y Comfama. Acepto los términos y condiciones del programa "Desarrolla, Conecta y Crece".
-                            </p>
-                            
-                            <div class="input-grid">
-                                <div class="input-group">
-                                    <label for="nombre_representante" class="form-label required">Nombre completo del representante legal</label>
-                                    <input type="text" id="nombre_representante" name="nombre_representante" class="form-input" required 
-                                           placeholder="Nombre completo">
-                                </div>
-
-                                <div class="input-group">
-                                    <label for="cedula_representante_declaracion" class="form-label required">Número de cédula</label>
-                                    <input type="text" id="cedula_representante_declaracion" name="cedula_representante_declaracion" class="form-input" required 
-                                           placeholder="Número de identificación">
-                                    <div class="input-helper">Debe coincidir con la cédula proporcionada anteriormente</div>
-                                </div>
-
-                                <div class="input-group">
-                                    <label for="fecha_declaracion" class="form-label required">Fecha de declaración</label>
-                                    <input type="date" id="fecha_declaracion" name="fecha_declaracion" class="form-input" required>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel-actions">
-                    <button type="button" class="btn-secondary" onclick="prevStep()">
-                        <span class="btn-icon">←</span>
-                        Anterior
-                    </button>
-                    <div class="actions-right">
-                        <button type="button" class="btn-outline" onclick="saveDraft()">
-                            <span class="btn-icon">💾</span>
-                            Guardar borrador
-                        </button>
-                        <button type="button" class="btn-success" onclick="submitForm()">
-                            <span class="btn-icon">✅</span>
-                            <span class="btn-text">Enviar Postulación</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-        </form>
-    </div>
-
-    <!-- Modal de Confirmación -->
-    <div id="confirmModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Confirmar Envío</h3>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="confirmation-icon">⚠️</div>
-                <p>¿Estás seguro de que deseas enviar tu postulación?</p>
-                <p class="warning-text">Una vez enviada, no podrás realizar modificaciones.</p>
-            </div>
-            <div class="modal-actions">
-                <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
-                <button class="btn-primary" onclick="confirmSubmit()">Sí, enviar postulación</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="../js/formulario.js"></script>
-    
 </body>
 </html>
