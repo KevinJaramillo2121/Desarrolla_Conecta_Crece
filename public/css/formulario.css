@@ -1,73 +1,838 @@
-    body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1, h2 {
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-        }
-        .form-section {
-            margin-bottom: 30px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="date"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        textarea {
-            min-height: 100px;
-        }
-        .checkbox-group {
-            margin: 10px 0;
-        }
-        .checkbox-group label {
-            display: inline-block;
-            margin-left: 5px;
-            font-weight: normal;
-        }
-        .required:after {
-            content: " *";
-            color: red;
-        }
-        button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        .file-upload {
-            margin: 10px 0;
-        }
+/* ========================================
+FORMULARIO DE CONVOCATORIA - DISEÑO MODERNO
+SISTEMA DE CONVOCATORIAS COMFAMA + AOXLAB
+======================================== */
+
+:root {
+    /* Colores Corporativos Unificados */
+    --magenta-comfama: #D0417E;
+    --magenta-light: #E659A1;
+    --magenta-dark: #B23368;
+    --naranja-aoxlab: #F37728;
+    --naranja-light: #FF8A4D;
+    --naranja-dark: #E06B1F;
+    --azul-aoxlab: #2BA1D4;
+    --azul-light: #5CB8E1;
+    --azul-dark: #1F7BA6;
+    --verde-success: #10B981;
+    --rojo-error: #EF4444;
+    --amarillo-warning: #F59E0B;
+    
+    /* Colores Base */
+    --gris-texto: #484547;
+    --negro-fuerte: #231F20;
+    --blanco: #FFFFFF;
+    --gris-claro: #F8F9FD;
+    --gris-medio: #E8EAED;
+    --gris-card: #FAFBFC;
+    --gris-border: #E1E5E9;
+    
+    /* Efectos y Sombras */
+    --shadow-card: 0 8px 32px rgba(72, 69, 71, 0.08);
+    --shadow-hover: 0 12px 48px rgba(208, 65, 126, 0.15);
+    --shadow-input: 0 2px 8px rgba(72, 69, 71, 0.06);
+    --shadow-button: 0 6px 24px rgba(243, 119, 40, 0.3);
+    
+    /* Tipografías */
+    --font-principal: 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-titulo: 'Aller', 'Arial Black', 'Helvetica Bold', sans-serif;
+    
+    /* Espaciado Sistémico */
+    --espacio-xs: 8px;
+    --espacio-sm: 12px;
+    --espacio-md: 16px;
+    --espacio-lg: 24px;
+    --espacio-xl: 32px;
+    --espacio-xxl: 48px;
+    
+    /* Bordes y Radio */
+    --radio-sm: 8px;
+    --radio-md: 12px;
+    --radio-lg: 16px;
+    --radio-xl: 20px;
+    
+    /* Transiciones */
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Reset y Configuración Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: var(--font-principal);
+    line-height: 1.6;
+    background: linear-gradient(135deg,
+        var(--gris-claro) 0%,
+        #E8F4F8 30%,
+        #FDF2F8 60%,
+        var(--gris-claro) 100%);
+    color: var(--gris-texto);
+}
+
+/* Fondo Decorativo Sutil */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(circle at 20% 80%, rgba(208, 65, 126, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(243, 119, 40, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(43, 161, 212, 0.02) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Header Corporativo Moderno */
+.formulario-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 3px solid transparent;
+    background-image: linear-gradient(white, white),
+        linear-gradient(90deg, var(--magenta-comfama), var(--naranja-aoxlab));
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    box-shadow: var(--shadow-card);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: var(--espacio-lg) 0;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--espacio-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--espacio-lg);
+}
+
+.logo-corporativo {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-lg);
+}
+
+.brand-logos {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-md);
+}
+
+.logo-comfama,
+.logo-aoxlab {
+    height: 56px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(208, 65, 126, 0.1));
+    transition: var(--transition-smooth);
+}
+
+.logo-comfama:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 4px 12px rgba(208, 65, 126, 0.2));
+}
+
+.logo-aoxlab:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 4px 12px rgba(243, 119, 40, 0.2));
+}
+
+.separador-logos {
+    width: 3px;
+    height: 40px;
+    background: linear-gradient(to bottom,
+        var(--magenta-comfama) 0%,
+        var(--naranja-aoxlab) 100%);
+    border-radius: 2px;
+}
+
+.programa-info {
+    text-align: center;
+}
+
+.programa-info h1 {
+    font-family: var(--font-titulo);
+    font-size: 1.75rem;
+    font-weight: 800;
+    background: linear-gradient(135deg,
+        var(--magenta-comfama) 0%,
+        var(--naranja-aoxlab) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: var(--espacio-xs);
+}
+
+.programa-info p {
+    color: var(--gris-texto);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Contenedor Principal */
+.container {
+    max-width: 1000px;
+    margin: var(--espacio-xxl) auto;
+    padding: 0 var(--espacio-lg);
+}
+
+/* Tarjeta Principal del Formulario */
+.formulario-card {
+    background: var(--blanco);
+    border-radius: var(--radio-xl);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    border: 1px solid var(--gris-border);
+    position: relative;
+}
+
+/* Header de la Tarjeta */
+.card-header {
+    background: linear-gradient(135deg,
+        var(--magenta-comfama) 0%,
+        var(--naranja-aoxlab) 100%);
+    color: var(--blanco);
+    padding: var(--espacio-xxl) var(--espacio-xl);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+        radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    animation: float 15s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes float {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+}
+
+.convocatoria-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--espacio-lg);
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1;
+}
+
+.convocatoria-icon::after {
+    content: '📋';
+    font-size: 40px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.card-header h1 {
+    font-family: var(--font-titulo);
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin-bottom: var(--espacio-md);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+.card-header p {
+    font-size: 1.125rem;
+    opacity: 0.95;
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Cuerpo del Formulario */
+.formulario-body {
+    padding: var(--espacio-xxl) var(--espacio-xl);
+}
+
+/* Secciones del Formulario */
+.form-section {
+    margin-bottom: var(--espacio-xxl);
+    background: var(--gris-card);
+    border-radius: var(--radio-lg);
+    padding: var(--espacio-xl);
+    border: 1px solid var(--gris-border);
+    position: relative;
+    transition: var(--transition-smooth);
+}
+
+.form-section:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.form-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg,
+        var(--magenta-comfama) 0%,
+        var(--naranja-aoxlab) 100%);
+    border-radius: 2px 0 0 2px;
+}
+
+/* Títulos de Sección */
+h2 {
+    font-family: var(--font-titulo);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--negro-fuerte);
+    margin-bottom: var(--espacio-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-md);
+}
+
+h2::before {
+    content: '';
+    width: 6px;
+    height: 40px;
+    background: linear-gradient(180deg,
+        var(--magenta-comfama) 0%,
+        var(--naranja-aoxlab) 100%);
+    border-radius: 3px;
+}
+
+/* Grupos de Formulario */
+.form-group {
+    margin-bottom: var(--espacio-lg);
+    position: relative;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Labels Mejorados */
+label {
+    display: block;
+    font-weight: 600;
+    color: var(--gris-texto);
+    margin-bottom: var(--espacio-sm);
+    font-size: 0.95rem;
+    position: relative;
+    padding-left: var(--espacio-lg);
+}
+
+label::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--magenta-comfama);
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+label.required::after {
+    content: " *";
+    color: var(--rojo-error);
+    font-weight: 700;
+}
+
+/* Inputs Modernos */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+textarea,
+select {
+    width: 100%;
+    padding: var(--espacio-md) var(--espacio-lg);
+    border: 2px solid var(--gris-border);
+    border-radius: var(--radio-md);
+    font-family: var(--font-principal);
+    font-size: 1rem;
+    background: var(--blanco);
+    color: var(--gris-texto);
+    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-input);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--magenta-comfama);
+    box-shadow: 0 0 0 4px rgba(208, 65, 126, 0.1), var(--shadow-input);
+    transform: translateY(-2px);
+}
+
+input:hover,
+textarea:hover,
+select:hover {
+    border-color: var(--magenta-light);
+    transform: translateY(-1px);
+}
+
+/* Textareas */
+textarea {
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+/* Selects */
+select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m4 6 4 4 4-4' stroke='%23D0417E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+    padding-right: var(--espacio-xxl);
+}
+
+/* Grid para Checkboxes y Radios */
+.checkbox-grid,
+.radio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--espacio-md);
+    margin-top: var(--espacio-md);
+}
+
+/* Checkboxes y Radios Modernos */
+.checkbox-group,
+.radio-group {
+    background: var(--blanco);
+    padding: var(--espacio-md);
+    border-radius: var(--radio-md);
+    border: 2px solid var(--gris-border);
+    transition: var(--transition-smooth);
+    cursor: pointer;
+}
+
+.checkbox-group:hover,
+.radio-group:hover {
+    border-color: var(--magenta-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-input);
+}
+
+.checkbox-group input[type="checkbox"],
+.checkbox-group input[type="radio"],
+.radio-group input[type="radio"] {
+    display: none;
+}
+
+.checkbox-group label,
+.radio-group label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-sm);
+    font-weight: 500;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.checkbox-group label::before,
+.radio-group label::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--gris-border);
+    background: var(--blanco);
+    transition: var(--transition-smooth);
+    flex-shrink: 0;
+}
+
+.checkbox-group label::before {
+    border-radius: var(--radio-sm);
+}
+
+.radio-group label::before {
+    border-radius: 50%;
+}
+
+.checkbox-group input:checked + label::before {
+    background: var(--magenta-comfama);
+    border-color: var(--magenta-comfama);
+    background-image: url("data:image/svg+xml,%3csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z' fill='white'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.radio-group input:checked + label::before {
+    background: var(--magenta-comfama);
+    border-color: var(--magenta-comfama);
+    box-shadow: inset 0 0 0 3px var(--blanco);
+}
+
+.checkbox-group input:checked + label,
+.radio-group input:checked + label {
+    color: var(--magenta-dark);
+    font-weight: 600;
+}
+
+/* Campo de Texto Condicional */
+#estado_otro_texto {
+    margin-top: var(--espacio-md);
+    border: 2px dashed var(--gris-border);
+    background: var(--gris-claro);
+}
+
+#estado_otro_texto:focus {
+    background: var(--blanco);
+    border-style: solid;
+}
+
+/* Upload de Archivos */
+.file-upload {
+    margin: var(--espacio-md) 0;
+    position: relative;
+}
+
+.file-upload input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.file-upload-area {
+    border: 3px dashed var(--gris-border);
+    border-radius: var(--radio-lg);
+    padding: var(--espacio-xl);
+    text-align: center;
+    background: var(--gris-card);
+    transition: var(--transition-smooth);
+    cursor: pointer;
+}
+
+.file-upload-area:hover {
+    border-color: var(--magenta-comfama);
+    background: rgba(208, 65, 126, 0.05);
+    transform: translateY(-2px);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: var(--magenta-comfama);
+    margin-bottom: var(--espacio-md);
+}
+
+.upload-text {
+    color: var(--gris-texto);
+    font-weight: 500;
+}
+
+.upload-hint {
+    color: var(--gris-texto);
+    font-size: 0.875rem;
+    margin-top: var(--espacio-sm);
+    opacity: 0.8;
+}
+
+/* Botones Modernos */
+button {
+    font-family: var(--font-principal);
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radio-md);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espacio-sm);
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Botón Primario */
+button[type="submit"],
+.btn-primary {
+    background: linear-gradient(135deg,
+        var(--magenta-comfama) 0%,
+        var(--naranja-aoxlab) 100%);
+    color: var(--blanco);
+    padding: var(--espacio-md) var(--espacio-xl);
+    font-size: 1.125rem;
+    box-shadow: var(--shadow-button);
+    min-width: 200px;
+    justify-content: center;
+}
+
+button[type="submit"]:hover,
+.btn-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(243, 119, 40, 0.4);
+    background: linear-gradient(135deg,
+        var(--naranja-aoxlab) 0%,
+        var(--magenta-comfama) 100%);
+}
+
+/* Botón Secundario (Borrador) */
+.btn-secondary {
+    background: linear-gradient(135deg,
+        var(--azul-aoxlab) 0%,
+        var(--azul-light) 100%);
+    color: var(--blanco);
+    padding: var(--espacio-sm) var(--espacio-lg);
+    font-size: 1rem;
+    box-shadow: 0 4px 16px rgba(43, 161, 212, 0.25);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(43, 161, 212, 0.35);
+}
+
+/* Contenedor de Botones */
+.form-actions {
+    display: flex;
+    gap: var(--espacio-lg);
+    justify-content: center;
+    margin-top: var(--espacio-xxl);
+    padding-top: var(--espacio-xl);
+    border-top: 2px solid var(--gris-border);
+}
+
+/* Reloj de Cuenta Regresiva */
+#reloj-convocatoria {
+    background: linear-gradient(135deg,
+        var(--verde-success) 0%,
+        #22C55E 100%);
+    color: var(--blanco);
+    padding: var(--espacio-md) var(--espacio-lg);
+    border-radius: var(--radio-md);
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: var(--espacio-lg);
+    font-size: 1.125rem;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.25);
+}
+
+#reloj-convocatoria.urgent {
+    background: linear-gradient(135deg,
+        var(--rojo-error) 0%,
+        #F87171 100%);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+/* Mensajes de Estado */
+.mensaje {
+    padding: var(--espacio-md) var(--espacio-lg);
+    border-radius: var(--radio-md);
+    margin: var(--espacio-lg) 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-sm);
+    border-left: 4px solid;
+}
+
+.mensaje.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--verde-success);
+    border-left-color: var(--verde-success);
+}
+
+.mensaje.error {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--rojo-error);
+    border-left-color: var(--rojo-error);
+}
+
+.mensaje.warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--amarillo-warning);
+    border-left-color: var(--amarillo-warning);
+}
+
+/* Footer */
+.formulario-footer {
+    background: var(--negro-fuerte);
+    color: var(--blanco);
+    padding: var(--espacio-xl) 0;
+    text-align: center;
+    margin-top: var(--espacio-xxl);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--espacio-lg);
+}
+
+.footer-content p {
+    opacity: 0.8;
+    font-size: 0.875rem;
+}
+
+/* Estados de Loading */
+.loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
+    border: 3px solid transparent;
+    border-top: 3px solid var(--magenta-comfama);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 var(--espacio-md);
+    }
+    
+    .formulario-body {
+        padding: var(--espacio-xl) var(--espacio-lg);
+    }
+    
+    .form-section {
+        padding: var(--espacio-lg);
+    }
+    
+    .card-header {
+        padding: var(--espacio-xl) var(--espacio-lg);
+    }
+    
+    .card-header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .checkbox-grid,
+    .radio-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    button {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: var(--espacio-md);
+    }
+    
+    .separador-logos {
+        width: 40px;
+        height: 3px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-comfama,
+    .logo-aoxlab {
+        height: 40px;
+    }
+    
+    .convocatoria-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .convocatoria-icon::after {
+        font-size: 28px;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .form-section {
+        margin-bottom: var(--espacio-lg);
+    }
+}
+
+/* Estados de Focus para Accesibilidad */
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: 3px solid rgba(208, 65, 126, 0.3);
+    outline-offset: 2px;
+}
+
+/* Animaciones reducidas para usuarios que lo prefieran */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--gris-claro);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg,
+        var(--magenta-comfama) 0%,
+        var(--naranja-aoxlab) 100%);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg,
+        var(--magenta-dark) 0%,
+        var(--naranja-dark) 100%);
+}
