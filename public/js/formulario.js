@@ -235,3 +235,14 @@
         document.getElementById('btn-guardar-borrador').addEventListener('click', guardarComoBorrador);
         document.getElementById('btn-enviar').addEventListener('click', enviarPostulacion);
     });
+    document.addEventListener('DOMContentLoaded', async () => {
+    // Configurar validación en tiempo real
+    configurarValidacionTiempoReal();
+    
+    await validarEstadoPostulacion();
+    const fechaCierre = await obtenerFechaCierre();
+    if (fechaCierre) iniciarCuentaRegresiva(fechaCierre);
+    
+    document.getElementById('btn-guardar-borrador').addEventListener('click', guardarComoBorrador);
+    document.getElementById('btn-enviar').addEventListener('click', enviarPostulacion);
+});
