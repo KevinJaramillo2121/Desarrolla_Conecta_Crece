@@ -10,6 +10,217 @@
   --comfama-gray: #6C757D;
   --comfama-light-gray: #F8F9FA;
 }
+/* ================================================
+   ESTILOS COUNTDOWN TIMER - INTEGRADO CON COMFAMA
+   ================================================ */
+
+/* Variables adicionales para countdown (agrega esto a tus :root existentes) */
+:root {
+    --error: var(--comfama-danger);
+    --warning: var(--comfama-warning);
+}
+
+/* Contenedor principal del countdown timer */
+#countdown-display {
+    background: linear-gradient(135deg, var(--comfama-dark) 0%, var(--comfama-primary) 100%);
+    color: white;
+    padding: 20px 25px;
+    border-radius: 10px;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 163, 224, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Efecto de brillo sutil */
+#countdown-display::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: countdown-shimmer 3s infinite;
+}
+
+/* Icono del timer */
+.timer-icon {
+    font-size: 28px;
+    margin-right: 20px;
+    animation: countdown-pulse-icon 2s infinite ease-in-out;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    z-index: 1;
+    position: relative;
+}
+
+/* Contenido del timer */
+.timer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    z-index: 1;
+    position: relative;
+}
+
+/* Etiqueta "Tiempo restante" */
+.timer-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Valor del countdown */
+#timer-value {
+    font-size: 24px;
+    font-weight: 700;
+    font-family: 'Courier New', 'Monaco', monospace;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    min-width: 200px;
+    color: #ffffff;
+}
+
+/* Estados dinámicos */
+.countdown-warning {
+    background: linear-gradient(135deg, var(--comfama-warning) 0%, #f7971e 100%) !important;
+    box-shadow: 0 4px 15px rgba(240, 173, 78, 0.4) !important;
+    animation: countdown-pulse-warning 2s infinite ease-in-out;
+}
+
+.countdown-warning .timer-label {
+    color: rgba(0, 58, 93, 0.8) !important;
+}
+
+.countdown-warning #timer-value {
+    color: var(--comfama-dark) !important;
+}
+
+.countdown-critical {
+    background: linear-gradient(135deg, var(--comfama-danger) 0%, #c9302c 100%) !important;
+    box-shadow: 0 4px 15px rgba(217, 83, 79, 0.4) !important;
+    animation: countdown-pulse-critical 1s infinite;
+}
+
+.countdown-critical #timer-value {
+    color: #ffffff !important;
+    animation: countdown-flash-critical 0.8s infinite alternate;
+}
+
+.countdown-expired {
+    background: linear-gradient(135deg, var(--comfama-gray) 0%, #495057 100%) !important;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3) !important;
+}
+
+.countdown-expired #timer-value {
+    font-size: 18px;
+}
+
+.countdown-expired .timer-icon {
+    animation: none;
+    opacity: 0.7;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    #countdown-display {
+        padding: 15px 20px;
+        margin: 15px 0;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .timer-icon {
+        font-size: 24px;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    
+    #timer-value {
+        font-size: 20px;
+        min-width: auto;
+    }
+    
+    .timer-label {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    #countdown-display {
+        padding: 12px 15px;
+    }
+    
+    .timer-icon {
+        font-size: 20px;
+    }
+    
+    #timer-value {
+        font-size: 18px;
+    }
+}
+
+/* Animaciones */
+@keyframes countdown-shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+@keyframes countdown-pulse-icon {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes countdown-pulse-warning {
+    0%, 100% { 
+        transform: scale(1); 
+        box-shadow: 0 4px 15px rgba(240, 173, 78, 0.4); 
+    }
+    50% { 
+        transform: scale(1.02); 
+        box-shadow: 0 6px 20px rgba(240, 173, 78, 0.6); 
+    }
+}
+
+@keyframes countdown-pulse-critical {
+    0%, 100% { 
+        transform: scale(1); 
+        box-shadow: 0 4px 15px rgba(217, 83, 79, 0.4); 
+    }
+    50% { 
+        transform: scale(1.02); 
+        box-shadow: 0 6px 20px rgba(217, 83, 79, 0.6); 
+    }
+}
+
+@keyframes countdown-flash-critical {
+    0% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
+/* Hover effects */
+#countdown-display:not(.countdown-expired):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 163, 224, 0.4);
+}
+
+#countdown-display.countdown-warning:hover {
+    box-shadow: 0 6px 20px rgba(240, 173, 78, 0.5);
+}
+
+#countdown-display.countdown-critical:hover {
+    box-shadow: 0 6px 20px rgba(217, 83, 79, 0.5);
+}
+
 
 body {
   font-family: 'Segoe UI', 'Open Sans', sans-serif;
