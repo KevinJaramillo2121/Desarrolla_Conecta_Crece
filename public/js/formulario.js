@@ -1,60 +1,73 @@
-    async function obtenerFechaCierre() {
-        try {
-            const response = await fetch('/participante/fecha-cierre');
-            const data = await response.json();
-            return new Date(data.fechaFin);
-        } catch (error) {
-            console.error('Error al obtener fecha de cierre:', error);
-            return null;
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCountdown();
+});
+
+
+async function initializeCountdown() {
+    try {
+        const response = await fetch('/participante/fecha-cierre');
+        const data = await response.json();
+        
+        if (data.fechaFin) {
+            const deadline = new Date(data.fechaFin);
+            startCountdown(deadline);
+        }
+    } catch (error) {
+        console.error('Error al obtener fecha de cierre:', error);
+        document.getElementById('timer-value').textContent = 'No disponible';
+    }
+}
+function startCountdown(deadline) {
+    const timerElement = document.getElementById('timer-value');
+    
+    function updateTimer() {
+        const now = new Date().getTime();
+        const distance = deadline.getTime() - now;
+        
+        if (distance < 0) {
+            timerElement.textContent = 'Convocatoria cerrada';
+            timerElement.style.color = 'var(--error)';
+            disableForm();
+            clearInterval(interval);
+            return;
+        }
+        
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        timerElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        
+        // Cambiar color si queda poco tiempo
+        if (days <= 1) {
+            timerElement.style.color = 'var(--error)';
+        } else if (days <= 3) {
+            timerElement.style.color = 'var(--warning)';
         }
     }
+    
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+}
+function disableForm() {
+    const form = document.getElementById('multi-step-form');
+    const inputs = form.querySelectorAll('input, textarea, select, button');
+    
+    inputs.forEach(input => {
+        input.disabled = true;
+    });
+    
+    // Mostrar mensaje de convocatoria cerrada
+    const message = document.createElement('div');
+    message.className = 'alert alert-error';
+    message.innerHTML = `
+        <h3>⛔ Convocatoria Cerrada</h3>
+        <p>El tiempo para enviar postulaciones ha terminado.</p>
+    `;
+    form.insertBefore(message, form.firstChild);
+}
 
-    function iniciarCuentaRegresiva(fechaCierre) {
-        const reloj = document.getElementById('reloj-convocatoria');
-        const formulario = document.getElementById('inscripcionForm');
-
-        function actualizarReloj() {
-            const ahora = new Date();
-            const diferencia = fechaCierre - ahora;
-
-            if (diferencia <= 0) {
-                reloj.textContent = '⛔ La convocatoria ha cerrado.';
-                if (formulario) {
-                    formulario.querySelectorAll('input, textarea, select, button').forEach(elem => {
-                        elem.disabled = true;
-                    });
-                }
-                clearInterval(intervalo);
-                return;
-            }
-
-            const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-            const horas = Math.floor((diferencia / (1000 * 60 * 60)) % 24);
-            const minutos = Math.floor((diferencia / (1000 * 60)) % 60);
-            const segundos = Math.floor((diferencia / 1000) % 60);
-
-            reloj.textContent = `⏳ Tiempo restante: ${dias}d ${horas}h ${minutos}m ${segundos}s`;
-        }
-
-        actualizarReloj();
-        const intervalo = setInterval(actualizarReloj, 1000);
-    }
-
-    async function validarEstadoPostulacion() {
-        try {
-            const res = await fetch('/participante/estado-postulacion');
-            const data = await res.json();
-            if (data.estado === 'enviado') {
-                document.getElementById('reloj-convocatoria').textContent = '✅ Ya enviaste tu postulación.';
-                const formulario = document.getElementById('inscripcionForm');
-                formulario.querySelectorAll('input, textarea, select, button').forEach(elem => {
-                    elem.disabled = true;
-                });
-            }
-        } catch (error) {
-            console.error('Error al validar estado:', error);
-        }
-    }
 
     function recolectarDatosDelFormulario() {
         return {
