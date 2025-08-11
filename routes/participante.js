@@ -30,17 +30,18 @@ const fileFilter = (req, file, cb) => {
     ];
     cb(null, allowed.includes(file.mimetype));
 };
-const upload = multer({ storage, limits:{ fileSize:20*1024*1024 }, fileFilter })
-    .fields([
-        { name:'camara_comercio', maxCount:1 },
-        { name:'rut', maxCount:1 },
-        { name:'certificado_tamano_file', maxCount:1 },
-        { name:'afiliacion_comfama', maxCount:1 },
-        { name:'hoja_vida', maxCount:1 },
-        { name:'otros_documentos', maxCount:1 },
-        { name: 'firma_digital',           maxCount: 1 }
-        
-    ]);
+const upload = multer({ storage, limits:{ fileSize:10*1024*1024 }, fileFilter })
+.fields([
+    { name:'camara_comercio', maxCount:1 },
+    { name:'rut', maxCount:1 },
+    { name:'certificado_tamano_file', maxCount:1 },
+    { name:'parafiscales', maxCount:1 }, 
+    { name:'afiliacion_comfama', maxCount:1 },
+    { name:'hoja_vida', maxCount:1 },
+    { name:'otros_documentos', maxCount:1 },
+    { name: 'firma_digital', maxCount: 1 }
+]);
+
 
 // Vista principal del participante
 router.get('/', protegerRuta('Participante'), (req, res) => {
@@ -68,35 +69,35 @@ router.post('/enviar-postulacion', protegerRuta('Participante'), upload, async (
     const client = await pool.connect();
     
     try {
-        console.log('=== DEBUG BACKEND ===');
-        console.log('req.session.usuario:', req.session.usuario);
-        console.log('req.body keys:', Object.keys(req.body));
-        console.log('req.files keys:', req.files ? Object.keys(req.files) : 'No files');
-        
-        let empresaId = req.session.usuario.empresaId;
-        console.log('empresaId inicial:', empresaId);
-        
-        // ✅ SI NO TIENE EMPRESA, CREARLA DESDE EL FORMULARIO
+        console.log('=== INICIO PROCESAMIENTO POSTULACIÓN ===');
+        console.log('Usuario:', req.session.usuario);
+        console.log('Archivos recibidos:', req.files ? Object.keys(req.files) : 'Ninguno');
+        console.log('Campos recibidos:', Object.keys(req.body));
+
+        let empresaId = req.session.usuario?.empresaId;
+        console.log('EmpresaId inicial:', empresaId);
+
+        await client.query('BEGIN');
+
+        // VALIDACIÓN INICIAL
+        if (!req.session.usuario || !req.session.usuario.id) {
+            await client.query('ROLLBACK');
+            return res.status(401).json({ error: 'Sesión no válida' });
+        }
+
+        // SI NO TIENE EMPRESA, CREARLA
         if (!empresaId) {
-            console.log('Usuario sin empresa asociada, creando nueva empresa...');
+            console.log('Creando nueva empresa...');
+            const empresaData = extraerDatosEmpresa(req.body);
             
-            const {
-                nombre_legal, nit, persona_juridica, tipo_empresa,
-                representante, cedula_representante, correo_contacto,
-                telefono_contacto, municipio, direccion, fuera_valle,
-                afiliada_comfama, tiene_trabajador
-            } = req.body;
-            
-            // Validar datos de empresa
-            if (!nombre_legal || !nit || !representante || !cedula_representante) {
+            // Validar datos mínimos de empresa
+            if (!empresaData.nombre_legal || !empresaData.nit || !empresaData.representante) {
+                await client.query('ROLLBACK');
                 return res.status(400).json({ 
-                    error: 'Faltan datos obligatorios de la empresa' 
+                    error: 'Faltan datos obligatorios de la empresa: nombre legal, NIT y representante son requeridos' 
                 });
             }
-            
-            await client.query('BEGIN');
-            
-            // Crear empresa
+
             const empresaResult = await client.query(`
                 INSERT INTO empresas (
                     nombre_legal, nit, persona_juridica, tipo_empresa,
@@ -105,16 +106,23 @@ router.post('/enviar-postulacion', protegerRuta('Participante'), upload, async (
                     afiliada_comfama, tiene_trabajador, certificado_tamano, declaracion_veraz
                 ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15) RETURNING id
             `, [
-                nombre_legal, nit, 
-                persona_juridica === 'true' || persona_juridica === true,
-                tipo_empresa || 'Micro', representante, cedula_representante, correo_contacto,
-                telefono_contacto, municipio, direccion || 'No especificada',
-                fuera_valle === 'true' || fuera_valle === true,
-                afiliada_comfama === 'true' || afiliada_comfama === true,
-                tiene_trabajador === 'true' || tiene_trabajador === true,
-                true, true // certificado_tamano y declaracion_veraz por defecto
+                empresaData.nombre_legal,
+                empresaData.nit,
+                empresaData.persona_juridica,
+                empresaData.tipo_empresa || 'Micro',
+                empresaData.representante,
+                empresaData.cedula_representante,
+                empresaData.correo_contacto,
+                empresaData.telefono_contacto,
+                empresaData.municipio,
+                empresaData.direccion || 'No especificada',
+                empresaData.fuera_valle,
+                empresaData.afiliada_comfama,
+                empresaData.tiene_trabajador,
+                true, // certificado_tamano
+                true  // declaracion_veraz
             ]);
-            
+
             empresaId = empresaResult.rows[0].id;
             
             // Actualizar usuario con empresa_id
@@ -122,147 +130,181 @@ router.post('/enviar-postulacion', protegerRuta('Participante'), upload, async (
                 'UPDATE usuarios SET empresa_id = $1 WHERE id = $2',
                 [empresaId, req.session.usuario.id]
             );
-            
+
             // Actualizar sesión
             req.session.usuario.empresaId = empresaId;
-            
             console.log('Empresa creada con ID:', empresaId);
-        } else {
-            await client.query('BEGIN');
         }
-        
-        // Verificar que no haya enviado ya su postulación
+
+        // VERIFICAR QUE NO HAYA ENVIADO YA SU POSTULACIÓN
         const yaPostulo = await client.query(
-            'SELECT * FROM postulaciones WHERE empresa_id = $1 AND estado = $2',
+            'SELECT id FROM postulaciones WHERE empresa_id = $1 AND estado = $2',
             [empresaId, 'enviado']
         );
 
         if (yaPostulo.rows.length > 0) {
             await client.query('ROLLBACK');
-            return res.status(400).json({ error: 'Ya enviaste tu postulación. No puedes modificarla.' });
+            return res.status(400).json({ 
+                error: 'Ya enviaste tu postulación. No puedes modificarla.' 
+            });
         }
-        
-        console.log('Procesando postulación para empresa ID:', empresaId);
-        
-        const uploadedFiles = req.files || {};
-        
-        // Debug de campos recibidos
-        console.log('Campo producto_info raw:', req.body.producto_info);
-        console.log('Campo brechas raw:', req.body.brechas);
-        console.log('Campo motivacion raw:', req.body.motivacion);
-        
-        // ✅ PARSEO SEGURO DE CAMPOS JSON CON CORRECCIÓN DE ARRAYS
-        let producto_info, brechas, motivacion;
-        
-        try {
-            producto_info = req.body.producto_info ? JSON.parse(req.body.producto_info) : {};
-            console.log('producto_info parseado:', producto_info);
-        } catch (e) {
+
+        // PROCESAR CAMPOS JSON CON MANEJO DE ERRORES MEJORADO
+        console.log('Procesando campos JSON...');
+        const { producto_info, brechas, motivacion } = procesarCamposJSON(req.body);
+
+        // VALIDAR CAMPOS PRINCIPALES
+        if (!producto_info.nombre || !producto_info.descripcion) {
             await client.query('ROLLBACK');
-            console.error('Error parsing producto_info:', e);
-            return res.status(400).json({ error: "El campo producto_info no es un JSON válido: " + e.message });
+            return res.status(400).json({ 
+                error: 'El nombre y descripción del producto son obligatorios' 
+            });
         }
-        
-        try {
-            // ✅ SOLUCIÓN: Si brechas es un array, tomar el último elemento
-            let brechasRaw = req.body.brechas;
-            if (Array.isArray(brechasRaw)) {
-                // Tomar el último elemento que contiene el JSON válido
-                brechasRaw = brechasRaw[brechasRaw.length - 1];
-                console.log('brechas extraído del array:', brechasRaw);
-            }
-            brechas = brechasRaw ? JSON.parse(brechasRaw) : {};
-            console.log('brechas parseado:', brechas);
-        } catch (e) {
-            await client.query('ROLLBACK');
-            console.error('Error parsing brechas:', e);
-            return res.status(400).json({ error: "El campo brechas no es un JSON válido: " + e.message });
-        }
-        
-        try {
-            // ✅ APLICAR LA MISMA LÓGICA A MOTIVACION por si acaso
-            let motivacionRaw = req.body.motivacion;
-            if (Array.isArray(motivacionRaw)) {
-                motivacionRaw = motivacionRaw[motivacionRaw.length - 1];
-                console.log('motivacion extraído del array:', motivacionRaw);
-            }
-            motivacion = motivacionRaw ? JSON.parse(motivacionRaw) : {};
-            console.log('motivacion parseado:', motivacion);
-        } catch (e) {
-            await client.query('ROLLBACK');
-            console.error('Error parsing motivacion:', e);
-            return res.status(400).json({ error: "El campo motivacion no es un JSON válido: " + e.message });
-        }
-        
-        // Verificar si ya existe una postulación
-        const postulacionResult = await client.query(
-            'SELECT * FROM postulaciones WHERE empresa_id = $1',
+
+        // GUARDAR O ACTUALIZAR POSTULACIÓN
+        const postulacionExistente = await client.query(
+            'SELECT id FROM postulaciones WHERE empresa_id = $1',
             [empresaId]
         );
-        
-        if (postulacionResult.rows.length === 0) {
+
+        if (postulacionExistente.rows.length === 0) {
             console.log('Insertando nueva postulación...');
-            await client.query(
-                'INSERT INTO postulaciones (empresa_id, estado, producto_info, brechas, motivacion, fecha_envio) VALUES ($1, $2, $3, $4, $5, now())',
-                [empresaId, 'enviado', producto_info, brechas, motivacion]
-            );
+            await client.query(`
+                INSERT INTO postulaciones (empresa_id, estado, producto_info, brechas, motivacion, fecha_envio) 
+                VALUES ($1, $2, $3, $4, $5, now())
+            `, [empresaId, 'enviado', producto_info, brechas, motivacion]);
         } else {
             console.log('Actualizando postulación existente...');
-            await client.query(
-                'UPDATE postulaciones SET estado = $1, producto_info = $2, brechas = $3, motivacion = $4, fecha_envio = now() WHERE empresa_id = $5',
-                ['enviado', producto_info, brechas, motivacion, empresaId]
-            );
+            await client.query(`
+                UPDATE postulaciones 
+                SET estado = $1, producto_info = $2, brechas = $3, motivacion = $4, fecha_envio = now(), fecha_actualizacion = now()
+                WHERE empresa_id = $5
+            `, ['enviado', producto_info, brechas, motivacion, empresaId]);
         }
-        
-        // ✅ MANEJAR LA SUBIDA DE DOCUMENTOS CON CORRECCIONES
-        for (const fieldName in uploadedFiles) {
-            const filesArray = uploadedFiles[fieldName];
-            for (const archivo of filesArray) {
-                console.log(`Guardando documento: ${archivo.originalname}`);
-                
-                // ✅ DETERMINAR CATEGORÍA CORRECTA
-                let categoria = 'Otro';
-                switch(fieldName) {
-                    case 'camara_comercio': categoria = 'CamaraComercio'; break;
-                    case 'rut': categoria = 'RUT'; break;
-                    case 'certificado_tamano_file': categoria = 'TamanoEmpresarial'; break;
-                    case 'afiliacion_comfama': categoria = 'AfiliacionComfama'; break;
-                    case 'hoja_vida': categoria = 'HojaVidaProducto'; break;
-                    case 'otros_documentos': categoria = 'Otro'; break;
-                }
-                
-                const documentoQuery = `
-                    INSERT INTO documentos(empresa_id, categoria, nombre_original, nombre_guardado, tipo_archivo, ruta, tamano_bytes)
-                    VALUES($1, $2, $3, $4, $5, $6, $7)
-                `;
-                
-                await client.query(documentoQuery, [
-                    empresaId,
-                    categoria,
-                    archivo.originalname,
-                    archivo.filename,
-                    archivo.mimetype,
-                    archivo.path,
-                    archivo.size || 0
-                ]);
-            }
-        }
-        
+
+        // PROCESAR ARCHIVOS SUBIDOS
+        await procesarDocumentosSubidos(client, req.files, empresaId);
+
         await client.query('COMMIT');
-        console.log('Postulación guardada exitosamente');
-        res.json({ mensaje: 'Postulación y documentos enviados correctamente.' });
-        
+        console.log('✅ Postulación guardada exitosamente');
+
+        res.status(200).json({ 
+            mensaje: 'Postulación enviada correctamente. ¡Gracias por participar!',
+            empresaId: empresaId
+        });
+
     } catch (error) {
         await client.query('ROLLBACK');
-        console.error('Error completo en enviar-postulacion:', error);
-        res.status(500).json({ 
-            error: 'Error al enviar la postulación',
-            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        console.error('❌ Error completo en enviar-postulacion:', error);
+        
+        res.status(500).json({
+            error: 'Error interno del servidor al procesar la postulación',
+            details: process.env.NODE_ENV === 'development' ? error.message : 'Contacta al administrador'
         });
     } finally {
         client.release();
     }
 });
+
+// Funciones auxiliares para el backend
+function extraerDatosEmpresa(body) {
+    return {
+        nombre_legal: body.nombre_legal?.trim(),
+        nit: body.nit?.trim(),
+        persona_juridica: body.persona_juridica === 'true' || body.persona_juridica === true,
+        tipo_empresa: body.tipo_empresa || 'Micro',
+        representante: body.representante?.trim(),
+        cedula_representante: body.cedula_representante?.trim(),
+        correo_contacto: body.correo_contacto?.trim(),
+        telefono_contacto: body.telefono_contacto?.trim(),
+        municipio: body.municipio?.trim(),
+        direccion: body.direccion?.trim(),
+        fuera_valle: body.fuera_valle === 'true' || body.fuera_valle === true,
+        afiliada_comfama: body.afiliada_comfama === 'true' || body.afiliada_comfama === true,
+        tiene_trabajador: body.tiene_trabajador === 'true' || body.tiene_trabajador === true
+    };
+}
+
+function procesarCamposJSON(body) {
+    let producto_info, brechas, motivacion;
+
+    try {
+        // Manejar producto_info
+        let productoRaw = body.producto_info;
+        if (Array.isArray(productoRaw)) {
+            productoRaw = productoRaw[productoRaw.length - 1];
+        }
+        producto_info = productoRaw ? JSON.parse(productoRaw) : {};
+        console.log('✅ producto_info procesado');
+
+        // Manejar brechas
+        let brechasRaw = body.brechas;
+        if (Array.isArray(brechasRaw)) {
+            brechasRaw = brechasRaw[brechasRaw.length - 1];
+        }
+        brechas = brechasRaw ? JSON.parse(brechasRaw) : {};
+        console.log('✅ brechas procesado');
+
+        // Manejar motivacion
+        let motivacionRaw = body.motivacion;
+        if (Array.isArray(motivacionRaw)) {
+            motivacionRaw = motivacionRaw[motivacionRaw.length - 1];
+        }
+        motivacion = motivacionRaw ? JSON.parse(motivacionRaw) : {};
+        console.log('✅ motivacion procesado');
+
+        return { producto_info, brechas, motivacion };
+
+    } catch (error) {
+        console.error('Error procesando campos JSON:', error);
+        throw new Error(`Error en el formato de los datos: ${error.message}`);
+    }
+}
+
+async function procesarDocumentosSubidos(client, files, empresaId) {
+    if (!files) {
+        console.log('No hay archivos para procesar');
+        return;
+    }
+
+    console.log('Procesando documentos subidos...');
+    
+    for (const fieldName in files) {
+        const filesArray = files[fieldName];
+        
+        for (const archivo of filesArray) {
+            console.log(`Guardando documento: ${archivo.originalname} (${fieldName})`);
+            
+            // Determinar categoría
+            let categoria = 'Otro';
+            switch(fieldName) {
+            case 'camara_comercio': categoria = 'CamaraComercio'; break;
+            case 'rut': categoria = 'RUT'; break;
+            case 'certificado_tamano_file': categoria = 'TamanoEmpresarial'; break;
+            case 'parafiscales': categoria = 'Parafiscales'; break; // ✅ NUEVO
+            case 'afiliacion_comfama': categoria = 'AfiliacionComfama'; break;
+            case 'hoja_vida': categoria = 'HojaVidaProducto'; break;
+            case 'otros_documentos': categoria = 'Otro'; break;
+        }
+
+            await client.query(`
+                INSERT INTO documentos(empresa_id, categoria, nombre_original, nombre_guardado, tipo_archivo, ruta, tamano_bytes)
+                VALUES($1, $2, $3, $4, $5, $6, $7)
+            `, [
+                empresaId,
+                categoria,
+                archivo.originalname,
+                archivo.filename,
+                archivo.mimetype,
+                archivo.path,
+                archivo.size || 0
+            ]);
+        }
+    }
+    
+    console.log('✅ Todos los documentos procesados');
+}
+
 
 // ✅ GUARDAR BORRADOR CORREGIDO
 router.post('/guardar-borrador', protegerRuta('Participante'), async (req, res) => {
