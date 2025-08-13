@@ -118,17 +118,17 @@
                     const estadoPreseleccion = postulacion.estado_preseleccion || 'Sin evaluar';
 
                     tr.innerHTML = `
-                        <td><strong>${postulacion.nombre_legal}</strong></td>
-                        <td>${postulacion.nit}</td>
-                        <td><span class="status-badge">${postulacion.tipo_empresa}</span></td>
-                        <td>${postulacion.municipio}</td>
-                        <td>${crearBadgeEstado(estadoPostulacion, 'postulacion')}</td>
-                        <td>${crearBadgeEstado(estadoPreseleccion, 'preseleccion')}</td>
-                        <td>
-                            <button class="btn-action" onclick="verDetalles(${postulacion.id})">
-                                👁️ Ver Detalles
-                            </button>
-                        </td>
+                    <td><strong>${postulacion.nombre_legal}</strong></td>
+                    <td>${postulacion.nit}</td>
+                    <td>${postulacion.tipo_empresa}</td>
+                    <td>${postulacion.municipio}</td>
+                    <td>${crearBadgeEstado(estadoPostulacion, 'postulacion')}</td>
+                    <td>–</td>
+                    <td>
+                        <button class="btn-action" onclick="verDetalles(${postulacion.empresa_id})">
+                        👁️ Ver Detalles
+                        </button>
+                    </td>
                     `;
                     tbody.appendChild(tr);
                 });
