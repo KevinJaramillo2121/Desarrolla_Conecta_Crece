@@ -103,11 +103,11 @@
 
                 if (postulaciones.length === 0) {
                     tbody.innerHTML = `
-                        <tr>
-                            <td colspan="7" style="text-align: center; padding: 2rem; color: #6B7280;">
-                                No hay postulaciones registradas aún
-                            </td>
-                        </tr>
+                        <td>${
+                            postulacion.estado_definitivo 
+                                ? (postulacion.estado_definitivo === 'Preseleccionado' ? '⭐ Preseleccionado' : '❌ No_preseleccionado') 
+                                : '⏳ Sin definitiva'
+                        }</td>
                     `;
                     return;
                 }
@@ -158,6 +158,10 @@
             // 3. Cargar evaluaciones
             mostrarEvaluaciones(empresaId);
 
+            // Guardamos el empresaId en el campo oculto del formulario
+            document.getElementById('admin-empresa-id').value = empresaId;
+            document.getElementById('nombre-empresa-def').textContent = data.empresa.nombre_legal;
+
         } catch (error) {
             console.error('Error mostrando detalles:', error);
             alert('No se pudieron cargar los detalles de la empresa.');
@@ -202,7 +206,7 @@
             }
         });
 
-            // Cargar TODAS las evaluaciones de una empresa y mostrarlas en la tabla
+        // Llamada modificada para también actualizar estado actual definitivo
         async function mostrarEvaluaciones(empresaId) {
             try {
                 const res = await fetch(`/admin/evaluaciones/${empresaId}`);
@@ -214,20 +218,71 @@
 
                 if (evaluaciones.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="4">No hay evaluaciones registradas</td></tr>';
+                    document.getElementById('estado-definitivo-actual').textContent = 'Sin evaluación definitiva';
                     return;
+                }
+
+                let definitiva = evaluaciones.find(e => e.es_definitiva);
+
+                if (definitiva) {
+                    document.getElementById('estado-definitivo-actual').textContent = definitiva.estado_preseleccion;
+                } else {
+                    document.getElementById('estado-definitivo-actual').textContent = 'Sin evaluación definitiva';
                 }
 
                 evaluaciones.forEach(ev => {
                     tbody.innerHTML += `
                         <tr ${ev.es_definitiva ? 'class="fila-definitiva"' : ''}>
-                            <td>${ev.nombre_completo}</td>
+                            <td>${ev.nombre_completo} ${ev.rol_nombre ? `(${ev.rol_nombre})` : ''}</td>
                             <td>${ev.estado_preseleccion ?? 'No evaluado'}</td>
                             <td>${ev.observaciones ?? ''}</td>
                             <td>${ev.es_definitiva ? '✅ Sí' : 'No'}</td>
                         </tr>
                     `;
                 });
+
             } catch (error) {
                 console.error('Error mostrando evaluaciones:', error);
             }
         }
+
+
+                    // 📌 Enviar Evaluación Definitiva
+            document.getElementById('form-evaluacion-definitiva').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const empresa_id = document.getElementById('admin-empresa-id').value;
+                const estado_preseleccion = document.getElementById('estado_preseleccion').value;
+                const observaciones = document.getElementById('observaciones').value;
+                const criteriosRaw = document.getElementById('criterios').value;
+
+                let criterios;
+                try {
+                    criterios = criteriosRaw ? JSON.parse(criteriosRaw) : null;
+                } catch (err) {
+                    alert('⚠️ El formato de criterios debe ser JSON válido.');
+                    return;
+                }
+
+                try {
+                    const res = await fetch('/admin/evaluar-definitivo', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ empresa_id, estado_preseleccion, observaciones, criterios })
+                    });
+
+                    const data = await res.json();
+
+                    if (res.ok) {
+                        alert(data.mensaje || 'Evaluación definitiva guardada.');
+                        // Recargar tabla de evaluaciones para reflejar cambio
+                        mostrarEvaluaciones(empresa_id);
+                    } else {
+                        alert(data.error || 'Error al guardar la evaluación definitiva.');
+                    }
+                } catch (error) {
+                    console.error('Error guardando evaluación definitiva:', error);
+                    alert('Error de conexión con el servidor.');
+                }
+            });
+

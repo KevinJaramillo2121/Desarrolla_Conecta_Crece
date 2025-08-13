@@ -92,6 +92,41 @@
             <button onclick="ocultarDetalleAdmin()" class="btn-secondary" style="margin-top:15px;">Cerrar</button>
         </section>
 
+        <!-- 📌 Formulario para Evaluación Definitiva por el Administrador -->
+
+        <div id="info-definitiva" style="background: #eef9ff; padding: 10px; margin-bottom: 10px; border: 1px solid #c4e4ff;">
+            <strong>Empresa a calificar:</strong> 
+            <span id="nombre-empresa-def"></span>
+            <br>
+            <strong>Estado actual definitivo:</strong> 
+            <span id="estado-definitivo-actual">Sin evaluación definitiva</span>
+        </div>
+            <h3>📝 Evaluación Definitiva (Administrador)</h3>
+        <form id="form-evaluacion-definitiva" style="margin-top:15px;">
+            <input type="hidden" id="admin-empresa-id" name="empresa_id">
+
+            <div class="form-group">
+                <label for="estado_preseleccion">Estado de Preselección:</label>
+                <select id="estado_preseleccion" name="estado_preseleccion" required>
+                    <option value="">Seleccione...</option>
+                    <option value="Preseleccionado">⭐ Preseleccionado</option>
+                    <option value="No_preseleccionado">❌ No preseleccionado</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="margin-top:10px;">
+                <label for="observaciones">Observaciones:</label>
+                <textarea id="observaciones" name="observaciones" rows="3"></textarea>
+            </div>
+
+            <div class="form-group" style="margin-top:10px;">
+                <label for="criterios">Criterios de Evaluación (JSON, opcional):</label>
+                <textarea id="criterios" name="criterios" rows="3" placeholder='{"criterio1": 5, "criterio2": 3}'></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary" style="margin-top:10px;">💾 Guardar Evaluación Definitiva</button>
+        </form>
+
         <!-- Sección de Crear Evaluador -->
         <section id="crear-evaluador">
             <h2><span class="icon icon-users"></span>Crear nuevo Evaluador</h2>
@@ -122,9 +157,6 @@
             </form>
             <div id="resultado-evaluador" class="mensaje" style="display: none;"></div>
         </section>
-
-        
-
     </div>
 
     <script src="../js/administracion.js"></script>

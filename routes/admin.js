@@ -58,16 +58,19 @@ router.get('/postulaciones', protegerRuta('Administrador'), async (req, res) => 
     try {
         const result = await pool.query(`
             SELECT 
-                e.id AS empresa_id,
-                e.nombre_legal,
-                e.nit,
-                e.tipo_empresa,
-                e.municipio,
-                p.estado AS estado_postulacion
-            FROM empresas e
-            LEFT JOIN postulaciones p
-                ON p.empresa_id = e.id AND p.estado = 'enviado'
-            ORDER BY e.nombre_legal
+            e.id AS empresa_id,
+            e.nombre_legal,
+            e.nit,
+            e.tipo_empresa,
+            e.municipio,
+            p.estado AS estado_postulacion,
+            sd.estado_preseleccion AS estado_definitivo
+        FROM empresas e
+        LEFT JOIN postulaciones p
+            ON p.empresa_id = e.id AND p.estado = 'enviado'
+        LEFT JOIN seleccion sd
+            ON sd.empresa_id = e.id AND sd.es_definitiva = true
+        ORDER BY e.nombre_legal
         `);
         res.json(result.rows);
     } catch (error) {
