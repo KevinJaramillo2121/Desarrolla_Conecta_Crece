@@ -139,9 +139,31 @@
         }
 
         // Función para ver detalles (placeholder)
-        function verDetalles(id) {
-            alert(`Ver detalles de empresa con ID: ${id}`);
+            async function verDetalles(empresaId) {
+        try {
+            // Mostrar contenedor de detalle
+            document.getElementById('detalle-admin').style.display = 'block';
+
+            // 1. Traer datos principales de la empresa (si tienes endpoint para esto)
+            const resInfo = await fetch(`/admin/postulacion/${empresaId}`);
+            if (!resInfo.ok) throw new Error('No se pudo obtener la información de la empresa');
+            const data = await resInfo.json();
+
+            // 2. Pintar datos en el detalle (ajusta IDs a los que tengas en tu HTML)
+            document.getElementById('detalle-nombre').textContent = data.empresa.nombre_legal;
+            document.getElementById('detalle-nit').textContent = data.empresa.nit;
+            document.getElementById('detalle-tipo').textContent = data.empresa.tipo_empresa;
+            document.getElementById('detalle-municipio').textContent = data.empresa.municipio;
+
+            // 3. Cargar evaluaciones
+            mostrarEvaluaciones(empresaId);
+
+        } catch (error) {
+            console.error('Error mostrando detalles:', error);
+            alert('No se pudieron cargar los detalles de la empresa.');
         }
+    }
+
 
         // Inicialización
         document.addEventListener('DOMContentLoaded', () => {
@@ -179,3 +201,33 @@
                 form.classList.remove('loading');
             }
         });
+
+            // Cargar TODAS las evaluaciones de una empresa y mostrarlas en la tabla
+        async function mostrarEvaluaciones(empresaId) {
+            try {
+                const res = await fetch(`/admin/evaluaciones/${empresaId}`);
+                if (!res.ok) throw new Error('No se pudo obtener las evaluaciones');
+
+                const evaluaciones = await res.json();
+                const tbody = document.querySelector('#tabla-evaluaciones tbody');
+                tbody.innerHTML = '';
+
+                if (evaluaciones.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4">No hay evaluaciones registradas</td></tr>';
+                    return;
+                }
+
+                evaluaciones.forEach(ev => {
+                    tbody.innerHTML += `
+                        <tr ${ev.es_definitiva ? 'class="fila-definitiva"' : ''}>
+                            <td>${ev.nombre_completo}</td>
+                            <td>${ev.estado_preseleccion ?? 'No evaluado'}</td>
+                            <td>${ev.observaciones ?? ''}</td>
+                            <td>${ev.es_definitiva ? '✅ Sí' : 'No'}</td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error mostrando evaluaciones:', error);
+            }
+        }

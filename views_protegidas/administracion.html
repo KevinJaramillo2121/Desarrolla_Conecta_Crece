@@ -97,6 +97,32 @@
             </form>
             <div id="resultado-evaluador" class="mensaje" style="display: none;"></div>
         </section>
+
+        <!-- 📌 Nueva Sección: Detalle de Empresa -->
+        <section id="detalle-admin" style="display:none; margin-top:30px;">
+            <h2>📄 Detalle de Empresa</h2>
+            <p><strong>Nombre:</strong> <span id="detalle-nombre"></span></p>
+            <p><strong>NIT:</strong> <span id="detalle-nit"></span></p>
+            <p><strong>Tipo de Empresa:</strong> <span id="detalle-tipo"></span></p>
+            <p><strong>Municipio:</strong> <span id="detalle-municipio"></span></p>
+
+            <!-- 📋 Tabla de Evaluaciones -->
+            <h3>📋 Evaluaciones registradas</h3>
+            <table id="tabla-evaluaciones" border="1" cellpadding="6" cellspacing="0" style="width:100%; border-collapse: collapse;">
+                <thead style="background:#f0f0f0;">
+                    <tr>
+                        <th>Evaluador</th>
+                        <th>Estado Preselección</th>
+                        <th>Observaciones</th>
+                        <th>Definitiva</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <button onclick="ocultarDetalleAdmin()" class="btn-secondary" style="margin-top:15px;">Cerrar</button>
+        </section>
+
     </div>
 
     <script src="../js/administracion.js"></script>
