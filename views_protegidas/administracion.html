@@ -5,6 +5,35 @@
     <title>Administrador - Convocatoria</title>
     <link rel="stylesheet" href="../css/administracion.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Estilos de acordeón */
+        .accordion {
+            background-color: #f8f9fa;
+            color: #333;
+            cursor: pointer;
+            padding: 10px 15px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid #ccc;
+            outline: none;
+            transition: background-color 0.2s ease;
+            width: 100%;
+        }
+        .accordion:hover {
+            background-color: #e9ecef;
+        }
+        .accordion.active {
+            background-color: #e9ecef;
+        }
+        .panel {
+            padding: 10px 15px;
+            display: none;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            border-top: none;
+            background: white;
+        }
+    </style>
 </head>
 <body>
     <!-- Header Principal -->
@@ -16,35 +45,31 @@
 
     <!-- Container Principal -->
     <div class="admin-container">
-        
-        <!-- Sección de Fechas de Convocatoria -->
-        <section>
-            <h2><span class="icon icon-calendar"></span>Fechas de convocatoria</h2>
+
+        <!-- 📅 Fechas de Convocatoria -->
+        <button class="accordion">📅 Fechas de convocatoria</button>
+        <div class="panel">
             <form id="form-fechas" class="form-grid">
                 <div class="form-group">
                     <label for="fecha_inicio">
-                        <span class="icon icon-calendar"></span>
-                        Fecha de Inicio:
+                        <span class="icon icon-calendar"></span> Fecha de Inicio:
                     </label>
                     <input type="date" id="fecha_inicio" required>
                 </div>
 
                 <div class="form-group">
                     <label for="fecha_fin">
-                        <span class="icon icon-calendar"></span>
-                        Fecha de Cierre:
+                        <span class="icon icon-calendar"></span> Fecha de Cierre:
                     </label>
                     <input type="date" id="fecha_fin" required>
                 </div>
 
-                <button type="submit" class="btn-primary">
-                    💾 Guardar fechas
-                </button>
+                <button type="submit" class="btn-primary">💾 Guardar fechas</button>
             </form>
             <div id="mensaje-fechas" class="mensaje" style="display: none;"></div>
-        </section>
+        </div>
 
-        <!-- Sección de Postulaciones -->
+        <!-- 📋 Postulaciones registradas (siempre visible) -->
         <section>
             <h2><span class="icon icon-users"></span>Postulaciones registradas</h2>
             <div style="overflow-x: auto;">
@@ -67,7 +92,7 @@
             </div>
         </section>
 
-        <!-- 📌 Nueva Sección: Detalle de Empresa -->
+        <!-- 📄 Detalle de Empresa -->
         <section id="detalle-admin" style="display:none; margin-top:30px;">
             <h2>📄 Detalle de Empresa</h2>
             <p><strong>Nombre:</strong> <span id="detalle-nombre"></span></p>
@@ -92,73 +117,81 @@
             <button onclick="ocultarDetalleAdmin()" class="btn-secondary" style="margin-top:15px;">Cerrar</button>
         </section>
 
-        <!-- 📌 Formulario para Evaluación Definitiva por el Administrador -->
+        <!-- 📝 Evaluación Definitiva (Administrador) -->
+        <button class="accordion">📝 Evaluación Definitiva (Administrador)</button>
+        <div class="panel">
+            <div id="info-definitiva" style="background: #eef9ff; padding: 10px; margin-bottom: 10px; border: 1px solid #c4e4ff;">
+                <strong>Empresa a calificar:</strong> 
+                <span id="nombre-empresa-def"></span>
+                <br>
+                <strong>Estado actual definitivo:</strong> 
+                <span id="estado-definitivo-actual">Sin evaluación definitiva</span>
+            </div>
 
-        <div id="info-definitiva" style="background: #eef9ff; padding: 10px; margin-bottom: 10px; border: 1px solid #c4e4ff;">
-            <strong>Empresa a calificar:</strong> 
-            <span id="nombre-empresa-def"></span>
-            <br>
-            <strong>Estado actual definitivo:</strong> 
-            <span id="estado-definitivo-actual">Sin evaluación definitiva</span>
+            <form id="form-evaluacion-definitiva" style="margin-top:15px;">
+                <input type="hidden" id="admin-empresa-id" name="empresa_id">
+                <div class="form-group">
+                    <label for="estado_preseleccion">Estado de Preselección:</label>
+                    <select id="estado_preseleccion" name="estado_preseleccion" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Preseleccionado">⭐ Preseleccionado</option>
+                        <option value="No_preseleccionado">❌ No preseleccionado</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-top:10px;">
+                    <label for="observaciones">Observaciones:</label>
+                    <textarea id="observaciones" name="observaciones" rows="3"></textarea>
+                </div>
+
+                <div class="form-group" style="margin-top:10px;">
+                    <label for="criterios">Criterios de Evaluación (JSON, opcional):</label>
+                    <textarea id="criterios" name="criterios" rows="3" placeholder='{"criterio1": 5, "criterio2": 3}'></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top:10px;">💾 Guardar Evaluación Definitiva</button>
+            </form>
         </div>
-            <h3>📝 Evaluación Definitiva (Administrador)</h3>
-        <form id="form-evaluacion-definitiva" style="margin-top:15px;">
-            <input type="hidden" id="admin-empresa-id" name="empresa_id">
 
-            <div class="form-group">
-                <label for="estado_preseleccion">Estado de Preselección:</label>
-                <select id="estado_preseleccion" name="estado_preseleccion" required>
-                    <option value="">Seleccione...</option>
-                    <option value="Preseleccionado">⭐ Preseleccionado</option>
-                    <option value="No_preseleccionado">❌ No preseleccionado</option>
-                </select>
-            </div>
-
-            <div class="form-group" style="margin-top:10px;">
-                <label for="observaciones">Observaciones:</label>
-                <textarea id="observaciones" name="observaciones" rows="3"></textarea>
-            </div>
-
-            <div class="form-group" style="margin-top:10px;">
-                <label for="criterios">Criterios de Evaluación (JSON, opcional):</label>
-                <textarea id="criterios" name="criterios" rows="3" placeholder='{"criterio1": 5, "criterio2": 3}'></textarea>
-            </div>
-
-            <button type="submit" class="btn-primary" style="margin-top:10px;">💾 Guardar Evaluación Definitiva</button>
-        </form>
-
-        <!-- Sección de Crear Evaluador -->
-        <section id="crear-evaluador">
-            <h2><span class="icon icon-users"></span>Crear nuevo Evaluador</h2>
-            <form id="form-evaluador" class="form-grid">
+        <!-- ➕ Crear Evaluador -->
+        <button class="accordion">➕ Crear nuevo Evaluador</button>
+        <div class="panel">
+            <form id="form-evaluador" class="form-grid" style="margin-top:10px;">
                 <div class="form-group">
                     <label for="nombre_usuario">Nombre de usuario:</label>
                     <input type="text" name="nombre_usuario" id="nombre_usuario" required>
                 </div>
-                
                 <div class="form-group">
                     <label for="correo">Correo electrónico:</label>
                     <input type="email" name="correo" id="correo" required>
                 </div>
-                
                 <div class="form-group">
                     <label for="password">Contraseña:</label>
                     <input type="password" name="password" id="password" required>
                 </div>
-                
                 <div class="form-group">
                     <label for="nombre_completo">Nombre completo:</label>
                     <input type="text" name="nombre_completo" id="nombre_completo" required>
                 </div>
-
-                <button type="submit" class="btn-primary">
-                    ➕ Crear Evaluador
-                </button>
+                <button type="submit" class="btn-primary">➕ Crear Evaluador</button>
             </form>
             <div id="resultado-evaluador" class="mensaje" style="display: none;"></div>
-        </section>
+        </div>
     </div>
 
     <script src="../js/administracion.js"></script>
+    <script>
+        // Script para acordeones
+        document.addEventListener('DOMContentLoaded', () => {
+            const acc = document.getElementsByClassName("accordion");
+            for (let i = 0; i < acc.length; i++) {
+                acc[i].addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    const panel = this.nextElementSibling;
+                    panel.style.display = panel.style.display === "block" ? "none" : "block";
+                });
+            }
+        });
+    </script>
 </body>
 </html>

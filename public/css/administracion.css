@@ -580,3 +580,32 @@ select:focus {
         var(--magenta-dark) 0%, 
         var(--naranja-dark) 100%);
 }
+
+.accordion {
+  background-color: #f8f9fa;
+  color: #333;
+  cursor: pointer;
+  padding: 10px 15px;
+  text-align: left;
+  font-weight: bold;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: background-color 0.2s ease;
+}
+
+.accordion:hover {
+  background-color: #e9ecef;
+}
+
+.accordion.active {
+  background-color: #e9ecef;
+}
+
+.panel {
+  padding: 0 15px;
+  display: none;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-top: none;
+  background: white;
+}
