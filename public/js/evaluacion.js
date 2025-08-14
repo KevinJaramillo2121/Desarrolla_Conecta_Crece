@@ -447,22 +447,7 @@
                                                   class="form-textarea"></textarea>
                                     </div>
                                 </div>
-                                
-                                <div class="form-row">
-                                    <div class="form-group full-width">
-                                        <label for="criterios">
-                                            <span class="label-icon">📊</span>
-                                            Criterios de Evaluación (JSON opcional)
-                                        </label>
-                                        <textarea id="criterios" name="criterios" 
-                                                  placeholder='Ejemplo: {"innovacion": 8, "viabilidad": 7, "impacto": 9, "factibilidad": 6}'
-                                                  class="form-textarea small"></textarea>
-                                        <small class="form-hint">
-                                            Formato JSON opcional. Deje en blanco si no desea especificar criterios numéricos.
-                                        </small>
-                                    </div>
-                                </div>
-                                
+
                                 <div class="form-actions">
                                     <button type="submit" class="btn btn-success btn-large">
                                         <span class="btn-icon">💾</span>
