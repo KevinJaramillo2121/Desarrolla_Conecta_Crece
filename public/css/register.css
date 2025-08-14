@@ -339,59 +339,9 @@
     transition: width 0.3s ease, background 0.3s ease;
     }
 
-    /* CHECKBOXES */
-    .checkbox-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-    }
     @media(min-width: 768px) {
     .checkbox-grid { grid-template-columns: repeat(2,1fr); }
     }
-    .checkbox-container {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-4);
-    cursor: pointer;
-    }
-    .checkbox-container input {
-    display: none;
-    }
-    .checkbox-custom {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--border-light);
-    border-radius: 4px;
-    position: relative;
-    flex-shrink: 0;
-    transition: all 0.2s ease;
-    }
-    .checkbox-container input:checked + .checkbox-custom {
-    background: var(--primary-orange);
-    border-color: var(--primary-orange);
-    }
-    .checkbox-container input:checked + .checkbox-custom::after {
-    content: '✓';
-    color: var(--white);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 12px;
-    }
-    .checkbox-content {
-    display: flex;
-    flex-direction: column;
-    }
-    .checkbox-title {
-    font-weight: 600;
-    color: var(--text-dark);
-    }
-    .checkbox-description {
-    font-size: var(--font-size-sm);
-    color: var(--text-gray);
-    }
-
     /* CONFIRMATION SUMMARY */
     .confirmation-summary {
     display: flex;
@@ -424,9 +374,6 @@
     /* TERMS SECTION */
     .terms-section {
     margin-top: var(--space-6);
-    }
-    .checkbox-container.large {
-    gap: var(--space-3);
     }
     .terms-link {
     color: var(--primary-blue);
@@ -616,3 +563,435 @@
     padding: var(--space-2) var(--space-4);
     font-size: var(--font-size-sm);
     }
+
+    /* ===== CONTENEDOR GENERAL DEL PASO DE CONFIRMACIÓN ===== */
+.form-step.confirmacion {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Título y descripción que ya tienes en stepTitle y stepDescription */
+#stepTitle {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: .25rem;
+}
+#stepDescription {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+/* ===== FILAS DE DATOS DE CONFIRMACIÓN ===== */
+.confirm-row {
+  display: flex;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+.confirm-row:last-child {
+  border-bottom: none;
+}
+.confirm-label {
+  flex: 0 0 40%;
+  font-weight: 500;
+  color: #374151;
+}
+.confirm-value {
+  flex: 1;
+  color: #111827;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+/* ===== LISTAS DE CARACTERÍSTICAS (ej. Afiliada / Trabajador) ===== */
+#confirm-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+#confirm-features span {
+  background-color: #dbeafe;
+  color: #1e40af;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* ===== BOTÓN EDITAR (los que tienes configurados para goToStep) ===== */
+.btn-editar {
+  background: none;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+.btn-editar:hover {
+  background-color: #f3f4f6;
+}
+
+/* ===== CONTENEDOR DE ACCIONES FINALES ===== */
+.confirm-actions {
+  text-align: center;
+  margin-top: 2rem;
+}
+.confirm-actions label {
+  display: block;
+  margin-bottom: 1rem;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+/* ===== BOTÓN ENVIAR FINAL ===== */
+#submitBtn {
+  background-color: #2563eb;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+#submitBtn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+#submitBtn:hover:not(:disabled) {
+  background-color: #1e40af;
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 640px) {
+  .confirm-row {
+    flex-direction: column;
+  }
+  .confirm-label {
+    margin-bottom: 0.25rem;
+  }
+}
+
+/* ================================
+    MEJORAS PARA LA SECCIÓN DE CONFIRMACIÓN
+    ================================ */
+
+.confirmation-summary {
+    background: var(--background-light);
+    border-radius: var(--border-radius-sm);
+    padding: var(--space-4);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.summary-section {
+    padding: var(--space-3) 0;
+    border-bottom: 1px dashed var(--border-light);
+}
+
+.summary-section:last-child {
+    border-bottom: none;
+}
+
+.summary-section h4 {
+    color: var(--primary-blue);
+    margin-bottom: var(--space-3);
+    font-size: var(--font-size-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.summary-section h4::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--primary-orange);
+    border-radius: 50%;
+    margin-right: var(--space-2);
+}
+
+.summary-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    padding: var(--space-2) 0;
+    align-items: center;
+}
+
+.summary-item .label {
+    font-weight: 600;
+    color: var(--text-gray);
+    text-align: right;
+    font-size: var(--font-size-sm);
+}
+
+.summary-item .value {
+    font-weight: 500;
+    color: var(--text-dark);
+    background: var(--white);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-light);
+    word-break: break-word;
+}
+
+.features-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+}
+
+.features-tags .tag {
+    background: var(--white);
+    border: 1px solid var(--primary-blue);
+    color: var(--primary-blue);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.features-tags .tag::before {
+    content: "✓";
+    color: var(--primary-blue);
+    font-weight: bold;
+}
+
+.terms-section {
+    margin-top: var(--space-6);
+    padding: var(--space-4);
+    background: rgba(43, 161, 212, 0.05);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(43, 161, 212, 0.2);
+}
+
+/* Efectos hover para mejor interactividad */
+.summary-item .value:hover {
+    box-shadow: 0 0 0 2px var(--border-focus);
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+
+.features-tags .tag:hover {
+    background: var(--primary-blue);
+    color: var(--white);
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+
+.features-tags .tag:hover::before {
+    color: var(--white);
+}
+/* ================================
+   MEJORAS PARA CHECKBOXES 
+   ================================ */
+
+/* ================================
+   MEJORAS PARA EL PASO 2 - DATOS DE LA EMPRESA
+   ================================ */
+
+#step2 {
+  padding: var(--space-6);
+}
+
+#step2 .step-header {
+  margin-bottom: var(--space-6);
+  text-align: center;
+}
+
+#step2 .step-header h3 {
+  font-size: var(--font-size-2xl);
+  color: var(--primary-blue);
+  margin-bottom: var(--space-2);
+}
+
+#step2 .step-header p {
+  color: var(--text-gray);
+  font-size: var(--font-size-base);
+}
+
+#step2 .form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+#step2 .form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+/* Input groups mejorados */
+#step2 .input-group {
+  position: relative;
+  margin-bottom: var(--space-4);
+}
+
+#step2 .input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#step2 .form-input {
+  padding: var(--space-3) var(--space-12);
+  border: 2px solid var(--border-light);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-base);
+  width: 100%;
+  transition: all 0.2s ease;
+  background-color: var(--white);
+}
+
+#step2 .form-input:focus {
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 0 4px var(--border-focus);
+  outline: none;
+}
+
+/* Select mejorado */
+#step2 .select-wrapper {
+  position: relative;
+}
+
+#step2 .form-select {
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--border-light);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-base);
+  width: 100%;
+  background-color: var(--white);
+  cursor: pointer;
+}
+
+#step2 .form-select:focus {
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 0 4px var(--border-focus);
+  outline: none;
+}
+
+/* Checkbox grid mejorado */
+#step2 .checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+#step2 .checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-light);
+  background: var(--white);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+#step2 .checkbox-container:hover {
+  border-color: var(--primary-orange);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+#step2 .checkbox-custom {
+  min-width: 20px;
+  min-height: 20px;
+  border: 2px solid var(--border-light);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+#step2 .checkbox-container input:checked ~ .checkbox-custom {
+  background-color: var(--primary-orange);
+  border-color: var(--primary-orange);
+}
+
+#step2 .checkbox-content {
+  display: flex;
+  flex-direction: column;
+}
+
+#step2 .checkbox-title {
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: var(--space-1);
+}
+
+#step2 .checkbox-description {
+  font-size: var(--font-size-sm);
+  color: var(--text-gray);
+  line-height: 1.4;
+}
+
+/* Responsive para pantallas más grandes */
+@media (min-width: 768px) {
+  #step2 .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  #step2 .form-row {
+    grid-template-columns: repeat(2, 1fr);
+    grid-column: span 2;
+  }
+  
+  #step2 .checkbox-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-column: span 2;
+  }
+  
+  /* Ajuste para inputs que deben ocupar ancho completo */
+  #step2 .input-group[data-fullwidth] {
+    grid-column: span 2;
+  }
+  
+  /* Ajuste para el checkbox que debe ocupar ancho completo */
+  #step2 .checkbox-container[data-fullwidth] {
+    grid-column: span 2;
+  }
+}
+
+/* Efectos especiales para inputs */
+#step2 .input-group:focus-within .form-label {
+  color: var(--primary-orange);
+}
+
+#step2 .input-icon {
+  color: var(--text-gray);
+  transition: color 0.2s ease;
+}
+
+#step2 .input-group:focus-within .input-icon {
+  color: var(--primary-orange);
+}
+
+/* Mejoras para el mensaje de error */
+#step2 .input-error {
+  position: absolute;
+  bottom: -18px;
+  left: 0;
+  font-size: 12px;
+  color: var(--error);
+}
+

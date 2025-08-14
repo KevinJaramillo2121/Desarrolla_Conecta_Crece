@@ -198,15 +198,21 @@ SELECT
     e.nit,
     e.tipo_empresa,
     e.municipio,
-    p.estado         AS estado_postulacion,
+    p.estado AS estado_postulacion,
     s.estado_preseleccion,
     s.fecha_evaluacion,
     u.nombre_completo AS evaluador,
-    s.observaciones
+    s.observaciones,
+    s.evaluador_id,
+    s.es_definitiva
 FROM empresas e
-LEFT JOIN postulaciones p ON p.empresa_id = e.id AND p.estado = 'enviado'
-LEFT JOIN seleccion s   ON s.empresa_id = e.id
-LEFT JOIN usuarios u    ON u.id = s.evaluador_id;
+LEFT JOIN postulaciones p
+    ON p.empresa_id = e.id AND p.estado = 'enviado'
+LEFT JOIN seleccion s
+    ON s.empresa_id = e.id
+LEFT JOIN usuarios u
+    ON u.id = s.evaluador_id;
+
 
 -- Inserción de USUARIOS base para pruebas (ajusta o elimina luego si no los necesitas)
 INSERT INTO usuarios (nombre_usuario, correo, password_hash, nombre_completo, rol_id)
@@ -246,3 +252,78 @@ VALUES
    crypt('password', gen_salt('bf')),
    'Participante Dos', 
    (SELECT id FROM roles WHERE nombre = 'Participante'));
+
+
+
+
+
+
+   DROP INDEX IF EXISTS idx_sel_empresa_id;
+
+-- 🔹 Cambiar para permitir varias evaluaciones por empresa:
+ALTER TABLE seleccion DROP CONSTRAINT seleccion_empresa_id_key;
+
+-- 🔹 Agregar restricción única por empresa y evaluador (cada evaluador puede evaluar una vez)
+ALTER TABLE seleccion ADD CONSTRAINT unica_empresa_evaluador UNIQUE (empresa_id, evaluador_id);
+
+-- 🔹 Agregar campo para marcar la evaluación definitiva del administrador
+ALTER TABLE seleccion ADD COLUMN es_definitiva BOOLEAN NOT NULL DEFAULT false;
+
+CREATE INDEX IF NOT EXISTS idx_sel_empresa_eval ON seleccion(empresa_id, evaluador_id);
+
+
+
+SELECT * FROM vista_general;
+
+
+
+
+
+//Esto es aparte pero creo que también lo corrí.
+
+
+BEGIN;
+
+-- 1. Quitar la restricción UNIQUE de empresa_id
+ALTER TABLE seleccion DROP CONSTRAINT IF EXISTS seleccion_empresa_id_key;
+
+-- 2. Asegurar que la columna evaluador_id existe
+ALTER TABLE seleccion 
+    ALTER COLUMN evaluador_id DROP NOT NULL;
+
+-- 3. Agregar columna para marcar evaluación final del administrador
+ALTER TABLE seleccion
+    ADD COLUMN IF NOT EXISTS es_final BOOLEAN NOT NULL DEFAULT FALSE;
+
+-- 4. Crear restricción única para permitir una evaluación por evaluador y empresa
+ALTER TABLE seleccion
+    ADD CONSTRAINT seleccion_empresa_evaluador_unique UNIQUE (empresa_id, evaluador_id, es_final);
+
+COMMIT;
+
+
+
+CREATE OR REPLACE VIEW vista_general AS
+SELECT
+    e.id,
+    e.nombre_legal,
+    e.nit,
+    e.tipo_empresa,
+    e.municipio,
+    p.estado AS estado_postulacion,
+    s.estado_preseleccion,
+    s.fecha_evaluacion,
+    u.nombre_completo AS evaluador,
+    s.observaciones
+FROM empresas e
+LEFT JOIN postulaciones p 
+    ON p.empresa_id = e.id AND p.estado = 'enviado'
+LEFT JOIN LATERAL (
+    SELECT *
+    FROM seleccion
+    WHERE seleccion.empresa_id = e.id
+    ORDER BY es_final DESC, fecha_actualizacion DESC
+    LIMIT 1
+) s ON true
+LEFT JOIN usuarios u 
+    ON u.id = s.evaluador_id;
