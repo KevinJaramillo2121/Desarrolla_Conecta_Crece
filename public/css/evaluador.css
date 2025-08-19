@@ -58,9 +58,7 @@ html, body {
 /* Header con Logos */
 .header-bienvenida {
     padding: var(--espacio-lg) 0;
-    background: linear-gradient(135deg, 
-        rgba(43, 161, 212, 0.05) 0%, 
-        rgba(208, 65, 126, 0.05) 100%);
+    background-color: var(--blanco);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(43, 161, 212, 0.1);
 }
@@ -83,32 +81,27 @@ html, body {
     text-decoration: none;
     border: none;
     outline: none;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     border-radius: var(--radio-suave);
     padding: var(--espacio-sm);
 }
 
-.logo-link:hover {
-    transform: scale(1.08);
-    background: rgba(43, 161, 212, 0.1);
-    box-shadow: 0 4px 16px rgba(43, 161, 212, 0.2);
-}
 
-.logo-comfama,
-.logo-aoxlab {
-    height: 60px;
+.logo-comfama {
+    height: 80px;
     width: auto;
     object-fit: contain;
-    filter: drop-shadow(0 2px 8px rgba(43, 161, 212, 0.1));
+    transition: filter 0.3s ease;
+}
+.logo-aoxlab {
+    height: 35px;
+    width: auto;
+    object-fit: contain;
     transition: filter 0.3s ease;
 }
 
-.logo-link:hover .logo-comfama {
-    filter: drop-shadow(0 4px 12px rgba(208, 65, 126, 0.25));
-}
-
-.logo-link:hover .logo-aoxlab {
-    filter: drop-shadow(0 4px 12px rgba(243, 119, 40, 0.25));
+.logo-corporativo .logo-comfama {
+    max-height: 80px; /* <-- Tamaño prominente para Comfama */
+    width: auto;
 }
 
 .separador-logos {
@@ -497,12 +490,6 @@ p {
 .info-item:nth-child(2) { animation-delay: 0.2s; }
 .info-item:nth-child(3) { animation-delay: 0.3s; }
 
-/* Estados de Focus para Accesibilidad */
-.btn-evaluacion:focus,
-.logo-link:focus {
-    outline: 3px solid rgba(43, 161, 212, 0.5);
-    outline-offset: 2px;
-}
 
 /* Prefiere movimiento reducido */
 @media (prefers-reduced-motion: reduce) {

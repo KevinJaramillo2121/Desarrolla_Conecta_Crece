@@ -180,7 +180,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-8) var(--space-6);
+    padding: var(--space-10) var(--space-10);
     position: relative;
     z-index: 10;
 }
@@ -923,4 +923,41 @@ body {
     .info-content h3 {
         font-size: var(--font-size-xl);
     }
+}
+/* =======================================
+   AJUSTE DE LOGOS EN PÁGINA DE LOGIN
+======================================== */
+
+/* 1. Contenedor principal de los logos en el header */
+.brand-logos {
+    display: flex;
+    align-items: center; /* Alinea los logos verticalmente */
+    gap: 1rem;         /* Espacio entre los logos y el símbolo '×' */
+}
+
+/* 2. Tamaño específico y más grande para el logo de Comfama */
+.brand-logos .logo-comfama {
+    height: 65px; /* <-- TAMAÑO AUMENTADO PARA COMFAMA */
+    width: auto;
+}
+
+/* 3. Tamaño ajustado y más pequeño para el logo de Aoxlab */
+.brand-logos .logo-aoxlab {
+    height: 42px; /* <-- TAMAÑO REDUCIDO PARA BALANCE */
+    width: auto;
+}
+
+/* 4. Estilo para el símbolo '×' para que se vea centrado */
+.brand-logos .partnership-symbol {
+    font-size: 2rem;
+    color: var(--text-light);
+    padding-bottom: 5px; /* Pequeño ajuste para centrarlo visualmente */
+}
+.separador-logos {
+    width: 2px;
+    height: 50px;
+    background: linear-gradient(180deg, 
+        var(--azul-evaluador) 0%, 
+        var(--magenta-comfama) 100%);
+    border-radius: 2px;
 }

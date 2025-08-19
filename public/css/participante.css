@@ -100,9 +100,13 @@ html, body {
     gap: var(--espacio-md);
 }
 
-.logo-comfama,
+.logo-comfama {
+    height: 65px;
+    width: auto;
+    object-fit: contain;
+}
 .logo-aoxlab {
-    height: 48px;
+    height: 35px;
     width: auto;
     object-fit: contain;
 }

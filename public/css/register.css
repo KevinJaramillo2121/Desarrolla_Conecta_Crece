@@ -102,15 +102,6 @@
     align-items: center;
     gap: var(--space-8);
     }
-    .brand-logos {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    }
-    .brand-logos img { height: 48px; filter: drop-shadow(var(--shadow-sm)); }
-    .partnership-symbol { font-size: var(--font-size-xl); color: var(--text-gray); }
-    .program-info h1 { font-size: var(--font-size-2xl); font-weight: 700; color: var(--text-dark); }
-    .program-info p { font-size: var(--font-size-sm); color: var(--text-gray); }
 
     /* MAIN LAYOUT */
     .register-main {
@@ -995,3 +986,31 @@
   color: var(--error);
 }
 
+/* =======================================
+   AJUSTE DE HEADER Y LOGOS - REGISTRO
+======================================== */
+
+/* 1. Fondo blanco para la barra superior del registro */
+.register-header {
+    background-color: var(--white); /* Fondo blanco */
+    padding: 0.8rem 0;             /* Espacio vertical para dar aire */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Sombra sutil opcional */
+}
+
+/* 2. Tamaños individuales para balancear los logos */
+.brand-logos .logo-comfama {
+    height: 65px; /* <-- Tamaño prominente para Comfama */
+    width: auto;
+}
+
+.brand-logos .logo-aoxlab {
+    height: 35px; /* <-- Tamaño ajustado para Aoxlab */
+    width: auto;
+}
+
+/* 3. Alineación del contenedor de logos */
+.brand-logos {
+    display: flex;
+    align-items: center; /* Centra los logos verticalmente */
+    gap: 2rem;           /* Espacio consistente entre ellos */
+}

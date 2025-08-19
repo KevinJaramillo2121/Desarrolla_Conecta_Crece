@@ -92,7 +92,7 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--blanco);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(208, 65, 126, 0.1);
     padding: var(--espacio-sm) 0;
@@ -109,37 +109,27 @@ body {
     gap: var(--espacio-lg);
 }
 
-.logo-corporativo {
-    display: flex;
-    align-items: center;
-    gap: var(--espacio-md);
+/* 1. Tamaño específico para el logo de Comfama */
+.logo-corporativo .logo-comfama {
+    max-height: 65px; /* <-- AUMENTAMOS ESTE VALOR SÓLO PARA COMFAMA */
+    width: auto;
 }
 
 .logo-comfama {
-    height: 48px;
-    width: auto;
-    filter: drop-shadow(0 2px 8px rgba(208, 65, 126, 0.15));
     transition: transform 0.3s ease;
 }
 
 .logo-aoxlab {
-    height: 42px;
+    height: 35px;
     width: auto;
-    filter: drop-shadow(0 2px 8px rgba(243, 119, 40, 0.15));
     transition: transform 0.3s ease;
 }
-
-.logo-corporativo:hover .logo-comfama,
-.logo-corporativo:hover .logo-aoxlab {
-    transform: scale(1.05);
-}
-
 .separador-logos {
     width: 2px;
-    height: 30px;
+    height: 2px;
     background: linear-gradient(to bottom, 
         var(--magenta-comfama) 0%, 
-        var(--naranja-aoxlab) 100%);
+        var(--naranja-aoxlab) 50%);
     border-radius: 1px;
 }
 
@@ -456,4 +446,33 @@ button:focus {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+}
+/* =======================================
+   ESTILOS HEADER Y LOGOS CORPORATIVOS
+   (Versión ajustada para tamaño y fondo)
+======================================== */
+
+/* 1. Fondo blanco y espaciado para el header */
+.header-bienvenida {
+    background-color: var(--blanco); /* Fondo blanco */
+    padding: var(--espacio-md) 0;    /* Espacio vertical para que no se sienta apretado */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Sombra sutil opcional para separarlo del contenido */
+    width: 100%;
+}
+
+/* 3. Contenedor de logos con separador y alineación */
+.logo-corporativo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; /* Espacio inicial, será ajustado por JS */
+    
+    /* Separador vertical entre los logos */
+    border-left: 1.5px solid #E0E0E0; /* Un gris más suave */
+    padding-left: 20px; /* Espacio después del separador */
+}
+
+/* 4. Espacio antes del separador */
+.logo-corporativo .logo-link:first-child {
+    padding-right: 20px; /* Espacio antes del separador, será ajustado por JS */
 }
