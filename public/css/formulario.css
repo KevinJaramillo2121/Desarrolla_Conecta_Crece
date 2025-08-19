@@ -653,3 +653,98 @@ select.success {
 .declaration-checkbox .checkbox-label strong {
     color: #212529;
 }
+/* --- Estilos para el Reloj Digital de Cuenta Regresiva --- */
+
+/* (Opcional pero recomendado) Importa una fuente con estilo digital desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+.countdown-container {
+    background-color: #0a0a0a; /* Fondo negro profundo */
+    border-radius: 15px;
+    padding: 25px 35px;
+    margin: 2rem auto;
+    max-width: 600px;
+    box-shadow: 0 0 35px rgba(0, 255, 135, 0.25), inset 0 0 15px rgba(0, 0, 0, 0.6);
+    border: 1px solid #222;
+    text-align: center;
+}
+
+.countdown-title {
+    color: #b0b0b0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.digital-clock {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    /* Usa la fuente digital importada o una alternativa como Courier New */
+    font-family: 'Orbitron', 'Courier New', Courier, monospace;
+}
+
+.time-segment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px; /* Asegura un ancho mínimo para cada segmento */
+}
+
+.digital-clock .number {
+    color: #00ff87; /* Verde neón brillante */
+    font-size: 3.5rem; /* Números grandes y visibles */
+    font-weight: 700;
+    line-height: 1;
+    text-shadow:
+        0 0 5px #00ff87,
+        0 0 15px #00ff87,
+        0 0 25px #00ff87,
+        0 0 45px #00c46a; /* Efecto de brillo (glow) */
+    transition: all 0.3s ease-in-out;
+}
+
+.digital-clock .label {
+    color: #00e076; /* Un verde ligeramente menos brillante para las etiquetas */
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 5px;
+}
+
+.digital-clock .separator {
+    color: #00ff87;
+    font-size: 3rem;
+    line-height: 1;
+    animation: blink-animation 1s infinite;
+    text-shadow: 0 0 5px #00ff87;
+}
+
+/* Animación para que los dos puntos parpadeen */
+@keyframes blink-animation {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* --- Clases de Advertencia --- */
+.digital-clock.warning .number,
+.digital-clock.warning .separator {
+    color: #f59e0b; /* Naranja/Ámbar cuando queden menos de 3 días */
+    text-shadow: 0 0 5px #f59e0b, 0 0 15px #f59e0b, 0 0 25px #f59e0b;
+}
+.digital-clock.warning .label {
+    color: #d97706;
+}
+
+.digital-clock.danger .number,
+.digital-clock.danger .separator {
+    color: #ef4444; /* Rojo cuando quede menos de 1 día */
+    text-shadow: 0 0 5px #ef4444, 0 0 15px #ef4444, 0 0 25px #ef4444;
+}
+.digital-clock.danger .label {
+    color: #dc2626;
+}

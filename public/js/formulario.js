@@ -308,42 +308,69 @@ async function obtenerFechaCierre() {
     }
 }
 
+// En formulario.js, reemplaza la función iniciarCuentaRegresiva por esta:
+
 function iniciarCuentaRegresiva(deadline) {
-    const timerElement = document.getElementById('timer-value');
-    if (!timerElement) return;
-    
+    // Referencias a los nuevos elementos del reloj
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+    const clockEl = document.querySelector('.digital-clock');
+
+    // Verificación para asegurar que todos los elementos existen
+    if (!daysEl || !hoursEl || !minutesEl || !secondsEl || !clockEl) {
+        console.error('Error: No se encontraron los elementos del reloj digital en el HTML.');
+        const container = document.querySelector('.countdown-container');
+        if (container) container.innerHTML = '<p>Error al cargar el contador.</p>';
+        return;
+    }
+
+    // Limpiar cualquier intervalo anterior para evitar múltiples contadores
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+
     function updateTimer() {
         const now = new Date().getTime();
         const distance = deadline.getTime() - now;
-        
+
+        // Si el tiempo se ha acabado
         if (distance < 0) {
-            timerElement.textContent = 'Convocatoria cerrada';
-            timerElement.style.color = 'var(--error, #ef4444)';
-            bloquearFormulario('El tiempo para enviar postulaciones ha terminado.');
             clearInterval(timerInterval);
+            // Muestra el mensaje de convocatoria cerrada dentro del reloj
+            clockEl.innerHTML = '<div class="countdown-title" style="font-size: 1.8rem; margin: 0;">Convocatoria Cerrada</div>';
+            clockEl.classList.add('danger');
+            bloquearFormulario('El tiempo para enviar postulaciones ha terminado.');
             return;
         }
-        
+
+        // Cálculos de tiempo
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        
-        timerElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-        
-        // Cambiar color según tiempo restante
-        if (days <= 1) {
-            timerElement.style.color = 'var(--error, #ef4444)';
-        } else if (days <= 3) {
-            timerElement.style.color = 'var(--warning, #f59e0b)';
-        } else {
-            timerElement.style.color = 'var(--success, #10b981)';
+
+        // Actualizar el contenido de cada número
+        // .padStart(2, '0') asegura que siempre haya dos dígitos (ej. 09, 08, 07)
+        daysEl.textContent = String(days).padStart(2, '0');
+        hoursEl.textContent = String(hours).padStart(2, '0');
+        minutesEl.textContent = String(minutes).padStart(2, '0');
+        secondsEl.textContent = String(seconds).padStart(2, '0');
+
+        // Lógica para cambiar el color del reloj según el tiempo restante
+        clockEl.classList.remove('warning', 'danger');
+        if (days < 1) { // Menos de 1 día
+            clockEl.classList.add('danger');
+        } else if (days < 3) { // Menos de 3 días
+            clockEl.classList.add('warning');
         }
     }
-    
-    updateTimer();
-    timerInterval = setInterval(updateTimer, 1000);
+
+    updateTimer(); // Llamada inicial para que el reloj aparezca inmediatamente
+    timerInterval = setInterval(updateTimer, 1000); // Actualiza el reloj cada segundo
 }
+
 
 function bloquearFormulario(mensaje) {
     convocatoriaCerrada = true;
