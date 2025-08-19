@@ -286,3 +286,26 @@
                 }
             });
 
+            // Script para gestionar el cierre de sesión
+document.addEventListener('DOMContentLoaded', () => {
+    const logoutButton = document.getElementById('logout-button');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/logout');
+                if (response.ok) {
+                    // Redirigir al login si el cierre de sesión fue exitoso
+                    window.location.href = '/login.html';
+                } else {
+                    console.error('Error al cerrar sesión.');
+                    alert('Hubo un problema al cerrar la sesión. Por favor, inténtalo de nuevo.');
+                }
+            } catch (error) {
+                console.error('Error de red:', error);
+                alert('No se pudo conectar con el servidor para cerrar la sesión.');
+            }
+        });
+    }
+});
+
+

@@ -361,3 +361,26 @@ tbody td {
         white-space: nowrap;
     }
 }
+    .app-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background-color: #1a202c;
+        color: white;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .logout-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        background-color: #e53e3e;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .logout-btn:hover {
+        background-color: #c53030;
+    }

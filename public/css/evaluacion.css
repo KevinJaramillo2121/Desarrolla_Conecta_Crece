@@ -1043,3 +1043,16 @@ html, body {
     color: var(--gris-texto);
     margin: 0;
 }
+.logout-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        background-color: #e53e3e; /* Un color rojo para indicar "salida" */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .logout-btn:hover {
+        background-color: #c53030; /* Un rojo más oscuro al pasar el ratón */
+    }

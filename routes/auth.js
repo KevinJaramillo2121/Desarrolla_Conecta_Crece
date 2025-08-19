@@ -141,4 +141,14 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({ mensaje: 'Error al cerrar la sesión.' });
+    }
+    res.clearCookie('connect.sid');
+    res.status(200).json({ mensaje: 'Sesión cerrada exitosamente.' });
+  });
+});
+
 module.exports = router;

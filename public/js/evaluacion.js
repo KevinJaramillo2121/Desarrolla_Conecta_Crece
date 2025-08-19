@@ -696,3 +696,24 @@
             console.error('❌ Promise rechazada no manejada:', e.reason);
             showToast('Error de conexión o servidor', 'error');
         });
+
+                document.addEventListener('DOMContentLoaded', () => {
+    const logoutButton = document.getElementById('logout-button');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/logout'); // Llama a la ruta universal
+                if (response.ok) {
+                    // Si el backend confirma, redirige al login
+                    window.location.href = '/login.html'; 
+                } else {
+                    console.error('Error al cerrar sesión.');
+                    alert('Hubo un problema al cerrar la sesión. Por favor, inténtalo de nuevo.');
+                }
+            } catch (error) {
+                console.error('Error de red:', error);
+                alert('No se pudo conectar con el servidor para cerrar la sesión.');
+            }
+        });
+    }
+});
