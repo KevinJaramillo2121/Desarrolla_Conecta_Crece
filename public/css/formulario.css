@@ -9,9 +9,10 @@
   --comfama-danger: #D9534F;
   --comfama-gray: #6C757D;
   --comfama-light-gray: #F8F9FA;
+      --font-mono: 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", monospace;
 }
 /* ================================================
-   ESTILOS COUNTDOWN TIMER - INTEGRADO CON COMFAMA
+    ESTILOS COUNTDOWN TIMER - INTEGRADO CON COMFAMA
    ================================================ */
 
 /* Variables adicionales para countdown (agrega esto a tus :root existentes) */
@@ -229,15 +230,6 @@ body {
   background-color: #f5f7fa;
   margin: 0;
   padding: 20px;
-}
-
-#reloj-convocatoria {
-  background-color: var(--comfama-dark);
-  color: white;
-  padding: 15px;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .container {
