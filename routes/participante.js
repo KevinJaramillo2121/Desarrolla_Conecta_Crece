@@ -14,13 +14,18 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // 2. Configuración de Multer usando uploadsDir
+// ...dentro de participante.js
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, uploadsDir),
     filename: (req, file, cb) => {
         const sanitized = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
-        cb(null, Date.now() + '-' + sanitized);
+        // Añadimos un número aleatorio grande para garantizar la unicidad
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + '-' + sanitized);
     }
 });
+
 const fileFilter = (req, file, cb) => {
     const allowed = [
         'application/pdf',
@@ -409,5 +414,4 @@ router.get('/fecha-cierre', async (req, res) => {
         res.status(500).json({ error: 'Error del servidor' });
     }
 });
-
 module.exports = router;

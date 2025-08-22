@@ -1,9 +1,10 @@
 -- ACTIVAR EXTENSIONES ÚTILES
 CREATE EXTENSION IF NOT EXISTS citext;
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
-CREATE EXTENSION IF NOT EXISTS pg_trgm;       -- Para búsquedas rápidas sobre texto
 
--- TIPOS ENUM
+-- =================================================================
+-- TIPOS ENUMERADOS (ENUM)
+-- =================================================================
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tipo_documento') THEN
@@ -11,32 +12,21 @@ BEGIN
             ('CamaraComercio', 'RUT', 'Parafiscales', 'TamanoEmpresarial',
              'AfiliacionComfama', 'HojaVidaProducto', 'Otro');
     END IF;
-END
-$$ LANGUAGE plpgsql;
-
-DO $$
-BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tipo_rol') THEN
         CREATE TYPE tipo_rol AS ENUM ('Participante', 'Evaluador', 'Administrador');
     END IF;
-END
-$$ LANGUAGE plpgsql;
-
-DO $$
-BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'estado_postulacion') THEN
         CREATE TYPE estado_postulacion AS ENUM ('borrador', 'enviado');
     END IF;
-END
-$$ LANGUAGE plpgsql;
-
-DO $$
-BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'estado_preseleccion') THEN
-        CREATE TYPE estado_preseleccion AS ENUM ('Preseleccionado', 'No_preseleccionado');
+        CREATE TYPE estado_preseleccion AS ENUM ('Preseleccionado', 'No_preseleccionado', 'Sin evaluar');
     END IF;
 END
 $$ LANGUAGE plpgsql;
+
+-- =================================================================
+-- TABLAS PRINCIPALES
+-- =================================================================
 
 -- TABLA EMPRESAS
 CREATE TABLE IF NOT EXISTS empresas (
@@ -44,39 +34,20 @@ CREATE TABLE IF NOT EXISTS empresas (
     nombre_legal         VARCHAR(255)  NOT NULL UNIQUE,
     nit                  VARCHAR(20)   NOT NULL UNIQUE,
     persona_juridica     BOOLEAN       NOT NULL,
-    tipo_empresa         VARCHAR(10)   NOT NULL
-                         CHECK (tipo_empresa IN ('Micro','Pequeña','Mediana')),
+    tipo_empresa         VARCHAR(10)   NOT NULL CHECK (tipo_empresa IN ('Micro','Pequeña','Mediana')),
     representante        VARCHAR(255)  NOT NULL,
     cedula_representante VARCHAR(20)   NOT NULL,
     correo_contacto      CITEXT        NOT NULL,
     telefono_contacto    VARCHAR(30)   NOT NULL,
     municipio            VARCHAR(100)  NOT NULL,
-    direccion            VARCHAR(255)  NOT NULL,
+    direccion            VARCHAR(255),
     fuera_valle          BOOLEAN       NOT NULL,
     afiliada_comfama     BOOLEAN       NOT NULL,
     tiene_trabajador     BOOLEAN       NOT NULL,
-    certificado_tamano   BOOLEAN       NOT NULL DEFAULT FALSE,
-    declaracion_veraz    BOOLEAN       NOT NULL DEFAULT FALSE,
-    firma_digital        TEXT,
-    fecha_declaracion    DATE,
     fecha_creacion       TIMESTAMP     NOT NULL DEFAULT now(),
     fecha_actualizacion  TIMESTAMP
 );
 CREATE INDEX IF NOT EXISTS idx_empresas_municipio ON empresas(municipio);
-
--- TABLA DOCUMENTOS (nombres corregidos)
-CREATE TABLE IF NOT EXISTS documentos (
-    id              SERIAL         PRIMARY KEY,
-    empresa_id      INT            NOT NULL REFERENCES empresas(id) ON DELETE CASCADE,
-    categoria       tipo_documento NOT NULL,
-    nombre_original VARCHAR(255)   NOT NULL,
-    nombre_guardado VARCHAR(255)   NOT NULL,
-    tipo_archivo    VARCHAR(100)   NOT NULL,
-    ruta            TEXT           NOT NULL,
-    tamano_bytes    INTEGER        CHECK (tamano_bytes <= 20 * 1024 * 1024),
-    fecha_carga     TIMESTAMP      NOT NULL DEFAULT now()
-);
-CREATE INDEX IF NOT EXISTS idx_documentos_empresa ON documentos(empresa_id);
 
 -- TABLA ROLES
 CREATE TABLE IF NOT EXISTS roles (
@@ -86,53 +57,35 @@ CREATE TABLE IF NOT EXISTS roles (
     fecha_creacion TIMESTAMP    NOT NULL DEFAULT now()
 );
 
-INSERT INTO roles (nombre, descripcion) VALUES
-    ('Administrador', 'Rol con acceso total'),
-    ('Evaluador', 'Rol para evaluar postulaciones'),
-    ('Participante', 'Rol para empresas que postulan')
-ON CONFLICT (nombre) DO NOTHING;
-
--- TABLA USUARIOS (agregada empresa_id)
+-- TABLA USUARIOS (Depende de roles y empresas)
 CREATE TABLE IF NOT EXISTS usuarios (
-    id                  SERIAL      PRIMARY KEY,
+    id                  SERIAL       PRIMARY KEY,
     nombre_usuario      VARCHAR(100) UNIQUE NOT NULL,
-    correo              CITEXT      UNIQUE NOT NULL,
+    correo              CITEXT       UNIQUE NOT NULL,
     password_hash       VARCHAR(255) NOT NULL,
     nombre_completo     VARCHAR(255) NOT NULL,
-    rol_id              INT         NOT NULL REFERENCES roles(id) ON DELETE RESTRICT,
-    activo              BOOLEAN     NOT NULL DEFAULT TRUE,
-    fecha_creacion      TIMESTAMP   NOT NULL DEFAULT now(),
-    fecha_ultimo_acceso TIMESTAMP,
-    empresa_id          INT         REFERENCES empresas(id) -- nueva columna nullable para participantes
+    rol_id              INT          NOT NULL REFERENCES roles(id) ON DELETE RESTRICT,
+    empresa_id          INT          REFERENCES empresas(id) ON DELETE SET NULL,
+    activo              BOOLEAN      NOT NULL DEFAULT TRUE,
+    fecha_creacion      TIMESTAMP    NOT NULL DEFAULT now(),
+    fecha_ultimo_acceso TIMESTAMP
 );
+CREATE INDEX IF NOT EXISTS idx_usuarios_rol_id ON usuarios(rol_id);
+CREATE INDEX IF NOT EXISTS idx_usuarios_empresa_id ON usuarios(empresa_id);
 
--- TRIGGER de verificación bcrypt
-CREATE OR REPLACE FUNCTION verify_bcrypt() RETURNS trigger AS $$
-BEGIN
-    IF NEW.password_hash NOT LIKE '$2%' THEN
-        RAISE EXCEPTION 'password_hash debe usar bcrypt';
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS trg_hash_check ON usuarios;
-CREATE TRIGGER trg_hash_check
-BEFORE INSERT OR UPDATE OF password_hash ON usuarios
-FOR EACH ROW EXECUTE FUNCTION verify_bcrypt();
-
--- TABLA POSTULACIONES (JSONB para datos estructurados)
-CREATE TABLE IF NOT EXISTS postulaciones (
-    id                SERIAL         PRIMARY KEY,
-    empresa_id        INT            NOT NULL REFERENCES empresas(id) ON DELETE CASCADE,
-    producto_info     JSONB          NOT NULL,
-    brechas           JSONB          NOT NULL,
-    motivacion        JSONB          NOT NULL,
-    estado            estado_postulacion NOT NULL DEFAULT 'borrador',
-    fecha_envio       TIMESTAMP,
-    fecha_creacion    TIMESTAMP      NOT NULL DEFAULT now(),
-    fecha_actualizacion TIMESTAMP
+-- TABLA DOCUMENTOS (Depende de empresas)
+CREATE TABLE IF NOT EXISTS documentos (
+    id              SERIAL         PRIMARY KEY,
+    empresa_id      INT            NOT NULL REFERENCES empresas(id) ON DELETE CASCADE,
+    categoria       tipo_documento NOT NULL,
+    nombre_original VARCHAR(255)   NOT NULL,
+    nombre_guardado VARCHAR(255)   NOT NULL UNIQUE,
+    tipo_archivo    VARCHAR(100)   NOT NULL,
+    ruta            TEXT           NOT NULL,
+    tamano_bytes    BIGINT         CHECK (tamano_bytes <= 10 * 1024 * 1024), -- Límite de 10MB
+    fecha_carga     TIMESTAMP      NOT NULL DEFAULT now()
 );
+CREATE INDEX IF NOT EXISTS idx_documentos_empresa_id ON documentos(empresa_id);
 
 -- TABLA CONVOCATORIA
 CREATE TABLE IF NOT EXISTS convocatoria (
@@ -141,78 +94,91 @@ CREATE TABLE IF NOT EXISTS convocatoria (
     fecha_fin      DATE        NOT NULL
 );
 
--- TRIGGER para validar fechas de envío
-CREATE OR REPLACE FUNCTION validar_envio() RETURNS trigger AS $$
-DECLARE
-    c convocatoria%ROWTYPE;
-BEGIN
-    SELECT * INTO c FROM convocatoria ORDER BY id DESC LIMIT 1;
-    IF NEW.estado = 'enviado' THEN
-        IF CURRENT_DATE < c.fecha_inicio OR CURRENT_DATE > c.fecha_fin THEN
-            RAISE EXCEPTION 'Fuera de periodo de convocatoria';
-        END IF;
-        NEW.fecha_envio := now();
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS trg_validar_envio ON postulaciones;
-CREATE TRIGGER trg_validar_envio
-BEFORE INSERT OR UPDATE ON postulaciones
-FOR EACH ROW EXECUTE FUNCTION validar_envio();
-
--- INDICES sobre JSONB
-CREATE INDEX IF NOT EXISTS idx_postulaciones_producto ON postulaciones USING gin(producto_info);
-CREATE INDEX IF NOT EXISTS idx_postulaciones_brechas  ON postulaciones USING gin(brechas);
-
--- Si decides migrar a TEXT (solo si en el futuro cambias JSONB a TEXT):
--- CREATE INDEX IF NOT EXISTS idx_postulaciones_producto_trgm ON postulaciones USING gin(producto_info gin_trgm_ops);
--- CREATE INDEX IF NOT EXISTS idx_postulaciones_brechas_trgm  ON postulaciones USING gin(brechas gin_trgm_ops);
-
-CREATE INDEX IF NOT EXISTS idx_postulaciones_empresa_id ON postulaciones(empresa_id);
-CREATE INDEX IF NOT EXISTS idx_postulaciones_estado ON postulaciones(estado);
-CREATE INDEX IF NOT EXISTS idx_postulaciones_fecha_envio ON postulaciones(fecha_envio);
-
--- TABLA SELECCION (corregido criterios_evaluacion como JSONB)
-CREATE TABLE IF NOT EXISTS seleccion (
-    id                  SERIAL                 PRIMARY KEY,
-    empresa_id          INT                    UNIQUE NOT NULL REFERENCES empresas(id) ON DELETE CASCADE,
-    estado_preseleccion estado_preseleccion    NOT NULL DEFAULT 'No_preseleccionado',
-    evaluador_id        INT                    REFERENCES usuarios(id) ON DELETE SET NULL,
-    criterios_evaluacion JSONB,
-    observaciones       TEXT,
-    fecha_evaluacion    TIMESTAMP,
-    fecha_creacion      TIMESTAMP               NOT NULL DEFAULT now(),
+-- TABLA POSTULACIONES (Depende de empresas)
+CREATE TABLE IF NOT EXISTS postulaciones (
+    id                  SERIAL             PRIMARY KEY,
+    empresa_id          INT                NOT NULL UNIQUE REFERENCES empresas(id) ON DELETE CASCADE,
+    producto_info       JSONB,
+    brechas             JSONB,
+    motivacion          JSONB,
+    estado              estado_postulacion NOT NULL DEFAULT 'borrador',
+    fecha_envio         TIMESTAMP,
+    fecha_creacion      TIMESTAMP          NOT NULL DEFAULT now(),
     fecha_actualizacion TIMESTAMP
 );
+CREATE INDEX IF NOT EXISTS idx_postulaciones_estado ON postulaciones(estado);
+CREATE INDEX IF NOT EXISTS idx_postulaciones_gin_producto ON postulaciones USING gin(producto_info);
 
-CREATE INDEX IF NOT EXISTS idx_sel_estado ON seleccion(estado_preseleccion);
-CREATE INDEX IF NOT EXISTS idx_sel_empresa_id ON seleccion(empresa_id);
+-- TABLA SELECCION (CORREGIDA, depende de empresas y usuarios)
+CREATE TABLE IF NOT EXISTS seleccion (
+    id                   SERIAL               PRIMARY KEY,
+    empresa_id           INT                  NOT NULL REFERENCES empresas(id) ON DELETE CASCADE,
+    evaluador_id         INT                  REFERENCES usuarios(id) ON DELETE SET NULL,
+    estado_preseleccion  estado_preseleccion  NOT NULL DEFAULT 'Sin evaluar',
+    observaciones        TEXT,
+    criterios_evaluacion JSONB,
+    es_definitiva        BOOLEAN              NOT NULL DEFAULT FALSE,
+    fecha_evaluacion     TIMESTAMP,
+    fecha_creacion       TIMESTAMP            NOT NULL DEFAULT now(),
+    fecha_actualizacion  TIMESTAMP,
+    -- Cada evaluador solo puede tener una evaluación por empresa.
+    -- La evaluación definitiva del admin es un caso especial.
+    CONSTRAINT unica_evaluacion_por_evaluador UNIQUE (empresa_id, evaluador_id)
+);
+CREATE INDEX IF NOT EXISTS idx_seleccion_empresa_evaluador ON seleccion(empresa_id, evaluador_id);
+CREATE INDEX IF NOT EXISTS idx_seleccion_estado ON seleccion(estado_preseleccion);
 
--- VISTA GENERAL
-CREATE OR REPLACE VIEW vista_general AS
+-- =================================================================
+-- DATOS INICIALES (SEED DATA)
+-- =================================================================
+
+-- Insertar roles si no existen
+INSERT INTO roles (nombre, descripcion) VALUES
+    ('Administrador', 'Rol con acceso total al sistema'),
+    ('Evaluador', 'Rol para revisar y calificar postulaciones'),
+    ('Participante', 'Rol para empresas que se postulan a la convocatoria')
+ON CONFLICT (nombre) DO NOTHING;
+
+-- Insertar usuarios de prueba (con contraseñas hasheadas usando bcrypt desde la app)
+-- NOTA: Por seguridad, las contraseñas deberían ser creadas desde tu aplicación con bcrypt.
+-- Estos hashes son de ejemplo y no se generaron con pgcrypto. Debes crear los usuarios desde tu UI de registro.
+-- Ejemplo de cómo crear un admin manualmente si lo necesitas:
+INSERT INTO usuarios (nombre_usuario, correo, password_hash, nombre_completo, rol_id)
+VALUES
+  ('admin', 'admin@aoxlab.com', '$2b$10$DaG7N4gZz.vj05s5j4E.e.9/M2efVlajD9AczGg/dJmJ3yY2DkTHi', 'Administrador Principal', (SELECT id FROM roles WHERE nombre = 'Administrador'))
+ON CONFLICT (nombre_usuario) DO NOTHING;
+-- La contraseña para el usuario 'admin' es 'admin123'
+
+-- =================================================================
+-- VISTAS
+-- =================================================================
+
+CREATE OR REPLACE VIEW vista_general_evaluaciones AS
 SELECT
-    e.id,
+    e.id AS empresa_id,
     e.nombre_legal,
     e.nit,
-    e.tipo_empresa,
-    e.municipio,
+    p.id AS postulacion_id,
     p.estado AS estado_postulacion,
-    s.estado_preseleccion,
-    s.fecha_evaluacion,
-    u.nombre_completo AS evaluador,
-    s.observaciones,
-    s.evaluador_id,
-    s.es_definitiva
+    -- Se toma la selección definitiva si existe, si no, la más reciente
+    COALESCE(
+        (SELECT s.estado_preseleccion FROM seleccion s WHERE s.empresa_id = e.id AND s.es_definitiva = TRUE LIMIT 1),
+        (SELECT s.estado_preseleccion FROM seleccion s WHERE s.empresa_id = e.id ORDER BY s.fecha_actualizacion DESC NULLS LAST, s.fecha_creacion DESC LIMIT 1),
+        'Sin evaluar'
+    ) AS estado_final_seleccion,
+    (SELECT COUNT(*) FROM seleccion s WHERE s.empresa_id = e.id) AS total_evaluaciones
 FROM empresas e
-LEFT JOIN postulaciones p
-    ON p.empresa_id = e.id AND p.estado = 'enviado'
-LEFT JOIN seleccion s
-    ON s.empresa_id = e.id
-LEFT JOIN usuarios u
-    ON u.id = s.evaluador_id;
+LEFT JOIN postulaciones p ON e.id = p.empresa_id;
 
+
+
+
+-- Script para limpiar y repoblar usuarios con contraseñas correctas
+BEGIN;
+
+-- 1. Vaciar la tabla de usuarios y reiniciar el contador de ID
+-- La opción CASCADE se asegura de limpiar cualquier dependencia en otras tablas.
+TRUNCATE TABLE usuarios RESTART IDENTITY CASCADE;
 
 -- Inserción de USUARIOS base para pruebas (ajusta o elimina luego si no los necesitas)
 INSERT INTO usuarios (nombre_usuario, correo, password_hash, nombre_completo, rol_id)
@@ -253,77 +219,4 @@ VALUES
    'Participante Dos', 
    (SELECT id FROM roles WHERE nombre = 'Participante'));
 
-
-
-
-
-
-   DROP INDEX IF EXISTS idx_sel_empresa_id;
-
--- 🔹 Cambiar para permitir varias evaluaciones por empresa:
-ALTER TABLE seleccion DROP CONSTRAINT seleccion_empresa_id_key;
-
--- 🔹 Agregar restricción única por empresa y evaluador (cada evaluador puede evaluar una vez)
-ALTER TABLE seleccion ADD CONSTRAINT unica_empresa_evaluador UNIQUE (empresa_id, evaluador_id);
-
--- 🔹 Agregar campo para marcar la evaluación definitiva del administrador
-ALTER TABLE seleccion ADD COLUMN es_definitiva BOOLEAN NOT NULL DEFAULT false;
-
-CREATE INDEX IF NOT EXISTS idx_sel_empresa_eval ON seleccion(empresa_id, evaluador_id);
-
-
-
-SELECT * FROM vista_general;
-
-
-
-
-
-//Esto es aparte pero creo que también lo corrí.
-
-
-BEGIN;
-
--- 1. Quitar la restricción UNIQUE de empresa_id
-ALTER TABLE seleccion DROP CONSTRAINT IF EXISTS seleccion_empresa_id_key;
-
--- 2. Asegurar que la columna evaluador_id existe
-ALTER TABLE seleccion 
-    ALTER COLUMN evaluador_id DROP NOT NULL;
-
--- 3. Agregar columna para marcar evaluación final del administrador
-ALTER TABLE seleccion
-    ADD COLUMN IF NOT EXISTS es_final BOOLEAN NOT NULL DEFAULT FALSE;
-
--- 4. Crear restricción única para permitir una evaluación por evaluador y empresa
-ALTER TABLE seleccion
-    ADD CONSTRAINT seleccion_empresa_evaluador_unique UNIQUE (empresa_id, evaluador_id, es_final);
-
 COMMIT;
-
-
-
-CREATE OR REPLACE VIEW vista_general AS
-SELECT
-    e.id,
-    e.nombre_legal,
-    e.nit,
-    e.tipo_empresa,
-    e.municipio,
-    p.estado AS estado_postulacion,
-    s.estado_preseleccion,
-    s.fecha_evaluacion,
-    u.nombre_completo AS evaluador,
-    s.observaciones
-FROM empresas e
-LEFT JOIN postulaciones p 
-    ON p.empresa_id = e.id AND p.estado = 'enviado'
-LEFT JOIN LATERAL (
-    SELECT *
-    FROM seleccion
-    WHERE seleccion.empresa_id = e.id
-    ORDER BY es_final DESC, fecha_actualizacion DESC
-    LIMIT 1
-) s ON true
-LEFT JOIN usuarios u 
-    ON u.id = s.evaluador_id;
