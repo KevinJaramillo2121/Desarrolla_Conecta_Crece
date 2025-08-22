@@ -79,12 +79,51 @@ router.post('/register', async (req, res) => {
 
         res.status(201).json({ mensaje: 'Usuario participante registrado exitosamente.' });
 
-    } catch (error) {
-        console.error('Error completo en /register:', error);
-        await pool.query('ROLLBACK');
-        console.log('Transacción revertida');
-        res.status(500).json({ mensaje: 'Error en el servidor: ' + error.message });
+    // En tu archivo auth.js, dentro de la ruta router.post('/register', ...),
+// reemplaza el bloque CATCH completo por el siguiente:
+
+} catch (error) {
+    // Revertir la transacción en cualquier caso de error
+    await pool.query('ROLLBACK');
+    console.error('Error en /register:', error); // Loguear el error completo para depuración
+
+    // ✅ Inicio de la lógica de error específico
+    // El código '23505' es específico de PostgreSQL para "unique_violation"
+    if (error.code === '23505') {
+        let campo = 'desconocido';
+        let mensajeParaUsuario = 'El valor ingresado ya existe.';
+
+        // La propiedad 'constraint' nos dice qué restricción falló.
+        // El nombre de la restricción lo define tu script SQL (ultimoscript.txt)
+        if (error.constraint === 'empresas_nit_key') {
+            campo = 'NIT';
+            mensajeParaUsuario = 'El NIT ingresado ya se encuentra registrado en otra empresa.';
+        } else if (error.constraint === 'empresas_nombre_legal_key') {
+            campo = 'Nombre Legal';
+            mensajeParaUsuario = 'El nombre legal de la empresa ya está en uso.';
+        } else if (error.constraint === 'usuarios_correo_key') {
+            campo = 'Correo';
+            mensajeParaUsuario = 'El correo electrónico ya está registrado.';
+        } else if (error.constraint === 'usuarios_nombre_usuario_key') {
+            campo = 'Nombre de Usuario';
+            mensajeParaUsuario = 'Este nombre de usuario ya ha sido tomado.';
+        }
+
+        console.log(`Violación de unicidad en el campo: ${campo}`);
+        // Se envía un código 409 (Conflict), que es más apropiado que 500 para este caso.
+        return res.status(409).json({
+            mensaje: mensajeParaUsuario,
+            campo_error: campo.toLowerCase().replace(' ', '_') // ej: 'nombre_legal'
+        });
     }
+
+    //  fallback para cualquier otro tipo de error
+    return res.status(500).json({
+        mensaje: 'Ha ocurrido un error inesperado en el servidor. Por favor, contacta a soporte.',
+        error: error.message // Opcional: puedes quitar esto en producción
+    });
+}
+
 });
 
 // Ruta POST /login (sin cambios, ya está correcta)
@@ -142,13 +181,13 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/logout', (req, res) => {
-  req.session.destroy(err => {
-    if (err) {
-      return res.status(500).json({ mensaje: 'Error al cerrar la sesión.' });
-    }
-    res.clearCookie('connect.sid');
-    res.status(200).json({ mensaje: 'Sesión cerrada exitosamente.' });
-  });
+    req.session.destroy(err => {
+        if (err) {
+        return res.status(500).json({ mensaje: 'Error al cerrar la sesión.' });
+        }
+        res.clearCookie('connect.sid');
+        res.status(200).json({ mensaje: 'Sesión cerrada exitosamente.' });
+    });
 });
 
 module.exports = router;
