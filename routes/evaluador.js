@@ -3,7 +3,6 @@ const router = express.Router();
 const path = require('path');
 const protegerRuta = require('../middlewares/authMiddleware');
 const pool = require('../db');
-const fs      = require('fs');                
 
 router.get('/', protegerRuta('Evaluador'), (req, res) => {
     const filePath = path.resolve(__dirname, '../views_protegidas/evaluador.html');
@@ -98,67 +97,5 @@ router.post('/evaluador/evaluar', protegerRuta('Evaluador'), async (req, res) =>
     }
 });
 
-// 💡 Nueva ruta para obtener la lista de documentos de una empresa
-router.get('/documentos/:empresaId', protegerRuta('Evaluador'), async (req, res) => {
-    const { empresaId } = req.params;
-    try {
-        // ✅ CAMBIAR id_empresa por empresa_id
-        const result = await pool.query('SELECT id, nombre_original FROM documentos WHERE empresa_id = $1', [empresaId]);
-        res.json(result.rows);
-    } catch (error) {
-        console.error('Error al obtener documentos para la empresa:', error);
-        res.status(500).json({ error: 'Error del servidor' });
-    }
-});
-
-router.get('/descargar-documento/:id', protegerRuta('Evaluador'), async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const { rows } = await pool.query(
-            'SELECT ruta, nombre_guardado, nombre_original FROM documentos WHERE id = $1',
-            [id]
-        );
-        if (!rows.length) {
-            return res.status(404).json({ error: 'Documento no encontrado en la base de datos' });
-        }
-
-        const { ruta, nombre_guardado, nombre_original } = rows[0];
-
-        let filePath;
-        if (path.isAbsolute(ruta)) {
-            // Si 'ruta' ya incluye el filename, úsala directamente:
-            if (ruta.endsWith(nombre_guardado)) {
-                filePath = ruta;
-            } else {
-                filePath = path.join(ruta, nombre_guardado);
-            }
-        } else {
-            // Ruta relativa, ej. 'uploads'
-            filePath = path.resolve(__dirname, '..', ruta, nombre_guardado);
-        }
-
-        console.log('🔍 Intentando descargar archivo en:', filePath);
-
-        if (!fs.existsSync(filePath)) {
-            return res.status(404).json({
-                error: 'Archivo físico no encontrado',
-                buscado_en: filePath
-            });
-        }
-
-        res.download(filePath, nombre_original, (err) => {
-            if (err) {
-                console.error('❌ Error al enviar el archivo:', err);
-                if (!res.headersSent) {
-                    res.status(500).json({ error: 'Error al descargar el archivo' });
-                }
-            }
-        });
-    } catch (error) {
-        console.error('❌ Error en descarga de documento:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
-});
 
 module.exports = router;

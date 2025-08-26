@@ -7,11 +7,6 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 -- =================================================================
 DO $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tipo_documento') THEN
-        CREATE TYPE tipo_documento AS ENUM
-            ('CamaraComercio', 'RUT', 'Parafiscales', 'TamanoEmpresarial',
-             'AfiliacionComfama', 'HojaVidaProducto', 'Otro');
-    END IF;
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tipo_rol') THEN
         CREATE TYPE tipo_rol AS ENUM ('Participante', 'Evaluador', 'Administrador');
     END IF;
@@ -72,20 +67,6 @@ CREATE TABLE IF NOT EXISTS usuarios (
 );
 CREATE INDEX IF NOT EXISTS idx_usuarios_rol_id ON usuarios(rol_id);
 CREATE INDEX IF NOT EXISTS idx_usuarios_empresa_id ON usuarios(empresa_id);
-
--- TABLA DOCUMENTOS (Depende de empresas)
-CREATE TABLE IF NOT EXISTS documentos (
-    id              SERIAL         PRIMARY KEY,
-    empresa_id      INT            NOT NULL REFERENCES empresas(id) ON DELETE CASCADE,
-    categoria       tipo_documento NOT NULL,
-    nombre_original VARCHAR(255)   NOT NULL,
-    nombre_guardado VARCHAR(255)   NOT NULL UNIQUE,
-    tipo_archivo    VARCHAR(100)   NOT NULL,
-    ruta            TEXT           NOT NULL,
-    tamano_bytes    BIGINT         CHECK (tamano_bytes <= 10 * 1024 * 1024), -- Límite de 10MB
-    fecha_carga     TIMESTAMP      NOT NULL DEFAULT now()
-);
-CREATE INDEX IF NOT EXISTS idx_documentos_empresa_id ON documentos(empresa_id);
 
 -- TABLA CONVOCATORIA
 CREATE TABLE IF NOT EXISTS convocatoria (
@@ -220,3 +201,10 @@ VALUES
    (SELECT id FROM roles WHERE nombre = 'Participante'));
 
 COMMIT;
+
+
+
+
+SELECT nombre_usuario, password_hash FROM usuarios;
+
+

@@ -4,48 +4,6 @@ const router = express.Router();
 const path = require('path');
 const protegerRuta = require('../middlewares/authMiddleware');
 const pool = require('../db');
-const multer = require('multer');
-const fs = require('fs');
-
-// 1. Definir uploadsDir como ruta absoluta
-const uploadsDir = path.resolve(__dirname, '..', 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
-// 2. Configuración de Multer usando uploadsDir
-// ...dentro de participante.js
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, uploadsDir),
-    filename: (req, file, cb) => {
-        const sanitized = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
-        // Añadimos un número aleatorio grande para garantizar la unicidad
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + '-' + sanitized);
-    }
-});
-
-const fileFilter = (req, file, cb) => {
-    const allowed = [
-        'application/pdf',
-        'image/jpeg','image/jpg','image/png',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ];
-    cb(null, allowed.includes(file.mimetype));
-};
-const upload = multer({ storage, limits:{ fileSize:10*1024*1024 }, fileFilter })
-.fields([
-    { name:'camara_comercio', maxCount:1 },
-    { name:'rut', maxCount:1 },
-    { name:'certificado_tamano_file', maxCount:1 },
-    { name:'parafiscales', maxCount:1 }, 
-    { name:'afiliacion_comfama', maxCount:1 },
-    { name:'hoja_vida', maxCount:1 },
-    { name:'otros_documentos', maxCount:1 },
-    { name: 'firma_digital', maxCount: 1 }
-]);
 
 
 // Vista principal del participante
@@ -70,8 +28,8 @@ router.get('/formulario', protegerRuta('Participante'), async (req, res) => {
 });
 
 // Enviar postulación (con archivos)
-router.post('/enviar-postulacion', protegerRuta('Participante'), upload, async (req, res) => {
-    const client = await pool.connect();
+router.post('/enviar-postulacion', protegerRuta('Participante'), async (req, res) => {
+        const client = await pool.connect();
     
     try {
         console.log('=== INICIO PROCESAMIENTO POSTULACIÓN ===');
@@ -187,9 +145,6 @@ router.post('/enviar-postulacion', protegerRuta('Participante'), upload, async (
             `, ['enviado', producto_info, brechas, motivacion, empresaId]);
         }
 
-        // PROCESAR ARCHIVOS SUBIDOS
-        await procesarDocumentosSubidos(client, req.files, empresaId);
-
         await client.query('COMMIT');
         console.log('✅ Postulación guardada exitosamente');
 
@@ -265,51 +220,6 @@ function procesarCamposJSON(body) {
         throw new Error(`Error en el formato de los datos: ${error.message}`);
     }
 }
-
-async function procesarDocumentosSubidos(client, files, empresaId) {
-    if (!files) {
-        console.log('No hay archivos para procesar');
-        return;
-    }
-
-    console.log('Procesando documentos subidos...');
-    
-    for (const fieldName in files) {
-        const filesArray = files[fieldName];
-        
-        for (const archivo of filesArray) {
-            console.log(`Guardando documento: ${archivo.originalname} (${fieldName})`);
-            
-            // Determinar categoría
-            let categoria = 'Otro';
-            switch(fieldName) {
-            case 'camara_comercio': categoria = 'CamaraComercio'; break;
-            case 'rut': categoria = 'RUT'; break;
-            case 'certificado_tamano_file': categoria = 'TamanoEmpresarial'; break;
-            case 'parafiscales': categoria = 'Parafiscales'; break; // ✅ NUEVO
-            case 'afiliacion_comfama': categoria = 'AfiliacionComfama'; break;
-            case 'hoja_vida': categoria = 'HojaVidaProducto'; break;
-            case 'otros_documentos': categoria = 'Otro'; break;
-        }
-
-            await client.query(`
-                INSERT INTO documentos(empresa_id, categoria, nombre_original, nombre_guardado, tipo_archivo, ruta, tamano_bytes)
-                VALUES($1, $2, $3, $4, $5, $6, $7)
-            `, [
-                empresaId,
-                categoria,
-                archivo.originalname,
-                archivo.filename,
-                archivo.mimetype,
-                archivo.path,
-                archivo.size || 0
-            ]);
-        }
-    }
-    
-    console.log('✅ Todos los documentos procesados');
-}
-
 
 // ✅ GUARDAR BORRADOR CORREGIDO
 router.post('/guardar-borrador', protegerRuta('Participante'), async (req, res) => {
