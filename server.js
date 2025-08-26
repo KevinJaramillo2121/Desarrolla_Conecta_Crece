@@ -53,14 +53,14 @@ app.use((err, req, res, next) => {
 // Archivos estáticos públicos (login, register)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// === INICIO DEL CÓDIGO A AÑADIR ===
-// Ruta principal que sirve el login.html
+// 2. Ruta explícita para la página de bienvenida (index.html)
+// Express sirve 'index.html' por defecto desde la carpeta estática,
+// pero esta ruta lo hace más explícito y seguro.
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-// === FIN DEL CÓDIGO A AÑADIR ===
 
-// Rutas protegidas y públicas
+// El resto de tu código de rutas y middlewares sigue igual...
 app.use('/', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/evaluador', evaluadorRoutes);
