@@ -1,0 +1,223 @@
+/* Estilos Mejorados para la Página de Políticas */
+:root {
+    scroll-behavior: smooth;
+}
+
+html, body {
+    background-color: var(--gris-claro);
+}
+
+.policy-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 120px auto 60px; /* Espacio para header y footer */
+    gap: var(--espacio-xl);
+}
+
+/* --- Barra Lateral (Sidebar) --- */
+.policy-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 120px; /* Debe coincidir con el espacio superior del contenedor */
+    height: calc(100vh - 150px);
+}
+
+.sidebar-title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--negro-fuerte);
+    padding-bottom: var(--espacio-sm);
+    border-bottom: 1px solid #ddd;
+    margin-bottom: var(--espacio-md);
+}
+
+.policy-sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.policy-sidebar nav a {
+    display: block;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: var(--gris-texto);
+    font-weight: 500;
+    border-radius: var(--radio-boton);
+    margin-bottom: var(--espacio-xs);
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.policy-sidebar nav a:hover {
+    background-color: #eaf1f5;
+    color: var(--negro-fuerte);
+    transform: translateX(5px);
+}
+
+.policy-sidebar nav a.active {
+    background-color: var(--blanco);
+    color: var(--magenta-comfama);
+    font-weight: 700;
+    border-left: 3px solid var(--magenta-comfama);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.sidebar-footer {
+    position: absolute;
+    bottom: 20px;
+    font-size: 0.85rem;
+    color: #888;
+    line-height: 1.5;
+}
+
+/* --- Contenido Principal --- */
+.policy-content {
+    flex-grow: 1;
+    background: var(--blanco);
+    border-radius: var(--radio-tarjeta);
+    padding: var(--espacio-xl);
+    box-shadow: var(--shadow-tarjeta);
+}
+
+.content-header h1 {
+    font-family: var(--font-titulo);
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, var(--magenta-comfama), var(--naranja-aoxlab));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: var(--espacio-sm);
+}
+
+.content-header .intro {
+    font-size: 1.1rem;
+    color: var(--gris-texto);
+    padding-bottom: var(--espacio-lg);
+    border-bottom: 1px solid #eee;
+    margin-bottom: var(--espacio-xl);
+}
+
+.policy-section {
+    margin-bottom: var(--espacio-xxl);
+}
+
+.policy-section h2 {
+    font-family: var(--font-titulo);
+    font-size: 1.8rem;
+    color: var(--negro-fuerte);
+    margin-bottom: var(--espacio-lg);
+}
+
+.policy-section p {
+    line-height: 1.8;
+    margin-bottom: var(--espacio-md);
+}
+
+.points-list {
+    display: grid;
+    gap: var(--espacio-md);
+    margin: var(--espacio-lg) 0;
+}
+
+.point-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--espacio-sm);
+    background-color: var(--gris-claro);
+    padding: var(--espacio-md);
+    border-radius: var(--radio-suave);
+}
+.point-item .icon { font-size: 1.5rem; }
+
+.policy-section ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+.policy-section ul li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: var(--espacio-sm);
+    line-height: 1.6;
+}
+.policy-section ul li::before {
+    content: '›';
+    font-weight: bold;
+    color: var(--naranja-aoxlab);
+    font-size: 1.5rem;
+    position: absolute;
+    left: 5px;
+    top: -5px;
+}
+
+.note {
+    background-color: #fffaf4; /* Tono naranja claro */
+    border-left: 4px solid var(--naranja-aoxlab);
+    padding: var(--espacio-md);
+    margin: var(--espacio-lg) 0;
+    border-radius: var(--radio-suave);
+}
+
+.policy-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espacio-xs);
+    background-color: var(--azul-light);
+    color: var(--blanco);
+    padding: 12px 24px;
+    border-radius: var(--radio-boton);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    margin-top: var(--espacio-sm);
+}
+.policy-link:hover {
+    background-color: var(--azul-aoxlab);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(43, 161, 212, 0.3);
+}
+
+.content-footer {
+    margin-top: var(--espacio-xxl);
+    text-align: left;
+}
+
+.btn-back {
+    background: var(--gris-texto);
+    color: var(--blanco);
+    padding: var(--espacio-sm) var(--espacio-lg);
+    border: none;
+    font-weight: 700;
+    border-radius: var(--radio-boton);
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+.btn-back:hover {
+    background: var(--negro-fuerte);
+    transform: translateY(-2px);
+}
+
+/* --- Diseño Adaptable (Responsive) --- */
+@media (max-width: 1024px) {
+    .policy-container {
+        flex-direction: column;
+        margin-top: 100px;
+    }
+    .policy-sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        margin-bottom: var(--espacio-lg);
+        background: var(--blanco);
+        padding: var(--espacio-md);
+        border-radius: var(--radio-tarjeta);
+        box-shadow: var(--shadow-tarjeta);
+    }
+    .sidebar-footer { display: none; }
+}
+
+@media (max-width: 768px) {
+    .content-header h1 { font-size: 2rem; }
+    .policy-section h2 { font-size: 1.5rem; }
+    .policy-content { padding: var(--espacio-lg); }
+}
