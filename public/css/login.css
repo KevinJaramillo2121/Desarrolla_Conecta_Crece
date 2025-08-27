@@ -149,7 +149,7 @@ body {
 }
 
 .brand-logos img {
-    height: 48px;
+    height: 120px;
     width: auto;
     filter: drop-shadow(var(--shadow-sm));
 }
@@ -900,7 +900,7 @@ body {
     }
     
     .brand-logos img {
-        height: 36px;
+        height: 80px;
     }
     
     .partnership-symbol {
@@ -937,13 +937,13 @@ body {
 
 /* 2. Tamaño específico y más grande para el logo de Comfama */
 .brand-logos .logo-comfama {
-    height: 65px; /* <-- TAMAÑO AUMENTADO PARA COMFAMA */
+    height: 80px; /* <-- TAMAÑO AUMENTADO PARA COMFAMA */
     width: auto;
 }
 
 /* 3. Tamaño ajustado y más pequeño para el logo de Aoxlab */
 .brand-logos .logo-aoxlab {
-    height: 42px; /* <-- TAMAÑO REDUCIDO PARA BALANCE */
+    height: 80px; /* <-- TAMAÑO REDUCIDO PARA BALANCE */
     width: auto;
 }
 

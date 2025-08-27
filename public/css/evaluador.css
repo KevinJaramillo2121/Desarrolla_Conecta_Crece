@@ -93,7 +93,7 @@ html, body {
     transition: filter 0.3s ease;
 }
 .logo-aoxlab {
-    height: 35px;
+    height: 80px;
     width: auto;
     object-fit: contain;
     transition: filter 0.3s ease;
