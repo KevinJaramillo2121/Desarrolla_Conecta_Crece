@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const pool = require('../db'); // ✅ USAR CONFIGURACIÓN CENTRALIZADA
 
 // Ruta POST /register
+// Ruta POST /register
 router.post('/register', async (req, res) => {
     try {
         const {
@@ -19,18 +20,18 @@ router.post('/register', async (req, res) => {
             cedula_representante,
             telefono_contacto,
             municipio,
-            direccion,
-            fuera_valle,
-            afiliada_comfama,
-            tiene_trabajador
+            direccion
         } = req.body;
+
+        // Convertimos los valores de los checkboxes a booleanos.
+        const fuera_valle = !!req.body.fuera_valle;
+        const afiliada_comfama = !!req.body.afiliada_comfama;
+        const tiene_trabajador = !!req.body.tiene_trabajador;
 
         // Validar datos mínimos
         if (!nombre_usuario || !correo || !password || !nombre_completo || !nombre_legal || !nit) {
             return res.status(400).json({ mensaje: 'Faltan campos obligatorios.' });
         }
-
-        console.log('Iniciando registro para:', nombre_usuario);
 
         // Hashear la contraseña con bcrypt
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -40,13 +41,11 @@ router.post('/register', async (req, res) => {
             "SELECT id FROM roles WHERE nombre = 'Participante'"
         );
         const rol_id = resultRol.rows[0].id;
-        console.log('Rol ID obtenido:', rol_id);
 
         // Iniciar transacción
         await pool.query('BEGIN');
-        console.log('Transacción iniciada');
 
-        // ✅ INSERTAR EMPRESA (CORREGIDO - parámetros en array)
+        // INSERTAR EMPRESA
         const empresaResult = await pool.query(
             `INSERT INTO empresas (
                 nombre_legal, nit, persona_juridica, tipo_empresa,
@@ -54,78 +53,67 @@ router.post('/register', async (req, res) => {
                 telefono_contacto, municipio, direccion, fuera_valle,
                 afiliada_comfama, tiene_trabajador
             ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING id`,
-            [  // ✅ AQUÍ ESTABA EL ERROR - FALTABA EL ARRAY
+            [ 
                 nombre_legal, nit, persona_juridica, tipo_empresa,
                 representante, cedula_representante, correo,
-                telefono_contacto, municipio, direccion, fuera_valle,
-                afiliada_comfama, tiene_trabajador
+                telefono_contacto, municipio, direccion, 
+                fuera_valle,
+                afiliada_comfama,
+                tiene_trabajador
             ]
         );
         const empresa_id = empresaResult.rows[0].id;
-        console.log('Empresa creada con ID:', empresa_id);
 
-        // ✅ INSERTAR USUARIO CON empresa_id
+        // INSERTAR USUARIO CON empresa_id
         await pool.query(
             `INSERT INTO usuarios (
                 nombre_usuario, correo, password_hash, nombre_completo, rol_id, empresa_id
             ) VALUES ($1, $2, $3, $4, $5, $6)`,
             [nombre_usuario, correo, hashedPassword, nombre_completo, rol_id, empresa_id]
         );
-        console.log('Usuario creado y asociado a empresa ID:', empresa_id);
 
         // Confirmar transacción
         await pool.query('COMMIT');
-        console.log('Transacción confirmada exitosamente');
 
         res.status(201).json({ mensaje: 'Usuario participante registrado exitosamente.' });
 
-    // En tu archivo auth.js, dentro de la ruta router.post('/register', ...),
-// reemplaza el bloque CATCH completo por el siguiente:
+    } catch (error) {
+        // Revertir la transacción en cualquier caso de error
+        await pool.query('ROLLBACK');
+        console.error('Error en /register:', error); 
 
-} catch (error) {
-    // Revertir la transacción en cualquier caso de error
-    await pool.query('ROLLBACK');
-    console.error('Error en /register:', error); // Loguear el error completo para depuración
+        // Lógica de manejo de errores específicos
+        if (error.code === '23505') {
+            let campo = 'desconocido';
+            let mensajeParaUsuario = 'El valor ingresado ya existe.';
 
-    // ✅ Inicio de la lógica de error específico
-    // El código '23505' es específico de PostgreSQL para "unique_violation"
-    if (error.code === '23505') {
-        let campo = 'desconocido';
-        let mensajeParaUsuario = 'El valor ingresado ya existe.';
+            if (error.constraint === 'empresas_nit_key') {
+                campo = 'NIT';
+                mensajeParaUsuario = 'El NIT ingresado ya se encuentra registrado en otra empresa.';
+            } else if (error.constraint === 'empresas_nombre_legal_key') {
+                campo = 'Nombre Legal';
+                mensajeParaUsuario = 'El nombre legal de la empresa ya está en uso.';
+            } else if (error.constraint === 'usuarios_correo_key') {
+                campo = 'Correo';
+                mensajeParaUsuario = 'El correo electrónico ya está registrado.';
+            } else if (error.constraint === 'usuarios_nombre_usuario_key') {
+                campo = 'Nombre de Usuario';
+                mensajeParaUsuario = 'Este nombre de usuario ya ha sido tomado.';
+            }
 
-        // La propiedad 'constraint' nos dice qué restricción falló.
-        // El nombre de la restricción lo define tu script SQL (ultimoscript.txt)
-        if (error.constraint === 'empresas_nit_key') {
-            campo = 'NIT';
-            mensajeParaUsuario = 'El NIT ingresado ya se encuentra registrado en otra empresa.';
-        } else if (error.constraint === 'empresas_nombre_legal_key') {
-            campo = 'Nombre Legal';
-            mensajeParaUsuario = 'El nombre legal de la empresa ya está en uso.';
-        } else if (error.constraint === 'usuarios_correo_key') {
-            campo = 'Correo';
-            mensajeParaUsuario = 'El correo electrónico ya está registrado.';
-        } else if (error.constraint === 'usuarios_nombre_usuario_key') {
-            campo = 'Nombre de Usuario';
-            mensajeParaUsuario = 'Este nombre de usuario ya ha sido tomado.';
+            return res.status(409).json({
+                mensaje: mensajeParaUsuario,
+                campo_error: campo.toLowerCase().replace(' ', '_')
+            });
         }
 
-        console.log(`Violación de unicidad en el campo: ${campo}`);
-        // Se envía un código 409 (Conflict), que es más apropiado que 500 para este caso.
-        return res.status(409).json({
-            mensaje: mensajeParaUsuario,
-            campo_error: campo.toLowerCase().replace(' ', '_') // ej: 'nombre_legal'
+        // Fallback para cualquier otro tipo de error
+        return res.status(500).json({
+            mensaje: 'Ha ocurrido un error inesperado en el servidor. Por favor, contacta a soporte.',
+            error: error.message
         });
     }
-
-    //  fallback para cualquier otro tipo de error
-    return res.status(500).json({
-        mensaje: 'Ha ocurrido un error inesperado en el servidor. Por favor, contacta a soporte.',
-        error: error.message // Opcional: puedes quitar esto en producción
-    });
-}
-
 });
-
 // Ruta POST /login (sin cambios, ya está correcta)
 router.post('/login', async (req, res) => {
     const { nombre_usuario, password } = req.body;

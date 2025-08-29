@@ -192,3 +192,30 @@ nextBtn.addEventListener('click', () => {
 
     // ...etc.
 });
+document.getElementById('nextBtn').addEventListener('click', function () {
+    // Detecta el paso activo
+    const currentStep = document.querySelector('.form-step.active');
+    // Si estamos en el paso 2 (empresa)
+    if (currentStep && currentStep.id === 'step2') {
+        // Obtén los checkboxes
+        const fueraValle = document.querySelector('input[name="fuera_valle"]').checked;
+        const afiliadaComfama = document.querySelector('input[name="afiliada_comfama"]').checked;
+        const tieneTrabajador = document.querySelector('input[name="tiene_trabajador"]').checked;
+
+        // Cambia la condición según tu lógica de negocio
+        if (!fueraValle && !afiliadaComfama && !tieneTrabajador) {
+            const errorDiv = document.getElementById('checkbox-error');
+            errorDiv.textContent = 'Debes seleccionar al menos una de las características de empresa para continuar.';
+            errorDiv.style.display = 'flex';
+            return; // No avanza al siguiente paso
+        } else {
+            // Limpia el error si la validación pasa
+            const errorDiv = document.getElementById('checkbox-error');
+            errorDiv.textContent = '';
+            errorDiv.style.display = 'none';
+        }
+    }
+
+    // ...tu lógica para avanzar de paso...
+    avanzarAlSiguientePaso(); // Reemplaza esto por tu función real
+});
