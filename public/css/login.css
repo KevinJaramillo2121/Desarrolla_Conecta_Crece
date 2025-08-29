@@ -831,28 +831,34 @@ body {
 /* ================================
    RESPONSIVE
    ================================ */
+/* --- Estilos para Tablets (hasta 1024px) --- */
 @media (max-width: 1024px) {
+    .login-main {
+        padding: var(--space-8) var(--space-4); /* Menos padding lateral */
+    }
+
     .login-container {
+        /* Hacemos que la tarjeta de login ocupe todo el espacio */
         grid-template-columns: 1fr;
-        gap: var(--space-8);
+        max-width: 480px; /* Limitamos el ancho MÁXIMO del formulario para mejor lectura */
+        margin: 0 auto; /* Centramos el contenedor del formulario */
     }
     
+    /* ¡ESTE ES EL CAMBIO CLAVE! 
+      Ocultamos el panel de información en pantallas pequeñas 
+      para dar todo el protagonismo al formulario de login.
+    */
     .info-panel {
-        order: -1;
-        padding: var(--space-8);
+        display: none; 
     }
     
-    .features-list {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-around;
-    }
-    
-    .feature-item {
-        flex-basis: 280px;
+    .login-card {
+        /* Nos aseguramos que la tarjeta no tenga un orden específico y fluya naturalmente */
+        order: initial;
     }
 }
 
+/* El resto de tus Media Queries (max-width: 768px y 480px) pueden permanecer como estaban */
 @media (max-width: 768px) {
     .brand-partnership {
         flex-direction: column;
