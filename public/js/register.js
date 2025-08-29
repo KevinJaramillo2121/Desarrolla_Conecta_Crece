@@ -145,3 +145,50 @@
 
     updateFormSteps();
     });
+
+
+
+    // En register.js
+
+nextBtn.addEventListener('click', () => {
+    // =================================================================
+    // ▼ INICIO DEL CÓDIGO DE VALIDACIÓN DE CHECKBOXES ▼
+    // =================================================================
+
+    // Primero, oculta cualquier mensaje de error anterior
+    const checkboxError = document.getElementById('checkbox-error');
+    if (checkboxError) {
+        checkboxError.style.display = 'none';
+    }
+
+    // Verifica si estamos en el paso 2: "Datos de la Empresa" (cuyo índice es 1)
+    if (currentStep === 1) {
+        const esAfiliada = form.afiliada_comfama.checked;
+        const tieneTrabajador = form.tiene_trabajador.checked;
+
+        // Si NINGUNA de las dos opciones está marcada, muestra el error y detén el proceso.
+        if (!esAfiliada && !tieneTrabajador) {
+            if (checkboxError) {
+                checkboxError.textContent = 'La empresa debe estar afiliada, debe tener al menos un trabajador afiliado y debe estar ubicada en el valle de aburrá.';
+                checkboxError.style.display = 'flex'; // Usamos flex para centrar el texto si es necesario
+            }
+            return; // ¡Importante! Esto detiene la ejecución y no permite avanzar.
+        }
+    }
+
+    // =================================================================
+    // ▲ FIN DEL CÓDIGO DE VALIDACIÓN ▲
+    // =================================================================
+
+
+    // El resto de tu código de validación original continúa aquí...
+    const activeFields = Array.from(steps[currentStep].querySelectorAll('input, select')).filter(i => i.required);
+    const valid = activeFields.every(input => {
+        if (input.type === 'checkbox') return input.checked;
+        return input.reportValidity();
+    });
+
+    if (!valid) return;
+
+    // ...etc.
+});
