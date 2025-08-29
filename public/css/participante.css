@@ -1303,3 +1303,117 @@ html, body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--verde-comfama-dark);
 }
+/* ================================
+   RESPONSIVE DESIGN PARA PARTICIPANTE
+   ================================ */
+
+/* --- Estilos para Tablets y pantallas medianas (hasta 1024px) --- */
+@media (max-width: 1024px) {
+    .header-container,
+    .main-container {
+        /* Reducimos el padding lateral en tablets */
+        padding-left: var(--espacio-lg);
+        padding-right: var(--espacio-lg);
+    }
+
+    .header-brand .brand-text h1 {
+        /* Hacemos el título del portal un poco más pequeño */
+        font-size: 1.5rem;
+    }
+
+    .cards-container {
+        /* Pasamos de 4 a 2 columnas para las tarjetas de acción */
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .footer-container {
+        /* Pasamos de 4 a 2 columnas en el pie de página */
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--espacio-lg);
+    }
+}
+
+/* --- Estilos para Móviles (hasta 768px) --- */
+@media (max-width: 768px) {
+    .header-container {
+        /* Apilamos los elementos del header: logo/título y acciones de usuario */
+        flex-direction: column;
+        gap: var(--espacio-md);
+        padding: var(--espacio-md);
+    }
+
+    .header-brand {
+        /* Apilamos los logos y el texto del brand */
+        flex-direction: column;
+        text-align: center;
+        gap: var(--espacio-sm);
+    }
+
+    .user-details {
+        /* Ocultamos el rol para dar más espacio al nombre en móviles */
+        display: none;
+    }
+
+    .btn-logout .btn-text {
+        /* Ocultamos el texto del botón de logout, dejando solo el ícono */
+        display: none;
+    }
+
+    .btn-logout {
+        padding: var(--espacio-sm);
+        background-color: transparent;
+        border: 2px solid var(--rojo-error);
+        color: var(--rojo-error);
+    }
+    
+    .btn-logout .btn-icon {
+        margin-right: 0;
+    }
+
+    .welcome-section {
+        /* Menos padding para la sección de bienvenida */
+        padding: var(--espacio-lg);
+        text-align: center;
+    }
+
+    .cards-container {
+        /* ¡Ahora una sola columna para las tarjetas! Ideal para scroll vertical */
+        grid-template-columns: 1fr;
+    }
+
+    .help-section-header {
+        /* Apilamos el título y el subtítulo de la sección de ayuda */
+        flex-direction: column;
+        text-align: center;
+        gap: var(--espacio-sm);
+    }
+    
+    .footer-container {
+        /* También una columna para el footer, todo apilado */
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+}
+
+/* --- Estilos para Móviles Pequeños (hasta 480px) --- */
+@media (max-width: 480px) {
+    .main-container {
+        padding-left: var(--espacio-sm);
+        padding-right: var(--espacio-sm);
+    }
+
+    .welcome-section h2 {
+        font-size: 1.8rem; /* Título de bienvenida más pequeño */
+    }
+
+    .action-card {
+        /* Hacemos que la tarjeta sea más compacta */
+        flex-direction: column;
+        text-align: center;
+        gap: var(--espacio-sm);
+    }
+    
+    .card-icon {
+        margin-right: 0;
+    }
+}

@@ -961,3 +961,126 @@ body {
         var(--magenta-comfama) 100%);
     border-radius: 2px;
 }
+
+ /* ================================
+   RESPONSIVE DESIGN
+   ================================ */
+
+/* --- Estilos para Tablets (hasta 1024px) --- */
+@media (max-width: 1024px) {
+    .login-main {
+        /* Reducimos el padding en pantallas medianas */
+        padding: var(--space-8) var(--space-6);
+    }
+
+    .login-container {
+        /* Hacemos que la tarjeta de login y el panel de info se apilen verticalmente */
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+        max-width: 700px; /* Limitamos el ancho para que no se estire demasiado */
+    }
+    
+    .info-panel {
+        /* El panel de información ahora aparecerá primero en la vista móvil */
+        order: -1; 
+        padding: var(--space-8);
+    }
+    
+    .features-list {
+        /* Acomodamos los 'features' en fila para aprovechar el espacio en tablets */
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--space-4);
+    }
+    
+    .feature-item {
+        flex-basis: 280px; /* Base para que quepan 2 por fila aprox. */
+    }
+}
+
+/* --- Estilos para Móviles (hasta 768px) --- */
+@media (max-width: 768px) {
+    body {
+        /* Evitamos el scroll horizontal si algún elemento se desborda */
+        overflow-x: hidden;
+    }
+
+    .login-main {
+        /* Menos padding para dar más espacio al contenido */
+        padding: var(--space-6) var(--space-4);
+    }
+
+    .brand-partnership {
+        /* Apilamos los logos y la info del programa */
+        flex-direction: column;
+        gap: var(--space-4);
+        text-align: center;
+    }
+    
+    .login-card-header,
+    .login-card-body,
+    .login-card-footer {
+        /* Reducimos el padding dentro de la tarjeta de login */
+        padding: var(--space-6);
+    }
+    
+    .info-panel {
+        padding: var(--space-6);
+    }
+    
+    .features-list {
+        /* En móviles, los 'features' vuelven a apilarse verticalmente */
+        flex-direction: column;
+    }
+    
+    .footer-content {
+        /* Apilamos y centramos el contenido del footer */
+        flex-direction: column;
+        text-align: center;
+        gap: var(--space-2);
+    }
+    
+    .form-options {
+        /* Apilamos 'Recordar sesión' y '¿Olvidaste tu contraseña?' */
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
+    }
+}
+
+/* --- Estilos para Móviles Pequeños (hasta 480px) --- */
+@media (max-width: 480px) {
+    .brand-logos {
+        /* Apilamos los logos si no caben */
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+    
+    .brand-logos img {
+        /* Reducimos el tamaño de los logos */
+        height: 60px; 
+    }
+    
+    .partnership-symbol {
+        /* Ocultamos el símbolo 'x' para ahorrar espacio */
+        display: none; 
+    }
+    
+    .program-info h1 {
+        font-size: var(--font-size-xl);
+    }
+    
+    .login-title h2 {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .info-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .info-content h3 {
+        font-size: var(--font-size-xl);
+    }
+}

@@ -226,3 +226,85 @@ h1 {
     opacity: 0.7;
     font-size: 0.875rem;
 }
+/* --- Media Queries para Responsividad --- */
+
+/* Estilos para tablets y dispositivos móviles (hasta 768px) */
+@media (max-width: 768px) {
+
+    body {
+        /* Reducimos el padding general para dar más espacio al contenido */
+        padding: 1.5rem;
+    }
+
+    /* --- Header Responsivo --- */
+    .brand-partnership {
+        /* Permite que los logos se apilen si no caben */
+        flex-wrap: wrap;
+        gap: 1rem; /* Reduce el espacio entre logos */
+    }
+
+    .logo-aoxlab, .logo-comfama {
+        /* Reducimos el tamaño de los logos en móviles */
+        height: 80px;
+    }
+
+    /* --- Tarjeta de Bienvenida Responsiva --- */
+    .welcome-card {
+        /* Reducimos los paddings para que no se sienta apretada */
+        padding: 2rem 1.5rem;
+        margin: 0 1rem; /* Asegura un pequeño margen a los lados */
+    }
+
+    h1 {
+        /* Hacemos el título principal más pequeño para que no se desborde */
+        font-size: 1.8rem;
+    }
+
+    .welcome-card p {
+        /* Ajustamos el tamaño del párrafo para mejor legibilidad */
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 2rem; /* Menos espacio inferior */
+    }
+
+    .card-icon {
+        /* Hacemos el ícono un poco más pequeño */
+        width: 65px;
+        height: 65px;
+        font-size: 2rem;
+    }
+
+    /* --- Botones de Acción Responsivos --- */
+    .action-buttons {
+        /* Hacemos que los botones se apilen verticalmente */
+        flex-direction: column;
+        gap: 1rem; /* Espacio entre los botones apilados */
+        width: 100%; /* Ocupan todo el ancho disponible */
+    }
+
+    .btn {
+        /* Aseguramos que los botones tengan un tamaño consistente */
+        width: 100%;
+        padding: 0.9rem 1.5rem; /* Ajuste de padding vertical */
+    }
+}
+
+/* Estilos específicos para móviles muy pequeños (hasta 480px) */
+@media (max-width: 480px) {
+    body {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 1.6rem; /* Título aún más pequeño */
+    }
+
+    .welcome-card {
+        padding: 1.5rem 1rem; /* Padding aún más reducido */
+    }
+
+    .logo-aoxlab, .logo-comfama {
+        /* Un último ajuste para los logos en pantallas chicas */
+        height: 70px;
+    }
+}

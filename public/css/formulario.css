@@ -748,3 +748,90 @@ select.success {
 .digital-clock.danger .label {
     color: #dc2626;
 }
+/* ================================
+   RESPONSIVE DESIGN PARA FORMULARIO
+   ================================ */
+
+/* --- Estilos para Tablets y pantallas medianas (hasta 992px) --- */
+@media (max-width: 992px) {
+    .header-container {
+        /* Apilamos el título y el contador para que no se compriman */
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1.5rem; /* Espacio entre el título y el contador */
+    }
+
+    .form-section-grid {
+        /* ¡Importante! Pasamos de 2 columnas a 1 para los campos del formulario */
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Estilos para Móviles (hasta 768px) --- */
+@media (max-width: 768px) {
+    .form-container {
+        /* Reducimos el padding en móviles para más espacio */
+        padding: 1.5rem;
+    }
+
+    .form-section-header h2 {
+        /* Hacemos el título de la sección un poco más pequeño */
+        font-size: 1.5rem;
+    }
+
+    /* Ajustes para el reloj digital en móviles */
+    .digital-clock {
+        gap: 0.5rem; /* Menos espacio entre los segmentos del reloj */
+        padding: 0.8rem 1rem;
+    }
+
+    .digital-clock .number {
+        /* Números más pequeños para que quepan bien */
+        font-size: 2.5rem;
+    }
+
+    .digital-clock .separator {
+        font-size: 2rem;
+    }
+
+    .digital-clock .label {
+        font-size: 0.7rem; /* Etiquetas más pequeñas */
+    }
+
+    /* Ajustes para los botones de acción */
+    #btn-guardar-borrador,
+    #btn-enviar {
+        /* Hacemos que los botones ocupen todo el ancho y se apilen */
+        width: 100%;
+        display: block;
+        margin-bottom: 0.75rem; /* Espacio entre botones */
+    }
+
+    /* Eliminamos el margen del último botón */
+    #btn-enviar {
+        margin-bottom: 0;
+    }
+}
+
+/* --- Estilos para Móviles Pequeños (hasta 480px) --- */
+@media (max-width: 480px) {
+    .form-container {
+        /* Aún menos padding en pantallas muy chicas */
+        padding: 1rem;
+        border-radius: 0; /* Ocupa todo el ancho sin bordes redondeados */
+    }
+    
+    .program-title h1 {
+        font-size: 1.5rem;
+    }
+
+    .program-title p {
+        font-size: 0.9rem;
+    }
+    
+    .digital-clock {
+        transform: scale(0.9); /* Hacemos el reloj un 10% más pequeño */
+        transform-origin: center;
+    }
+}
