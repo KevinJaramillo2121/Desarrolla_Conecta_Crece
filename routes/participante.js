@@ -4,6 +4,8 @@ const router = express.Router();
 const path = require('path');
 const protegerRuta = require('../middlewares/authMiddleware');
 const pool = require('../db');
+const multer = require('multer'); // <--- AÑADE ESTO
+const upload = multer();          // <--- Y ESTO
 
 
 // Vista principal del participante
