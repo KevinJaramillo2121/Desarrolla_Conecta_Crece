@@ -30,8 +30,8 @@ router.get('/formulario', protegerRuta('Participante'), async (req, res) => {
 });
 
 // Enviar postulación (con archivos)
-router.post('/enviar-postulacion', protegerRuta('Participante'), async (req, res) => {
-        const client = await pool.connect();
+router.post('/enviar-postulacion', protegerRuta('Participante'), upload.any(), async (req, res) => { 
+    const client = await pool.connect();
     
     try {
         console.log('=== INICIO PROCESAMIENTO POSTULACIÓN ===');
