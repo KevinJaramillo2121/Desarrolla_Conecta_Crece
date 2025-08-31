@@ -617,14 +617,14 @@ async function enviarPostulacion() {
             errorMessage = errorData.error || errorData.mensaje || 'Error desconocido';
         } catch (e) {
             try {
-                const errorText = await res.text();
+                const errorText = await response.text();
                 errorMessage = errorText;
             } catch (e2) {
-                errorMessage = `Error ${res.status}: ${res.statusText}`;
+                errorMessage = `Error ${response.status}: ${response.statusText}`;
             }
         }
         console.error('Error response:', errorMessage);
-        alert(`Error ${res.status}: ${errorMessage}`);
+        alert(`Error ${response.status}: ${errorMessage}`);
         return;
     }
 
