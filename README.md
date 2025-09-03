@@ -1,110 +1,79 @@
-<div align="center">
-🚀 Plataforma de Convocatorias y Evaluaciones 🚀
-Un sistema integral para la gestión de postulaciones, desde el registro del participante hasta la evaluación final del administrador.
-</div> <!-- Puedes añadir un screenshot o un GIF de la aplicación aquí para un mayor impacto visual --> <!-- <div align="center"> <img src="URL_DEL_SCREENSHOT_O_GIF" alt="Dashboard de la aplicación" width="80%"> </div> -->
-Este proyecto es una aplicación web full-stack que resuelve de manera eficiente el proceso de convocatorias empresariales. Construida con una arquitectura robusta basada en roles, la plataforma ofrece una experiencia de usuario clara y segura para cada tipo de actor involucrado: empresas que se postulan, evaluadores que califican y administradores que supervisan todo el proceso.
+Plataforma de Convocatorias y Evaluaciones
+Este proyecto es una aplicación web robusta construida con Node.js y Express, diseñada para gestionar el ciclo de vida completo de una convocatoria. Permite a las empresas registrarse como participantes, completar y enviar formularios de postulación complejos, y ser evaluadas por un panel de expertos. El sistema soporta múltiples roles con permisos específicos, garantizando un flujo de trabajo seguro y organizado.
 
-✨ Características por Rol
-La funcionalidad del sistema está segmentada por roles, garantizando que cada usuario tenga acceso únicamente a las herramientas que necesita.
+✨ Características Principales
+El sistema está organizado en tres roles principales, cada uno con su propio panel y funcionalidades:
 
-Característica	👤 Participante	⚖️ Evaluador	⚙️ Administrador
-Ver Panel Principal	✅	✅	✅
-Registrar Empresa/Usuario	✅	❌	❌
-Crear/Editar Postulación	✅ (antes de enviar)	❌	❌
-Ver Postulaciones Asignadas	❌	✅	✅ (todas)
-Realizar Evaluaciones	❌	✅	✅ (definitiva)
-Ver Todas las Evaluaciones	❌	❌	✅
-Gestionar Fechas de Convocatoria	❌	❌	✅
-Crear Cuentas de Evaluador	❌	❌	✅
-🛠️ Stack Tecnológico
-Categoría	Tecnologías y Librerías
-Backend	Node.js, Express.js
-Base de Datos	PostgreSQL, node-postgres (pg)
-Seguridad	bcrypt (Hashing de contraseñas), express-session (Sesiones)
-Frontend	HTML5, CSS3, JavaScript (Vanilla JS, Fetch API)
-Utilidades	dotenv, multer (Manejo de archivos), pgcrypto
-🗄️ Estructura del Proyecto
-La organización del código está pensada para ser modular y escalable.
+👤 Rol de Participante (Empresas)
+Registro Seguro: Creación de una cuenta de usuario y un perfil de empresa en una única transacción.
 
-text
-/
-├── public/                 # Archivos estáticos (HTML, CSS, JS del cliente)
-│   ├── login.html
-│   ├── register.html
-│   └── js/
-│       ├── login.js
-│       ├── register.js
-│       └── ...
-├── routes/                 # Definición de las rutas de la API
-│   ├── auth.js             # Rutas de autenticación (login, register)
-│   ├── admin.js            # Rutas para el rol de Administrador
-│   ├── evaluador.js        # Rutas para el rol de Evaluador
-│   └── participante.js     # Rutas para el rol de Participante
-├── views_protegidas/       # Vistas HTML que requieren autenticación
-│   ├── admin.html
-│   ├── evaluador.html
-│   └── participante.html
-├── middlewares/            # Middlewares personalizados
-│   └── authMiddleware.js   # Middleware para proteger rutas por rol
-├── .env                    # Variables de entorno (NO subir a Git)
-├── .gitignore
-├── db.js                   # Configuración centralizada de la conexión a la BD
-├── package.json
-├── package-lock.json
-├── server.js               # Punto de entrada principal de la aplicación
-└── ultimoscript.txt        # Script SQL para la creación de la BD
-🚀 Guía de Inicio Rápido (Local)
-Para levantar el proyecto en tu máquina local, sigue estos pasos:
+Panel de Control Personalizado: Vista general del estado de su postulación y fechas clave de la convocatoria.
 
-Clona el Repositorio
+Formulario de Postulación Completo: Formulario multi-sección para capturar información detallada del producto, brechas de mercado y motivaciones.
 
-text
-git clone direccion del repo
-cd tu-repositorio
-Instala las Dependencias
+Guardado de Borrador: Posibilidad de guardar el progreso del formulario antes del envío final.
 
-text
-npm install
-Configura la Base de Datos
+Envío de Postulación: Envío final y bloqueo del formulario para evitar modificaciones post-entrega.
 
-Asegúrate de tener PostgreSQL instalado y corriendo.
+Validación en Tiempo Real: Feedback instantáneo en el frontend para asegurar la calidad de los datos.
 
-Crea una base de datos (p. ej., convocatoria_db).
+⚖️ Rol de Evaluador
+Panel de Evaluación: Listado de todas las postulaciones asignadas que están listas para ser revisadas.
 
-Ejecuta el script ultimoscript.txt en tu base de datos para crear todas las tablas, vistas y datos iniciales.
+Interfaz de Evaluación Detallada: Acceso completo a la información de la empresa y su postulación para una revisión informada.
 
-Configura las Variables de Entorno
+Registro de Calificaciones: Formulario para registrar el estado de preselección, observaciones y puntuaciones basadas en criterios específicos.
 
-Crea un archivo llamado .env en la raíz del proyecto.
+Seguridad y Aislamiento: Los evaluadores solo pueden ver y calificar las postulaciones que les corresponden.
 
-Copia y pega el siguiente contenido, ajustando los valores de la base de datos a tu configuración local.
+⚙️ Rol de Administrador
+Dashboard Global: Vista general de todas las empresas registradas, su estado de postulación y el resultado de las evaluaciones.
 
-text
-# Archivo: .env
+Gestión de Convocatorias: Creación y actualización de las fechas de inicio y fin de la convocatoria.
 
-# Entorno ('development' o 'production')
-NODE_ENV=development
+Gestión de Usuarios: Creación de nuevas cuentas para evaluadores.
 
-# Puerto del servidor
-PORT=3000
+Evaluación Definitiva: Capacidad para registrar una evaluación final y concluyente que prevalece sobre las demás.
 
-# Secreto para la sesión (cámbialo por algo seguro)
-SESSION_SECRET='un_secreto_muy_largo_y_dificil_de_adivinar'
+Revisión Completa: Acceso total a los perfiles de empresa, postulaciones y todas las evaluaciones individuales realizadas.
 
-# URL de conexión a PostgreSQL (ignorado si NODE_ENV es 'development')
-# DATABASE_URL="postgresql://user:pass@host:port/database?sslmode=require"
-Nota: En desarrollo, la conexión se configura automáticamente desde db.js con los valores estándar de PostgreSQL (postgres/postgresql en localhost:5432).
+🚀 Stack Tecnológico
+Backend
+Runtime: Node.js
 
-Inicia el Servidor
+Framework: Express.js
 
-text
-npm start
-¡Listo!
+Base de Datos: PostgreSQL
 
-Abre tu navegador en http://localhost:3000.
+Driver de BD: node-postgres (pg)
 
-Regístrate como un nuevo participante o usa la cuenta de administrador por defecto:
+Autenticación y Sesiones: express-session, bcrypt
 
-Usuario: admin
+Variables de Entorno: dotenv
 
-Contraseña: admin123
+Frontend
+Lenguajes: HTML5, CSS3, JavaScript (Vanilla JS)
+
+Librerías: Uso de fetch para la comunicación asíncrona (AJAX) con el backend.
+
+Base de Datos
+Motor: PostgreSQL
+
+Extensiones: citext (para correos y nits insensibles a mayúsculas/minúsculas), pgcrypto (para hashing de contraseñas a nivel de BD).
+
+🗄️ Estructura de la Base de Datos
+La arquitectura de la base de datos está diseñada para ser relacional y escalable, con las siguientes tablas principales:
+
+empresas: Almacena toda la información estática de las empresas participantes.
+
+usuarios: Contiene las credenciales y datos de todos los usuarios (participantes, evaluadores, administradores).
+
+roles: Define los tres roles del sistema y sus descripciones.
+
+postulaciones: Guarda los formularios de postulación, incluyendo los datos complejos en formato JSONB y el estado ('borrador' o 'enviado').
+
+seleccion: Registra cada evaluación individual realizada por un evaluador o administrador.
+
+convocatoria: Almacena las fechas de inicio y fin del proceso.
+
+Las relaciones están protegidas con claves foráneas para garantizar la integridad de los datos.
